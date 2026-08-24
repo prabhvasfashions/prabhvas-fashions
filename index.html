@@ -1,0 +1,533 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="UTF-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1" />
+<title>Prabhvas Fashions — Modest Wear &amp; Ethnic Fashion, Dubai</title>
+<meta name="description" content="Prabhvas Fashions — signature pleated palazzos and modest ethnic wear, hand-picked and shipped across the UAE. Order on WhatsApp, cash on delivery available." />
+<link rel="icon" type="image/png" sizes="32x32" href="assets/favicon-32.png" />
+<link rel="apple-touch-icon" href="assets/favicon-180.png" />
+<link rel="preconnect" href="https://fonts.googleapis.com" />
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+<link href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:wght@500;600;700&family=Karla:wght@400;500;600;700&display=swap" rel="stylesheet" />
+<style>
+  :root {
+    --ink: #1b1610;
+    --ink-soft: #6b6153;
+    --ivory: #f8f3e9;
+    --surface: #fffdf7;
+    --line: #e4dac5;
+    --rani: #c21f5b;
+    --teal: #0e7c74;
+    --royal: #2a3f8f;
+    --purple: #6b3fa0;
+    --gold: #c79a2e;
+    --whatsapp: #25d366;
+    --whatsapp-ink: #0b3d20;
+    --shadow: rgba(27, 22, 16, 0.10);
+  }
+
+  * { box-sizing: border-box; }
+  html { scroll-behavior: smooth; }
+
+  body {
+    margin: 0;
+    background: var(--ivory);
+    color: var(--ink);
+    font-family: 'Karla', -apple-system, 'Segoe UI', sans-serif;
+    line-height: 1.6;
+    -webkit-font-smoothing: antialiased;
+  }
+
+  h1, h2, h3, .display {
+    font-family: 'Cormorant Garamond', Georgia, serif;
+    font-weight: 600;
+    text-wrap: balance;
+    margin: 0;
+    color: var(--ink);
+  }
+
+  a { color: inherit; }
+  img { max-width: 100%; display: block; }
+
+  .eyebrow {
+    font-family: 'Karla', sans-serif;
+    font-size: 0.7rem;
+    font-weight: 700;
+    letter-spacing: 0.18em;
+    text-transform: uppercase;
+    color: var(--rani);
+  }
+
+  .wrap {
+    max-width: 1120px;
+    margin: 0 auto;
+    padding: 0 clamp(20px, 4vw, 48px);
+  }
+
+  /* ---------- top bar ---------- */
+  .topbar {
+    position: sticky;
+    top: 0;
+    z-index: 20;
+    background: rgba(248, 243, 233, 0.92);
+    backdrop-filter: blur(6px);
+    border-bottom: 1px solid var(--line);
+  }
+
+  .topbar-inner {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    padding: 12px clamp(20px, 4vw, 48px);
+    max-width: 1120px;
+    margin: 0 auto;
+    gap: 16px;
+  }
+
+  .brand-mark {
+    display: flex;
+    align-items: center;
+    gap: 10px;
+    text-decoration: none;
+  }
+
+  .brand-mark img { width: 34px; height: 34px; }
+
+  .brand-mark span {
+    font-family: 'Cormorant Garamond', serif;
+    font-weight: 700;
+    font-size: 1.25rem;
+    letter-spacing: 0.02em;
+  }
+
+  .topbar nav {
+    display: flex;
+    align-items: center;
+    gap: clamp(14px, 2vw, 28px);
+  }
+
+  .topbar nav a.section-link {
+    font-size: 0.82rem;
+    font-weight: 600;
+    text-decoration: none;
+    color: var(--ink-soft);
+    letter-spacing: 0.01em;
+  }
+
+  .topbar nav a.section-link:hover { color: var(--ink); }
+
+  .btn-whatsapp {
+    display: inline-flex;
+    align-items: center;
+    gap: 8px;
+    background: var(--whatsapp);
+    color: #fff;
+    font-weight: 700;
+    font-size: 0.85rem;
+    padding: 10px 18px;
+    border-radius: 100px;
+    text-decoration: none;
+    box-shadow: 0 2px 8px rgba(37, 211, 102, 0.35);
+    white-space: nowrap;
+    transition: transform 0.15s ease, box-shadow 0.15s ease;
+  }
+
+  .btn-whatsapp:hover { transform: translateY(-1px); box-shadow: 0 4px 14px rgba(37, 211, 102, 0.45); }
+  .btn-whatsapp svg { width: 16px; height: 16px; flex: none; }
+
+  /* ---------- hero ---------- */
+  .hero {
+    padding: clamp(48px, 8vw, 96px) 0 clamp(40px, 6vw, 64px);
+    text-align: center;
+    position: relative;
+  }
+
+  .hero-rule {
+    width: 64px;
+    height: 2px;
+    background: var(--gold);
+    margin: 0 auto 28px;
+  }
+
+  .hero img.mark {
+    width: clamp(150px, 20vw, 220px);
+    margin: 0 auto 28px;
+  }
+
+  .hero h1 {
+    font-size: clamp(2.4rem, 6vw, 4rem);
+    letter-spacing: 0.01em;
+  }
+
+  .hero .tagline {
+    margin: 18px auto 0;
+    max-width: 46ch;
+    color: var(--ink-soft);
+    font-size: clamp(1rem, 1.6vw, 1.15rem);
+  }
+
+  .hero-actions {
+    margin-top: 34px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    gap: 16px;
+    flex-wrap: wrap;
+  }
+
+  .btn-outline {
+    display: inline-flex;
+    align-items: center;
+    gap: 8px;
+    border: 1.5px solid var(--ink);
+    color: var(--ink);
+    font-weight: 600;
+    font-size: 0.85rem;
+    letter-spacing: 0.03em;
+    padding: 10px 22px;
+    border-radius: 100px;
+    text-decoration: none;
+  }
+
+  .btn-outline:hover { background: var(--ink); color: var(--ivory); }
+
+  /* ---------- value strip ---------- */
+  .value-strip {
+    border-top: 1px solid var(--line);
+    border-bottom: 1px solid var(--line);
+    background: var(--surface);
+  }
+
+  .value-strip .wrap {
+    display: grid;
+    grid-template-columns: repeat(4, 1fr);
+    gap: 0;
+  }
+
+  .value-item {
+    padding: 22px 18px;
+    text-align: center;
+    border-left: 1px solid var(--line);
+  }
+
+  .value-item:first-child { border-left: none; }
+
+  .value-item .num { font-family: 'Cormorant Garamond', serif; font-size: 1.6rem; color: var(--rani); display: block; margin-bottom: 4px; }
+  .value-item .label { font-size: 0.8rem; color: var(--ink-soft); }
+
+  /* ---------- category nav ---------- */
+  .categories {
+    padding: clamp(48px, 7vw, 72px) 0 20px;
+  }
+
+  .categories .section-head { text-align: center; margin-bottom: 30px; }
+  .categories h2 { font-size: clamp(1.8rem, 3.4vw, 2.4rem); margin-top: 8px; }
+
+  .cat-pills {
+    display: flex;
+    flex-wrap: wrap;
+    justify-content: center;
+    gap: 10px;
+    margin-top: 24px;
+  }
+
+  .cat-pill {
+    padding: 9px 18px;
+    border-radius: 100px;
+    font-size: 0.82rem;
+    font-weight: 600;
+    border: 1px solid var(--line);
+  }
+
+  .cat-pill.active {
+    background: var(--ink);
+    color: var(--ivory);
+    border-color: var(--ink);
+  }
+
+  .cat-pill.soon {
+    color: var(--ink-soft);
+    background: transparent;
+    position: relative;
+  }
+
+  .cat-pill.soon::after {
+    content: "coming soon";
+    font-size: 0.62rem;
+    letter-spacing: 0.06em;
+    text-transform: uppercase;
+    color: var(--gold);
+    margin-left: 8px;
+  }
+
+  /* ---------- product grid ---------- */
+  .products {
+    padding: 20px 0 clamp(56px, 8vw, 88px);
+  }
+
+  .grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(260px, 1fr));
+    gap: clamp(20px, 3vw, 32px);
+  }
+
+  .card {
+    background: var(--surface);
+    border: 1px solid var(--line);
+    border-radius: 4px;
+    overflow: hidden;
+    display: flex;
+    flex-direction: column;
+    box-shadow: 0 1px 0 var(--shadow);
+  }
+
+  .card .photo {
+    aspect-ratio: 3 / 4;
+    background: var(--ink);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    overflow: hidden;
+  }
+
+  .card .photo img { width: 100%; height: 100%; object-fit: contain; }
+
+  .card .info { padding: 20px 20px 22px; display: flex; flex-direction: column; gap: 10px; flex: 1; }
+
+  .card .name { font-size: 1.35rem; }
+
+  .card .meta { font-size: 0.8rem; color: var(--ink-soft); }
+
+  .card .price-row {
+    display: flex;
+    align-items: baseline;
+    justify-content: space-between;
+    margin-top: auto;
+    padding-top: 6px;
+  }
+
+  .card .price { font-family: 'Cormorant Garamond', serif; font-weight: 700; font-size: 1.5rem; color: var(--rani); }
+  .card .price small { font-family: 'Karla', sans-serif; font-weight: 600; font-size: 0.72rem; color: var(--ink-soft); margin-left: 4px; }
+
+  .card .btn-whatsapp { margin-top: 12px; justify-content: center; width: 100%; }
+
+  .bundle-note {
+    margin-top: 28px;
+    padding: 16px 20px;
+    border: 1px dashed var(--line);
+    border-radius: 4px;
+    font-size: 0.88rem;
+    color: var(--ink-soft);
+    text-align: center;
+  }
+
+  .bundle-note strong { color: var(--ink); }
+
+  /* ---------- payment / shipping band ---------- */
+  .info-band {
+    background: var(--ink);
+    color: var(--ivory);
+    padding: clamp(40px, 6vw, 56px) 0;
+  }
+
+  .info-band .wrap {
+    display: grid;
+    grid-template-columns: repeat(3, 1fr);
+    gap: 28px;
+  }
+
+  .info-band .col .eyebrow { color: var(--gold); }
+  .info-band .col h3 { color: var(--ivory); font-size: 1.3rem; margin: 8px 0 8px; }
+  .info-band .col p { color: #cfc6b4; font-size: 0.88rem; margin: 0; }
+
+  /* ---------- footer ---------- */
+  footer {
+    padding: clamp(36px, 6vw, 52px) 0;
+    text-align: center;
+  }
+
+  footer .brand-mark { justify-content: center; margin-bottom: 14px; }
+  footer .social { display: flex; justify-content: center; gap: 20px; margin: 18px 0; }
+  footer .social a { font-size: 0.85rem; font-weight: 600; text-decoration: none; color: var(--ink-soft); }
+  footer .social a:hover { color: var(--rani); }
+  footer .fine { font-size: 0.76rem; color: var(--ink-soft); margin-top: 10px; }
+
+  /* ---------- responsive ---------- */
+  @media (max-width: 760px) {
+    .topbar nav .section-link { display: none; }
+    .value-strip .wrap { grid-template-columns: repeat(2, 1fr); }
+    .value-item:nth-child(3) { border-left: none; }
+    .value-item:nth-child(1), .value-item:nth-child(2) { border-bottom: 1px solid var(--line); padding-bottom: 22px; }
+    .info-band .wrap { grid-template-columns: 1fr; }
+  }
+
+  @media (prefers-reduced-motion: reduce) {
+    html { scroll-behavior: auto; }
+    * { transition: none !important; }
+  }
+</style>
+</head>
+<body>
+
+<!--
+  SETUP NOTE FOR PRABHVAS FASHIONS — read before publishing:
+  1. Replace WHATSAPP_NUMBER below with the real WhatsApp Business number (UAE format, digits only, country code first, e.g. 9715XXXXXXXX).
+  2. Replace the Instagram href placeholder ("#") in the footer with the real Instagram profile URL, once available.
+  3. As more categories are ready (Kurtis & Tops, Lehengas, Sarees, Dupattas, Jewelry), duplicate the <section class="products"> block and its cat-pill entry.
+-->
+
+<div class="topbar">
+  <div class="topbar-inner">
+    <a class="brand-mark" href="#top">
+      <img src="assets/logo-header.png" alt="Prabhvas Fashions" />
+      <span>Prabhvas Fashions</span>
+    </a>
+    <nav>
+      <a class="section-link" href="#collection">Collection</a>
+      <a class="section-link" href="#shipping">Shipping &amp; Payment</a>
+      <a class="btn-whatsapp" id="nav-whatsapp" href="#" target="_blank" rel="noopener">
+        <svg viewBox="0 0 24 24" fill="currentColor"><path d="M12.04 2c-5.46 0-9.9 4.44-9.9 9.9 0 1.75.46 3.45 1.32 4.95L2 22l5.25-1.38a9.9 9.9 0 0 0 4.79 1.22h.004c5.46 0 9.9-4.44 9.9-9.9s-4.44-9.94-9.93-9.94zm0 18.1a8.2 8.2 0 0 1-4.19-1.15l-.3-.18-3.12.82.83-3.04-.2-.31a8.2 8.2 0 0 1-1.26-4.37c0-4.54 3.7-8.24 8.25-8.24 4.54 0 8.24 3.7 8.24 8.24 0 4.55-3.7 8.23-8.25 8.23zm4.52-6.17c-.25-.12-1.47-.72-1.7-.81-.23-.08-.4-.12-.56.13-.17.25-.65.81-.8.97-.14.17-.3.19-.55.06-.25-.12-1.05-.39-2-1.23-.74-.66-1.24-1.48-1.39-1.73-.14-.25-.02-.38.11-.51.11-.11.25-.29.37-.43.12-.14.16-.25.25-.41.08-.17.04-.31-.02-.43-.06-.12-.56-1.35-.77-1.85-.2-.48-.4-.42-.56-.43h-.48c-.17 0-.43.06-.66.31-.23.25-.86.84-.86 2.05 0 1.2.88 2.37 1 2.53.12.17 1.74 2.65 4.21 3.72.59.25 1.05.4 1.41.52.59.19 1.13.16 1.56.1.48-.07 1.47-.6 1.67-1.18.21-.58.21-1.07.14-1.18-.06-.1-.23-.16-.48-.28z"/></svg>
+        Order on WhatsApp
+      </a>
+    </nav>
+  </div>
+</div>
+
+<main id="top">
+
+  <section class="hero wrap">
+    <div class="hero-rule"></div>
+    <img class="mark" src="assets/logo-hero.png" alt="Prabhvas Fashions monogram" />
+    <h1>Modest Wear, Made to Move</h1>
+    <p class="tagline">Signature pleated silhouettes and hand-picked ethnic wear, shipped across the UAE — same-day where it matters.</p>
+    <div class="hero-actions">
+      <a class="btn-whatsapp" id="hero-whatsapp" href="#" target="_blank" rel="noopener">
+        <svg viewBox="0 0 24 24" fill="currentColor"><path d="M12.04 2c-5.46 0-9.9 4.44-9.9 9.9 0 1.75.46 3.45 1.32 4.95L2 22l5.25-1.38a9.9 9.9 0 0 0 4.79 1.22h.004c5.46 0 9.9-4.44 9.9-9.9s-4.44-9.94-9.93-9.94zm0 18.1a8.2 8.2 0 0 1-4.19-1.15l-.3-.18-3.12.82.83-3.04-.2-.31a8.2 8.2 0 0 1-1.26-4.37c0-4.54 3.7-8.24 8.25-8.24 4.54 0 8.24 3.7 8.24 8.24 0 4.55-3.7 8.23-8.25 8.23zm4.52-6.17c-.25-.12-1.47-.72-1.7-.81-.23-.08-.4-.12-.56.13-.17.25-.65.81-.8.97-.14.17-.3.19-.55.06-.25-.12-1.05-.39-2-1.23-.74-.66-1.24-1.48-1.39-1.73-.14-.25-.02-.38.11-.51.11-.11.25-.29.37-.43.12-.14.16-.25.25-.41.08-.17.04-.31-.02-.43-.06-.12-.56-1.35-.77-1.85-.2-.48-.4-.42-.56-.43h-.48c-.17 0-.43.06-.66.31-.23.25-.86.84-.86 2.05 0 1.2.88 2.37 1 2.53.12.17 1.74 2.65 4.21 3.72.59.25 1.05.4 1.41.52.59.19 1.13.16 1.56.1.48-.07 1.47-.6 1.67-1.18.21-.58.21-1.07.14-1.18-.06-.1-.23-.16-.48-.28z"/></svg>
+        Message us on WhatsApp
+      </a>
+      <a class="btn-outline" href="#collection">Browse the Collection ↓</a>
+    </div>
+  </section>
+
+  <section class="value-strip">
+    <div class="wrap">
+      <div class="value-item"><span class="num">S–2XL</span><span class="label">Free size, stretch fit</span></div>
+      <div class="value-item"><span class="num">7</span><span class="label">Emirates delivered to</span></div>
+      <div class="value-item"><span class="num">1–2</span><span class="label">Day express delivery</span></div>
+      <div class="value-item"><span class="num">COD</span><span class="label">Cash on delivery available</span></div>
+    </div>
+  </section>
+
+  <section class="categories wrap" id="collection">
+    <div class="section-head">
+      <p class="eyebrow">The Collection</p>
+      <h2>Signature Pleated &amp; Modest Wear</h2>
+      <div class="cat-pills">
+        <span class="cat-pill active">Palazzos</span>
+        <span class="cat-pill soon">Kurtis &amp; Tops</span>
+        <span class="cat-pill soon">Lehengas</span>
+        <span class="cat-pill soon">Sarees</span>
+        <span class="cat-pill soon">Dupattas</span>
+        <span class="cat-pill soon">Jewelry &amp; Accessories</span>
+      </div>
+    </div>
+  </section>
+
+  <section class="products wrap">
+    <div class="grid">
+
+      <article class="card">
+        <div class="photo"><img src="assets/products/palazzo-black.png" alt="Pleated wide-leg palazzo, Midnight Black" loading="lazy" /></div>
+        <div class="info">
+          <h3 class="name">Pleated Wide-Leg Palazzo</h3>
+          <p class="meta">Midnight Black &middot; Free Size (S–2XL, stretch waist 26"–40")</p>
+          <div class="price-row">
+            <span class="price">AED 65<small>per piece</small></span>
+          </div>
+          <a class="btn-whatsapp js-order" data-product="Pleated Wide-Leg Palazzo — Midnight Black (AED 65)" href="#" target="_blank" rel="noopener">
+            <svg viewBox="0 0 24 24" fill="currentColor"><path d="M12.04 2c-5.46 0-9.9 4.44-9.9 9.9 0 1.75.46 3.45 1.32 4.95L2 22l5.25-1.38a9.9 9.9 0 0 0 4.79 1.22h.004c5.46 0 9.9-4.44 9.9-9.9s-4.44-9.94-9.93-9.94zm0 18.1a8.2 8.2 0 0 1-4.19-1.15l-.3-.18-3.12.82.83-3.04-.2-.31a8.2 8.2 0 0 1-1.26-4.37c0-4.54 3.7-8.24 8.25-8.24 4.54 0 8.24 3.7 8.24 8.24 0 4.55-3.7 8.23-8.25 8.23zm4.52-6.17c-.25-.12-1.47-.72-1.7-.81-.23-.08-.4-.12-.56.13-.17.25-.65.81-.8.97-.14.17-.3.19-.55.06-.25-.12-1.05-.39-2-1.23-.74-.66-1.24-1.48-1.39-1.73-.14-.25-.02-.38.11-.51.11-.11.25-.29.37-.43.12-.14.16-.25.25-.41.08-.17.04-.31-.02-.43-.06-.12-.56-1.35-.77-1.85-.2-.48-.4-.42-.56-.43h-.48c-.17 0-.43.06-.66.31-.23.25-.86.84-.86 2.05 0 1.2.88 2.37 1 2.53.12.17 1.74 2.65 4.21 3.72.59.25 1.05.4 1.41.52.59.19 1.13.16 1.56.1.48-.07 1.47-.6 1.67-1.18.21-.58.21-1.07.14-1.18-.06-.1-.23-.16-.48-.28z"/></svg>
+            Order on WhatsApp
+          </a>
+        </div>
+      </article>
+
+      <article class="card">
+        <div class="photo"><img src="assets/products/palazzo-ivory.png" alt="Pleated wide-leg palazzo, Pearl Ivory White" loading="lazy" /></div>
+        <div class="info">
+          <h3 class="name">Pleated Wide-Leg Palazzo</h3>
+          <p class="meta">Pearl Ivory White &middot; Free Size (S–2XL, stretch waist 26"–40")</p>
+          <div class="price-row">
+            <span class="price">AED 65<small>per piece</small></span>
+          </div>
+          <a class="btn-whatsapp js-order" data-product="Pleated Wide-Leg Palazzo — Pearl Ivory White (AED 65)" href="#" target="_blank" rel="noopener">
+            <svg viewBox="0 0 24 24" fill="currentColor"><path d="M12.04 2c-5.46 0-9.9 4.44-9.9 9.9 0 1.75.46 3.45 1.32 4.95L2 22l5.25-1.38a9.9 9.9 0 0 0 4.79 1.22h.004c5.46 0 9.9-4.44 9.9-9.9s-4.44-9.94-9.93-9.94zm0 18.1a8.2 8.2 0 0 1-4.19-1.15l-.3-.18-3.12.82.83-3.04-.2-.31a8.2 8.2 0 0 1-1.26-4.37c0-4.54 3.7-8.24 8.25-8.24 4.54 0 8.24 3.7 8.24 8.24 0 4.55-3.7 8.23-8.25 8.23zm4.52-6.17c-.25-.12-1.47-.72-1.7-.81-.23-.08-.4-.12-.56.13-.17.25-.65.81-.8.97-.14.17-.3.19-.55.06-.25-.12-1.05-.39-2-1.23-.74-.66-1.24-1.48-1.39-1.73-.14-.25-.02-.38.11-.51.11-.11.25-.29.37-.43.12-.14.16-.25.25-.41.08-.17.04-.31-.02-.43-.06-.12-.56-1.35-.77-1.85-.2-.48-.4-.42-.56-.43h-.48c-.17 0-.43.06-.66.31-.23.25-.86.84-.86 2.05 0 1.2.88 2.37 1 2.53.12.17 1.74 2.65 4.21 3.72.59.25 1.05.4 1.41.52.59.19 1.13.16 1.56.1.48-.07 1.47-.6 1.67-1.18.21-.58.21-1.07.14-1.18-.06-.1-.23-.16-.48-.28z"/></svg>
+            Order on WhatsApp
+          </a>
+        </div>
+      </article>
+
+    </div>
+
+    <p class="bundle-note">Buying in bulk? <strong>Duo Combo</strong> — both colours for AED 110 (save AED 20). <strong>Boutique Bundle</strong> — 24 assorted pieces at AED 35/piece. Message us on WhatsApp for wholesale (MOQ 12, AED 38/piece).</p>
+  </section>
+
+  <section class="info-band" id="shipping">
+    <div class="wrap">
+      <div class="col">
+        <p class="eyebrow">Delivery</p>
+        <h3>Across the UAE</h3>
+        <p>Same-day and next-day delivery across all 7 Emirates. Express delivery in 1–2 days for orders placed after cut-off.</p>
+      </div>
+      <div class="col">
+        <p class="eyebrow">Payment</p>
+        <h3>Pay Your Way</h3>
+        <p>Cash on delivery, card on delivery, Apple Pay, bank transfer, or split it with Tabby and Tamara.</p>
+      </div>
+      <div class="col">
+        <p class="eyebrow">Ordering</p>
+        <h3>Simple as a Message</h3>
+        <p>Tap "Order on WhatsApp" on any piece, confirm your size and address in chat, and we'll take it from there.</p>
+      </div>
+    </div>
+  </section>
+
+  <footer>
+    <div class="wrap">
+      <a class="brand-mark" href="#top">
+        <img src="assets/logo-header.png" alt="Prabhvas Fashions" />
+        <span>Prabhvas Fashions</span>
+      </a>
+      <div class="social">
+        <a id="footer-whatsapp" href="#" target="_blank" rel="noopener">WhatsApp</a>
+        <a href="#" target="_blank" rel="noopener">Instagram</a>
+      </div>
+      <p class="fine">&copy; <span id="year"></span> Prabhvas Fashions, Dubai, UAE. Modest wear &amp; ethnic fashion.</p>
+    </div>
+  </footer>
+
+</main>
+
+<script>
+  // ---- Single place to configure ordering links ----
+  const WHATSAPP_NUMBER = "9715XXXXXXXX"; // TODO: replace with the real WhatsApp Business number, digits only, UAE country code first
+  const DEFAULT_MESSAGE = "Hi Prabhvas Fashions! I'd like to know more about your collection.";
+
+  function waLink(message) {
+    return "https://wa.me/" + WHATSAPP_NUMBER + "?text=" + encodeURIComponent(message);
+  }
+
+  document.getElementById("nav-whatsapp").href = waLink(DEFAULT_MESSAGE);
+  document.getElementById("hero-whatsapp").href = waLink(DEFAULT_MESSAGE);
+  document.getElementById("footer-whatsapp").href = waLink(DEFAULT_MESSAGE);
+
+  document.querySelectorAll(".js-order").forEach(function (btn) {
+    const product = btn.getAttribute("data-product");
+    btn.href = waLink("Hi Prabhvas Fashions! I'd like to order: " + product);
+  });
+
+  document.getElementById("year").textContent = new Date().getFullYear();
+</script>
+
+</body>
+</html>
