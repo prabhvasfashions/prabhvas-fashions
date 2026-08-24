@@ -1,0 +1,26 @@
+[
+  {
+    "id": "palazzo-black",
+    "category": "Palazzos",
+    "name": "Pleated Wide-Leg Palazzo",
+    "variant": "Midnight Black",
+    "sizes": "Free Size (S–2XL, stretch waist 26\"–40\")",
+    "price": 65,
+    "stock": 24,
+    "photo": "assets/products/palazzo-black.png",
+    "description": "Micro-pleated wide-leg palazzo, modest-chic everyday wear.",
+    "ready": true
+  },
+  {
+    "id": "palazzo-ivory",
+    "category": "Palazzos",
+    "name": "Pleated Wide-Leg Palazzo",
+    "variant": "Pearl Ivory White",
+    "sizes": "Free Size (S–2XL, stretch waist 26\"–40\")",
+    "price": 65,
+    "stock": 24,
+    "photo": "assets/products/palazzo-ivory.png",
+    "description": "Micro-pleated wide-leg palazzo, modest-chic everyday wear.",
+    "ready": true
+  }
+]

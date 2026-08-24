@@ -23,7 +23,6 @@
     --purple: #6b3fa0;
     --gold: #c79a2e;
     --whatsapp: #25d366;
-    --whatsapp-ink: #0b3d20;
     --shadow: rgba(27, 22, 16, 0.10);
   }
 
@@ -130,11 +129,14 @@
     text-decoration: none;
     box-shadow: 0 2px 8px rgba(37, 211, 102, 0.35);
     white-space: nowrap;
+    border: none;
+    cursor: pointer;
     transition: transform 0.15s ease, box-shadow 0.15s ease;
   }
 
   .btn-whatsapp:hover { transform: translateY(-1px); box-shadow: 0 4px 14px rgba(37, 211, 102, 0.45); }
   .btn-whatsapp svg { width: 16px; height: 16px; flex: none; }
+  .btn-whatsapp.muted { background: var(--ink-soft); box-shadow: none; }
 
   /* ---------- hero ---------- */
   .hero {
@@ -238,6 +240,8 @@
     font-size: 0.82rem;
     font-weight: 600;
     border: 1px solid var(--line);
+    text-decoration: none;
+    color: var(--ink);
   }
 
   .cat-pill.active {
@@ -250,6 +254,7 @@
     color: var(--ink-soft);
     background: transparent;
     position: relative;
+    pointer-events: none;
   }
 
   .cat-pill.soon::after {
@@ -262,8 +267,12 @@
   }
 
   /* ---------- product grid ---------- */
-  .products {
-    padding: 20px 0 clamp(56px, 8vw, 88px);
+  .products { padding: 20px 0 clamp(24px, 4vw, 40px); }
+
+  .category-block { padding: clamp(28px, 4vw, 44px) 0; }
+  .category-block h3 {
+    font-size: clamp(1.5rem, 2.6vw, 1.9rem);
+    margin-bottom: 20px;
   }
 
   .grid {
@@ -289,9 +298,24 @@
     align-items: center;
     justify-content: center;
     overflow: hidden;
+    position: relative;
   }
 
   .card .photo img { width: 100%; height: 100%; object-fit: contain; }
+
+  .card .sold-out-badge {
+    position: absolute;
+    top: 12px;
+    left: 12px;
+    background: var(--rani);
+    color: #fff;
+    font-size: 0.68rem;
+    font-weight: 700;
+    letter-spacing: 0.06em;
+    text-transform: uppercase;
+    padding: 5px 10px;
+    border-radius: 3px;
+  }
 
   .card .info { padding: 20px 20px 22px; display: flex; flex-direction: column; gap: 10px; flex: 1; }
 
@@ -312,8 +336,15 @@
 
   .card .btn-whatsapp { margin-top: 12px; justify-content: center; width: 100%; }
 
+  .empty-note {
+    text-align: center;
+    color: var(--ink-soft);
+    font-size: 0.9rem;
+    padding: 30px 0;
+  }
+
   .bundle-note {
-    margin-top: 28px;
+    margin-top: 8px;
     padding: 16px 20px;
     border: 1px dashed var(--line);
     border-radius: 4px;
@@ -352,6 +383,8 @@
   footer .social a { font-size: 0.85rem; font-weight: 600; text-decoration: none; color: var(--ink-soft); }
   footer .social a:hover { color: var(--rani); }
   footer .fine { font-size: 0.76rem; color: var(--ink-soft); margin-top: 10px; }
+  footer .admin-link { font-size: 0.72rem; color: var(--line); text-decoration: none; }
+  footer .admin-link:hover { color: var(--ink-soft); }
 
   /* ---------- responsive ---------- */
   @media (max-width: 760px) {
@@ -371,10 +404,10 @@
 <body>
 
 <!--
-  SETUP NOTE FOR PRABHVAS FASHIONS — read before publishing:
-  1. Replace WHATSAPP_NUMBER below with the real WhatsApp Business number (UAE format, digits only, country code first, e.g. 9715XXXXXXXX).
-  2. Replace the Instagram href placeholder ("#") in the footer with the real Instagram profile URL, once available.
-  3. As more categories are ready (Kurtis & Tops, Lehengas, Sarees, Dupattas, Jewelry), duplicate the <section class="products"> block and its cat-pill entry.
+  SETUP NOTE FOR PRABHVAS FASHIONS:
+  - Products are no longer hardcoded here — they're loaded from products.json.
+  - Use admin.html (linked quietly in the footer) to add, edit, delete products and change prices without touching this file.
+  - Instagram href placeholder ("#") in the footer still needs the real Instagram profile URL, once available.
 -->
 
 <div class="topbar">
@@ -423,53 +456,14 @@
     <div class="section-head">
       <p class="eyebrow">The Collection</p>
       <h2>Signature Pleated &amp; Modest Wear</h2>
-      <div class="cat-pills">
-        <span class="cat-pill active">Palazzos</span>
-        <span class="cat-pill soon">Kurtis &amp; Tops</span>
-        <span class="cat-pill soon">Lehengas</span>
-        <span class="cat-pill soon">Sarees</span>
-        <span class="cat-pill soon">Dupattas</span>
-        <span class="cat-pill soon">Jewelry &amp; Accessories</span>
+      <div class="cat-pills" id="cat-pills">
+        <!-- filled by script -->
       </div>
     </div>
   </section>
 
-  <section class="products wrap">
-    <div class="grid">
-
-      <article class="card">
-        <div class="photo"><img src="assets/products/palazzo-black.png" alt="Pleated wide-leg palazzo, Midnight Black" loading="lazy" /></div>
-        <div class="info">
-          <h3 class="name">Pleated Wide-Leg Palazzo</h3>
-          <p class="meta">Midnight Black &middot; Free Size (S–2XL, stretch waist 26"–40")</p>
-          <div class="price-row">
-            <span class="price">AED 65<small>per piece</small></span>
-          </div>
-          <a class="btn-whatsapp js-order" data-product="Pleated Wide-Leg Palazzo — Midnight Black (AED 65)" href="#" target="_blank" rel="noopener">
-            <svg viewBox="0 0 24 24" fill="currentColor"><path d="M12.04 2c-5.46 0-9.9 4.44-9.9 9.9 0 1.75.46 3.45 1.32 4.95L2 22l5.25-1.38a9.9 9.9 0 0 0 4.79 1.22h.004c5.46 0 9.9-4.44 9.9-9.9s-4.44-9.94-9.93-9.94zm0 18.1a8.2 8.2 0 0 1-4.19-1.15l-.3-.18-3.12.82.83-3.04-.2-.31a8.2 8.2 0 0 1-1.26-4.37c0-4.54 3.7-8.24 8.25-8.24 4.54 0 8.24 3.7 8.24 8.24 0 4.55-3.7 8.23-8.25 8.23zm4.52-6.17c-.25-.12-1.47-.72-1.7-.81-.23-.08-.4-.12-.56.13-.17.25-.65.81-.8.97-.14.17-.3.19-.55.06-.25-.12-1.05-.39-2-1.23-.74-.66-1.24-1.48-1.39-1.73-.14-.25-.02-.38.11-.51.11-.11.25-.29.37-.43.12-.14.16-.25.25-.41.08-.17.04-.31-.02-.43-.06-.12-.56-1.35-.77-1.85-.2-.48-.4-.42-.56-.43h-.48c-.17 0-.43.06-.66.31-.23.25-.86.84-.86 2.05 0 1.2.88 2.37 1 2.53.12.17 1.74 2.65 4.21 3.72.59.25 1.05.4 1.41.52.59.19 1.13.16 1.56.1.48-.07 1.47-.6 1.67-1.18.21-.58.21-1.07.14-1.18-.06-.1-.23-.16-.48-.28z"/></svg>
-            Order on WhatsApp
-          </a>
-        </div>
-      </article>
-
-      <article class="card">
-        <div class="photo"><img src="assets/products/palazzo-ivory.png" alt="Pleated wide-leg palazzo, Pearl Ivory White" loading="lazy" /></div>
-        <div class="info">
-          <h3 class="name">Pleated Wide-Leg Palazzo</h3>
-          <p class="meta">Pearl Ivory White &middot; Free Size (S–2XL, stretch waist 26"–40")</p>
-          <div class="price-row">
-            <span class="price">AED 65<small>per piece</small></span>
-          </div>
-          <a class="btn-whatsapp js-order" data-product="Pleated Wide-Leg Palazzo — Pearl Ivory White (AED 65)" href="#" target="_blank" rel="noopener">
-            <svg viewBox="0 0 24 24" fill="currentColor"><path d="M12.04 2c-5.46 0-9.9 4.44-9.9 9.9 0 1.75.46 3.45 1.32 4.95L2 22l5.25-1.38a9.9 9.9 0 0 0 4.79 1.22h.004c5.46 0 9.9-4.44 9.9-9.9s-4.44-9.94-9.93-9.94zm0 18.1a8.2 8.2 0 0 1-4.19-1.15l-.3-.18-3.12.82.83-3.04-.2-.31a8.2 8.2 0 0 1-1.26-4.37c0-4.54 3.7-8.24 8.25-8.24 4.54 0 8.24 3.7 8.24 8.24 0 4.55-3.7 8.23-8.25 8.23zm4.52-6.17c-.25-.12-1.47-.72-1.7-.81-.23-.08-.4-.12-.56.13-.17.25-.65.81-.8.97-.14.17-.3.19-.55.06-.25-.12-1.05-.39-2-1.23-.74-.66-1.24-1.48-1.39-1.73-.14-.25-.02-.38.11-.51.11-.11.25-.29.37-.43.12-.14.16-.25.25-.41.08-.17.04-.31-.02-.43-.06-.12-.56-1.35-.77-1.85-.2-.48-.4-.42-.56-.43h-.48c-.17 0-.43.06-.66.31-.23.25-.86.84-.86 2.05 0 1.2.88 2.37 1 2.53.12.17 1.74 2.65 4.21 3.72.59.25 1.05.4 1.41.52.59.19 1.13.16 1.56.1.48-.07 1.47-.6 1.67-1.18.21-.58.21-1.07.14-1.18-.06-.1-.23-.16-.48-.28z"/></svg>
-            Order on WhatsApp
-          </a>
-        </div>
-      </article>
-
-    </div>
-
-    <p class="bundle-note">Buying in bulk? <strong>Duo Combo</strong> — both colours for AED 110 (save AED 20). <strong>Boutique Bundle</strong> — 24 assorted pieces at AED 35/piece. Message us on WhatsApp for wholesale (MOQ 12, AED 38/piece).</p>
+  <section class="products wrap" id="product-sections">
+    <p class="empty-note" id="loading-note">Loading the collection…</p>
   </section>
 
   <section class="info-band" id="shipping">
@@ -503,6 +497,7 @@
         <a href="#" target="_blank" rel="noopener">Instagram</a>
       </div>
       <p class="fine">&copy; <span id="year"></span> Prabhvas Fashions, Dubai, UAE. Modest wear &amp; ethnic fashion.</p>
+      <p class="fine"><a class="admin-link" href="admin.html">admin</a></p>
     </div>
   </footer>
 
@@ -510,23 +505,108 @@
 
 <script>
   // ---- Single place to configure ordering links ----
-  const WHATSAPP_NUMBER = "9715XXXXXXXX"; // TODO: replace with the real WhatsApp Business number, digits only, UAE country code first
+  const WHATSAPP_NUMBER = "971586711803";
   const DEFAULT_MESSAGE = "Hi Prabhvas Fashions! I'd like to know more about your collection.";
+
+  // Full category list and display order — keep in sync with admin.html
+  const CATEGORIES = [
+    "Palazzos", "Kurtis / Tops", "Nighties", "Lehengas",
+    "Sarees", "Dupattas", "Jewelry", "Footwear", "Bags", "Other",
+  ];
 
   function waLink(message) {
     return "https://wa.me/" + WHATSAPP_NUMBER + "?text=" + encodeURIComponent(message);
   }
 
-  document.getElementById("nav-whatsapp").href = waLink(DEFAULT_MESSAGE);
-  document.getElementById("hero-whatsapp").href = waLink(DEFAULT_MESSAGE);
-  document.getElementById("footer-whatsapp").href = waLink(DEFAULT_MESSAGE);
+  function whatsappIconSvg() {
+    return '<svg viewBox="0 0 24 24" fill="currentColor"><path d="M12.04 2c-5.46 0-9.9 4.44-9.9 9.9 0 1.75.46 3.45 1.32 4.95L2 22l5.25-1.38a9.9 9.9 0 0 0 4.79 1.22h.004c5.46 0 9.9-4.44 9.9-9.9s-4.44-9.94-9.93-9.94zm0 18.1a8.2 8.2 0 0 1-4.19-1.15l-.3-.18-3.12.82.83-3.04-.2-.31a8.2 8.2 0 0 1-1.26-4.37c0-4.54 3.7-8.24 8.25-8.24 4.54 0 8.24 3.7 8.24 8.24 0 4.55-3.7 8.23-8.25 8.23zm4.52-6.17c-.25-.12-1.47-.72-1.7-.81-.23-.08-.4-.12-.56.13-.17.25-.65.81-.8.97-.14.17-.3.19-.55.06-.25-.12-1.05-.39-2-1.23-.74-.66-1.24-1.48-1.39-1.73-.14-.25-.02-.38.11-.51.11-.11.25-.29.37-.43.12-.14.16-.25.25-.41.08-.17.04-.31-.02-.43-.06-.12-.56-1.35-.77-1.85-.2-.48-.4-.42-.56-.43h-.48c-.17 0-.43.06-.66.31-.23.25-.86.84-.86 2.05 0 1.2.88 2.37 1 2.53.12.17 1.74 2.65 4.21 3.72.59.25 1.05.4 1.41.52.59.19 1.13.16 1.56.1.48-.07 1.47-.6 1.67-1.18.21-.58.21-1.07.14-1.18-.06-.1-.23-.16-.48-.28z"/></svg>';
+  }
 
-  document.querySelectorAll(".js-order").forEach(function (btn) {
-    const product = btn.getAttribute("data-product");
-    btn.href = waLink("Hi Prabhvas Fashions! I'd like to order: " + product);
-  });
+  function escapeHtml(s) {
+    return String(s).replace(/[&<>"']/g, (c) => ({ "&": "&amp;", "<": "&lt;", ">": "&gt;", '"': "&quot;", "'": "&#39;" }[c]));
+  }
 
-  document.getElementById("year").textContent = new Date().getFullYear();
+  function slugToLabel(cat) {
+    return cat === "Kurtis / Tops" ? "Kurtis &amp; Tops" : escapeHtml(cat);
+  }
+
+  async function init() {
+    document.getElementById("nav-whatsapp").href = waLink(DEFAULT_MESSAGE);
+    document.getElementById("hero-whatsapp").href = waLink(DEFAULT_MESSAGE);
+    document.getElementById("footer-whatsapp").href = waLink(DEFAULT_MESSAGE);
+    document.getElementById("year").textContent = new Date().getFullYear();
+
+    let products = [];
+    try {
+      const res = await fetch("products.json", { cache: "no-store" });
+      products = await res.json();
+    } catch (e) {
+      document.getElementById("loading-note").textContent = "Couldn't load the collection right now — please refresh, or message us on WhatsApp directly.";
+      return;
+    }
+
+    const ready = products.filter((p) => p.ready);
+    const activeCats = new Set(ready.map((p) => p.category));
+
+    // ---- category pills ----
+    const pillsHtml = CATEGORIES.map((cat) => {
+      if (activeCats.has(cat)) {
+        const anchor = "cat-" + cat.replace(/[^a-z0-9]+/gi, "-").toLowerCase();
+        return `<a class="cat-pill active" href="#${anchor}">${slugToLabel(cat)}</a>`;
+      }
+      return `<span class="cat-pill soon">${slugToLabel(cat)}</span>`;
+    }).join("");
+    document.getElementById("cat-pills").innerHTML = pillsHtml || '<span class="cat-pill soon">Collection coming soon</span>';
+
+    // ---- product sections ----
+    const container = document.getElementById("product-sections");
+    if (!ready.length) {
+      container.innerHTML = '<p class="empty-note">New pieces are being added — message us on WhatsApp to see what\'s available right now.</p>';
+      return;
+    }
+
+    let html = "";
+    CATEGORIES.forEach((cat) => {
+      const items = ready.filter((p) => p.category === cat);
+      if (!items.length) return;
+      const anchor = "cat-" + cat.replace(/[^a-z0-9]+/gi, "-").toLowerCase();
+      html += `<div class="category-block" id="${anchor}"><h3>${slugToLabel(cat)}</h3><div class="grid">`;
+      items.forEach((p) => {
+        const soldOut = Number(p.stock) <= 0;
+        const orderMsg = soldOut
+          ? `Hi Prabhvas Fashions! Is ${p.name} — ${p.variant} back in stock?`
+          : `Hi Prabhvas Fashions! I'd like to order: ${p.name} — ${p.variant} (AED ${p.price})`;
+        html += `
+          <article class="card">
+            <div class="photo">
+              ${soldOut ? '<span class="sold-out-badge">Sold Out</span>' : ""}
+              <img src="${escapeHtml(p.photo)}" alt="${escapeHtml(p.name)}, ${escapeHtml(p.variant || "")}" loading="lazy" />
+            </div>
+            <div class="info">
+              <h3 class="name">${escapeHtml(p.name)}</h3>
+              <p class="meta">${escapeHtml(p.variant || "")}${p.variant && p.sizes ? " &middot; " : ""}${escapeHtml(p.sizes || "")}</p>
+              ${p.description ? `<p class="meta">${escapeHtml(p.description)}</p>` : ""}
+              <div class="price-row"><span class="price">AED ${escapeHtml(p.price)}<small>per piece</small></span></div>
+              <a class="btn-whatsapp ${soldOut ? "muted" : ""}" href="${waLink(orderMsg)}" target="_blank" rel="noopener">
+                ${whatsappIconSvg()}
+                ${soldOut ? "Ask About Restock" : "Order on WhatsApp"}
+              </a>
+            </div>
+          </article>`;
+      });
+      html += `</div></div>`;
+    });
+    container.innerHTML = html;
+
+    if (activeCats.has("Palazzos")) {
+      const note = document.createElement("p");
+      note.className = "bundle-note";
+      note.innerHTML = 'Buying in bulk? <strong>Duo Combo</strong> — both colours for AED 110 (save AED 20). <strong>Boutique Bundle</strong> — 24 assorted pieces at AED 35/piece. Message us on WhatsApp for wholesale (MOQ 12, AED 38/piece).';
+      container.appendChild(note);
+    }
+  }
+
+  init();
 </script>
 
 </body>
