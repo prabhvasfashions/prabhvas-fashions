@@ -190,42 +190,33 @@
 
 <div class="wrap">
 
-  <!-- ===================== LOGIN ===================== -->
+  <!-- ===================== LOGIN — STEP 1: PASSWORD ===================== -->
   <div id="login-card" class="login-card">
-    <h2>Connect to your website</h2>
-    <p class="lead">This edits your live catalog directly through GitHub — there's no separate admin password. A GitHub access token, scoped to just this one repository, is what proves it's really you.</p>
+    <h2>Admin sign in</h2>
+    <p class="lead">Enter your admin password to continue. You'll then be asked for a 6-digit verification code.</p>
 
     <div class="field">
-      <label for="f-token">GitHub access token</label>
-      <input type="password" id="f-token" placeholder="github_pat_..." autocomplete="off" />
-      <p class="hint">Never shared with anyone but GitHub — it's kept only in this browser tab and is gone when you close it.</p>
+      <label for="f-password">Password</label>
+      <input type="password" id="f-password" placeholder="Your admin password" autocomplete="current-password" />
     </div>
 
-    <div class="field-row">
-      <div class="field">
-        <label for="f-owner">Repository owner</label>
-        <input type="text" id="f-owner" value="prabhvasfashions" />
-      </div>
-      <div class="field">
-        <label for="f-repo">Repository name</label>
-        <input type="text" id="f-repo" value="prabhvas-fashions" />
-      </div>
-    </div>
-
-    <button class="btn btn-primary btn-block" id="btn-connect">Connect</button>
+    <button class="btn btn-primary btn-block" id="btn-login">Continue</button>
     <div id="login-msg"></div>
+  </div>
 
-    <details class="howto">
-      <summary>How do I get an access token?</summary>
-      <ol>
-        <li>Go to <a href="https://github.com/settings/personal-access-tokens/new" target="_blank" rel="noopener">github.com/settings/personal-access-tokens/new</a> (sign in first if asked).</li>
-        <li>Give it a name like <code>Prabhvas admin</code>.</li>
-        <li>Under "Repository access," choose <strong>Only select repositories</strong> and pick <code>prabhvas-fashions</code>.</li>
-        <li>Under "Permissions &rarr; Repository permissions," set <strong>Contents</strong> to <strong>Read and write</strong>. Leave everything else as-is.</li>
-        <li>Click <strong>Generate token</strong>, then copy it — GitHub only shows it once — and paste it above.</li>
-        <li>Keep it somewhere safe (a password manager). If it's ever exposed, delete it from that same GitHub settings page and generate a new one.</li>
-      </ol>
-    </details>
+  <!-- ===================== LOGIN — STEP 2: 2FA CODE ===================== -->
+  <div id="twofa-card" class="login-card" style="display:none;">
+    <h2>Verification code</h2>
+    <p class="lead" id="twofa-lead">Enter the 6-digit code from your authenticator app, or the one just emailed to you.</p>
+
+    <div class="field">
+      <label for="f-code">6-digit code</label>
+      <input type="text" id="f-code" inputmode="numeric" pattern="[0-9]*" maxlength="6" placeholder="123456" autocomplete="one-time-code" />
+    </div>
+
+    <button class="btn btn-primary btn-block" id="btn-verify">Verify &amp; Sign In</button>
+    <button class="btn btn-ghost btn-block" id="btn-back-to-password" style="margin-top:10px;">&larr; Back</button>
+    <div id="twofa-msg"></div>
   </div>
 
   <!-- ===================== DASHBOARD ===================== -->
@@ -310,45 +301,40 @@
 <footer class="page-foot">Prabhvas Fashions admin &middot; changes publish straight to your live site via GitHub.</footer>
 
 <script>
+  // Fill this in once, right after you deploy the Cloudflare Worker — see
+  // the setup guide. It looks like "https://prabhvas-admin.<your-subdomain>.workers.dev".
+  const WORKER_URL = "https://REPLACE-ME.workers.dev";
+
   const CATEGORIES = [
     "Palazzos", "Kurtis / Tops", "Nighties", "Lehengas",
     "Sarees", "Dupattas", "Jewelry", "Footwear", "Bags", "Other",
   ];
-  const PRODUCTS_PATH = "products.json";
   const PHOTO_DIR = "assets/products";
+  const SESSION_KEY = "prabhvas_admin_session";
 
   let state = {
-    token: null,
-    owner: null,
-    repo: null,
-    branch: "main",
-    products: [],       // working copy
-    productsSha: null,  // sha of products.json as last fetched
+    token: null,        // session token issued after password + 2FA
+    challenge: null,    // short-lived token from /api/login, used to complete /api/verify-2fa
+    products: [],        // working copy
+    productsSha: null,   // sha of products.json as last fetched, for optimistic-concurrency publishing
     dirty: false,
-    editingIndex: null, // index into state.products while editor is open, or null for "new"
-    pendingPhotoFile: null,
+    editingIndex: null,  // index into state.products while editor is open, or null for "new"
   };
 
   const $ = (id) => document.getElementById(id);
 
-  function ghHeaders() {
-    return {
-      "Authorization": "Bearer " + state.token,
-      "Accept": "application/vnd.github+json",
-      "X-GitHub-Api-Version": "2022-11-28",
-    };
-  }
-
-  function apiBase() {
-    return `https://api.github.com/repos/${state.owner}/${state.repo}`;
-  }
-
-  // UTF-8 safe base64 encode for text content
-  function b64EncodeText(str) {
-    const bytes = new TextEncoder().encode(str);
-    let binary = "";
-    bytes.forEach((b) => (binary += String.fromCharCode(b)));
-    return btoa(binary);
+  async function api(path, opts = {}) {
+    const headers = { "Content-Type": "application/json", ...(opts.headers || {}) };
+    if (state.token) headers.Authorization = "Bearer " + state.token;
+    const res = await fetch(WORKER_URL + path, { ...opts, headers });
+    let data = null;
+    try { data = await res.json(); } catch { /* no body */ }
+    if (!res.ok) {
+      const err = new Error((data && data.error) || `Request failed (${res.status})`);
+      err.status = res.status;
+      throw err;
+    }
+    return data;
   }
 
   function fileToBase64(file) {
@@ -358,35 +344,6 @@
       reader.onerror = reject;
       reader.readAsDataURL(file);
     });
-  }
-
-  // GitHub's Contents API takes a real multi-segment path — encode each
-  // segment individually so the "/" separators survive (encodeURIComponent
-  // alone would turn them into "%2F" and silently break every path lookup).
-  function encodePath(path) {
-    return path.split("/").map(encodeURIComponent).join("/");
-  }
-
-  async function ghGetFile(path) {
-    const res = await fetch(`${apiBase()}/contents/${encodePath(path)}?ref=${state.branch}`, { headers: ghHeaders() });
-    if (res.status === 404) return null;
-    if (!res.ok) throw new Error(`GitHub read failed for ${path}: ${res.status}`);
-    return res.json(); // { sha, content (base64, may have newlines), ... }
-  }
-
-  async function ghPutFile(path, base64Content, message, sha) {
-    const body = { message, content: base64Content, branch: state.branch };
-    if (sha) body.sha = sha;
-    const res = await fetch(`${apiBase()}/contents/${encodePath(path)}`, {
-      method: "PUT",
-      headers: { ...ghHeaders(), "Content-Type": "application/json" },
-      body: JSON.stringify(body),
-    });
-    if (!res.ok) {
-      const errBody = await res.json().catch(() => ({}));
-      throw new Error(errBody.message || `GitHub write failed for ${path}: ${res.status}`);
-    }
-    return res.json();
   }
 
   function slugify(s) {
@@ -415,69 +372,132 @@
 
   function markDirty() { state.dirty = true; setStatus(); }
 
-  // ---------- LOGIN ----------
-  $("btn-connect").addEventListener("click", async () => {
-    const token = $("f-token").value.trim();
-    const owner = $("f-owner").value.trim();
-    const repo = $("f-repo").value.trim();
+  // ---------- LOGIN: STEP 1 — PASSWORD ----------
+  $("btn-login").addEventListener("click", submitPassword);
+  $("f-password").addEventListener("keydown", (e) => { if (e.key === "Enter") submitPassword(); });
+
+  async function submitPassword() {
+    const password = $("f-password").value;
     const msgEl = $("login-msg");
     msgEl.innerHTML = "";
-    if (!token || !owner || !repo) {
-      msgEl.innerHTML = '<div class="msg error">Fill in the token, owner, and repository name.</div>';
+    if (!password) {
+      msgEl.innerHTML = '<div class="msg error">Enter your password.</div>';
       return;
     }
-    $("btn-connect").disabled = true;
-    $("btn-connect").textContent = "Connecting…";
+    if (WORKER_URL.includes("REPLACE-ME")) {
+      msgEl.innerHTML = '<div class="msg error">The admin panel isn\'t connected to its Worker yet — see the setup guide.</div>';
+      return;
+    }
+    $("btn-login").disabled = true;
+    $("btn-login").textContent = "Checking…";
     try {
-      const res = await fetch(`https://api.github.com/repos/${owner}/${repo}`, {
-        headers: { Authorization: "Bearer " + token, Accept: "application/vnd.github+json" },
-      });
-      if (res.status === 401) throw new Error("That token was rejected — check it was copied in full.");
-      if (res.status === 404) throw new Error("Repository not found, or this token doesn't have access to it.");
-      if (!res.ok) throw new Error(`GitHub returned an error (${res.status}).`);
-      const repoInfo = await res.json();
-      state.token = token;
-      state.owner = owner;
-      state.repo = repo;
-      state.branch = repoInfo.default_branch || "main";
-
-      await loadProducts();
-
+      const data = await api("/api/login", { method: "POST", body: JSON.stringify({ password }) });
+      state.challenge = data.challenge;
+      $("f-password").value = "";
+      const parts = [];
+      if (data.totpEnabled) parts.push("the code from your authenticator app");
+      if (data.emailSent) parts.push("the code just emailed to you");
+      $("twofa-lead").textContent = parts.length
+        ? `Enter ${parts.join(" or ")}.`
+        : "Enter your 6-digit verification code.";
       $("login-card").style.display = "none";
-      $("dashboard").style.display = "block";
-      $("conn-pill").style.display = "inline-flex";
-      $("conn-text").textContent = `${owner}/${repo}`;
+      $("twofa-card").style.display = "block";
+      $("f-code").value = "";
+      $("f-code").focus();
     } catch (err) {
       msgEl.innerHTML = `<div class="msg error">${err.message}</div>`;
     } finally {
-      $("btn-connect").disabled = false;
-      $("btn-connect").textContent = "Connect";
+      $("btn-login").disabled = false;
+      $("btn-login").textContent = "Continue";
     }
+  }
+
+  // ---------- LOGIN: STEP 2 — 2FA CODE ----------
+  $("btn-verify").addEventListener("click", submitCode);
+  $("f-code").addEventListener("keydown", (e) => { if (e.key === "Enter") submitCode(); });
+  $("btn-back-to-password").addEventListener("click", () => {
+    $("twofa-card").style.display = "none";
+    $("login-card").style.display = "block";
+    $("twofa-msg").innerHTML = "";
   });
+
+  async function submitCode() {
+    const code = $("f-code").value.trim();
+    const msgEl = $("twofa-msg");
+    msgEl.innerHTML = "";
+    if (!/^\d{6}$/.test(code)) {
+      msgEl.innerHTML = '<div class="msg error">Enter the 6-digit code.</div>';
+      return;
+    }
+    $("btn-verify").disabled = true;
+    $("btn-verify").textContent = "Verifying…";
+    try {
+      const data = await api("/api/verify-2fa", { method: "POST", body: JSON.stringify({ challenge: state.challenge, code }) });
+      state.token = data.token;
+      sessionStorage.setItem(SESSION_KEY, data.token);
+      await enterDashboard();
+    } catch (err) {
+      msgEl.innerHTML = `<div class="msg error">${err.message}</div>`;
+    } finally {
+      $("btn-verify").disabled = false;
+      $("btn-verify").textContent = "Verify & Sign In";
+    }
+  }
+
+  async function enterDashboard() {
+    await loadProducts();
+    $("login-card").style.display = "none";
+    $("twofa-card").style.display = "none";
+    $("dashboard").style.display = "block";
+    $("conn-pill").style.display = "inline-flex";
+    $("conn-text").textContent = "Signed in";
+  }
 
   $("btn-disconnect").addEventListener("click", () => {
-    if (state.dirty && !confirm("You have unpublished changes that will be lost. Disconnect anyway?")) return;
-    state = { token: null, owner: null, repo: null, branch: "main", products: [], productsSha: null, dirty: false, editingIndex: null, pendingPhotoFile: null };
-    $("dashboard").style.display = "none";
-    $("login-card").style.display = "block";
-    $("conn-pill").style.display = "none";
-    $("f-token").value = "";
+    if (state.dirty && !confirm("You have unpublished changes that will be lost. Sign out anyway?")) return;
+    signOut();
   });
 
+  function signOut() {
+    sessionStorage.removeItem(SESSION_KEY);
+    state = { token: null, challenge: null, products: [], productsSha: null, dirty: false, editingIndex: null };
+    $("dashboard").style.display = "none";
+    $("twofa-card").style.display = "none";
+    $("login-card").style.display = "block";
+    $("conn-pill").style.display = "none";
+    $("f-password").value = "";
+  }
+
   async function loadProducts() {
-    const file = await ghGetFile(PRODUCTS_PATH);
-    if (!file) {
-      state.products = [];
-      state.productsSha = null;
-    } else {
-      const jsonText = decodeURIComponent(escape(atob(file.content.replace(/\n/g, ""))));
-      state.products = JSON.parse(jsonText);
-      state.productsSha = file.sha;
+    try {
+      const data = await api("/api/products");
+      state.products = data.products || [];
+      state.productsSha = data.sha || null;
+    } catch (err) {
+      if (err.status === 401) {
+        signOut();
+        $("login-msg").innerHTML = '<div class="msg error">Your session expired — please sign in again.</div>';
+        throw err;
+      }
+      throw err;
     }
     state.dirty = false;
     setStatus();
     renderList();
   }
+
+  // Resume an existing session (survives a page refresh within the same
+  // browser tab; cleared automatically when the tab is closed).
+  (async function tryResumeSession() {
+    const existing = sessionStorage.getItem(SESSION_KEY);
+    if (!existing || WORKER_URL.includes("REPLACE-ME")) return;
+    state.token = existing;
+    try {
+      await enterDashboard();
+    } catch {
+      // loadProducts() already handled sign-out messaging on 401
+    }
+  })();
 
   // ---------- LIST ----------
   function renderList() {
@@ -548,7 +568,6 @@
 
   function openEditor(index) {
     state.editingIndex = index;
-    state.pendingPhotoFile = null;
     $("e-photo").value = "";
     const p = index === null ? null : state.products[index];
 
@@ -631,14 +650,11 @@
     $("btn-publish").disabled = true;
     $("btn-publish").textContent = "Publishing…";
     try {
-      // 1. Upload any new photos first
+      // 1. Collect any new photos as base64, keyed by their destination path.
+      const photos = {};
       for (const p of state.products) {
         if (p._photoFile) {
-          const base64 = await fileToBase64(p._photoFile);
-          const existing = await ghGetFile(p.photo).catch(() => null);
-          await ghPutFile(p.photo, base64, `Update photo for ${p.name}`, existing ? existing.sha : undefined);
-          delete p._photoFile;
-          delete p._photoPreview;
+          photos[p.photo] = await fileToBase64(p._photoFile);
         }
       }
 
@@ -647,17 +663,29 @@
         .filter((p) => !p._deleted)
         .map(({ _deleted, _photoFile, _photoPreview, ...clean }) => clean);
 
-      const jsonText = JSON.stringify(published, null, 2) + "\n";
-      const base64 = b64EncodeText(jsonText);
-      const result = await ghPutFile(PRODUCTS_PATH, base64, "Update product catalog via admin panel", state.productsSha);
-      state.productsSha = result.content.sha;
+      // 3. Send everything to the Worker in one call — it uploads the
+      //    photos and commits products.json server-side, using the GitHub
+      //    token it holds privately.
+      const data = await api("/api/publish", {
+        method: "POST",
+        body: JSON.stringify({ products: published, sha: state.productsSha, photos }),
+      });
+      state.productsSha = data.sha || state.productsSha;
       state.products = published;
       state.dirty = false;
       setStatus();
       renderList();
       msgEl.innerHTML = '<div class="msg ok">Published. Your live site will update within about a minute — <a href="index.html" target="_blank" rel="noopener">check it here</a>.</div>';
     } catch (err) {
-      msgEl.innerHTML = `<div class="msg error">Publish failed: ${err.message}</div>`;
+      if (err.status === 401) {
+        signOut();
+        $("login-msg").innerHTML = '<div class="msg error">Your session expired — please sign in again.</div>';
+      } else if (err.status === 409) {
+        msgEl.innerHTML = `<div class="msg error">${err.message} <button class="btn btn-ghost btn-sm" id="btn-reload-after-conflict" style="margin-left:8px;">Refresh now</button></div>`;
+        $("btn-reload-after-conflict")?.addEventListener("click", () => location.reload());
+      } else {
+        msgEl.innerHTML = `<div class="msg error">Publish failed: ${err.message}</div>`;
+      }
     } finally {
       $("btn-publish").textContent = "Publish Changes";
       setStatus();

@@ -1,0 +1,255 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="UTF-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1" />
+<meta name="robots" content="noindex, nofollow" />
+<title>Prabhvas Fashions — Offline Password Hash Generator</title>
+<style>
+  /* Deliberately no external fonts, scripts, or stylesheets of any kind —
+     this page must work fully offline, opened straight from disk. */
+  :root {
+    --ink: #1b1610; --ink-soft: #6b6153; --ivory: #f8f3e9;
+    --surface: #ffffff; --surface-sunk: #f1ece0; --line: #e4dac5; --line-strong: #d3c7ab;
+    --rani: #c21f5b; --good: #2f7a4f; --good-soft: #e5f2e9; --bad: #b3261e; --bad-soft: #fbe9e7;
+    --warn: #8a6416; --warn-soft: #fdf3e0;
+  }
+  * { box-sizing: border-box; }
+  body {
+    margin: 0; background: var(--ivory); color: var(--ink);
+    font-family: -apple-system, 'Segoe UI', Roboto, Arial, sans-serif; line-height: 1.55;
+  }
+  .wrap { max-width: 640px; margin: 0 auto; padding: clamp(20px, 4vw, 40px); }
+  h1 { font-size: 1.5rem; margin: 0 0 4px; }
+  h2 { font-size: 1.15rem; margin: 0 0 10px; }
+  p.sub { color: var(--ink-soft); font-size: 0.9rem; margin: 0 0 24px; }
+  code, .mono { font-family: ui-monospace, SFMono-Regular, Menlo, Consolas, monospace; }
+
+  .banner {
+    background: var(--warn-soft); border: 1px solid #e9d49b; color: var(--warn);
+    border-radius: 6px; padding: 14px 16px; font-size: 0.86rem; margin-bottom: 24px;
+  }
+  .banner strong { display: block; margin-bottom: 4px; }
+  .banner.offline-ok { background: var(--good-soft); border-color: #bfe3cb; color: var(--good); }
+
+  .card {
+    background: var(--surface); border: 1px solid var(--line); border-radius: 6px;
+    padding: clamp(20px, 4vw, 28px); margin-bottom: 20px;
+  }
+  .field { margin-bottom: 14px; }
+  .field label { display: block; font-size: 0.78rem; font-weight: 700; margin-bottom: 6px; }
+  .field input {
+    width: 100%; padding: 10px 12px; border: 1px solid var(--line-strong); border-radius: 4px;
+    font-size: 0.92rem; background: var(--surface); color: var(--ink);
+  }
+  .field input:focus { outline: 2px solid var(--rani); outline-offset: 1px; }
+  .field .hint { font-size: 0.76rem; color: var(--ink-soft); margin-top: 5px; }
+  .row { display: flex; gap: 10px; align-items: center; }
+  .row input[type="checkbox"] { width: auto; }
+
+  button {
+    font-family: inherit; cursor: pointer; border: none; border-radius: 4px;
+    padding: 11px 20px; font-weight: 700; font-size: 0.88rem;
+  }
+  .btn-primary { background: var(--rani); color: #fff; width: 100%; }
+  .btn-primary:hover { background: #a91a4c; }
+  .btn-primary:disabled { background: var(--line-strong); color: var(--ink-soft); cursor: not-allowed; }
+  .btn-ghost { background: transparent; color: var(--ink); border: 1px solid var(--line-strong); padding: 8px 14px; font-size: 0.82rem; }
+  .btn-ghost:hover { background: var(--surface-sunk); }
+
+  .output {
+    margin-top: 16px; display: none;
+  }
+  .output textarea {
+    width: 100%; min-height: 70px; padding: 10px 12px; border: 1px solid var(--line-strong);
+    border-radius: 4px; font-size: 0.82rem; resize: vertical; background: var(--surface-sunk); color: var(--ink);
+  }
+  .output .actions { margin-top: 8px; display: flex; gap: 8px; align-items: center; }
+  .output .copied { font-size: 0.8rem; color: var(--good); display: none; }
+
+  .msg { border-radius: 4px; padding: 10px 14px; font-size: 0.85rem; margin-top: 12px; }
+  .msg.error { background: var(--bad-soft); color: var(--bad); border: 1px solid #f0c9c5; }
+  .msg.ok { background: var(--good-soft); color: var(--good); border: 1px solid #bfe3cb; }
+
+  footer { text-align: center; padding: 20px; font-size: 0.76rem; color: var(--ink-soft); }
+</style>
+</head>
+<body>
+<div class="wrap">
+  <h1>Offline Password Hash Generator</h1>
+  <p class="sub">For your Prabhvas Fashions admin panel — generates the value you paste into Cloudflare, without your real password ever leaving this browser tab.</p>
+
+  <div class="banner" id="net-banner">
+    <strong>Before you type your real password:</strong>
+    Save this file to your computer and open it directly (double-click it, or drag it into your browser) — ideally after turning off Wi-Fi, just to be certain nothing is ever sent anywhere. This page makes no network requests; everything below runs with plain browser JavaScript on your device.
+  </div>
+
+  <div class="card">
+    <h2>1. Generate your hash</h2>
+    <div class="field">
+      <label for="pw1">Choose your admin password</label>
+      <input type="password" id="pw1" autocomplete="new-password" placeholder="Type a strong password" />
+    </div>
+    <div class="field">
+      <label for="pw2">Confirm it</label>
+      <input type="password" id="pw2" autocomplete="new-password" placeholder="Type it again" />
+    </div>
+    <div class="row" style="margin-bottom:14px;">
+      <input type="checkbox" id="show-pw" />
+      <label for="show-pw" style="font-size:0.82rem;">Show password while typing</label>
+    </div>
+    <button class="btn-primary" id="btn-generate">Generate Hash</button>
+    <div id="gen-msg"></div>
+
+    <div class="output" id="output-box">
+      <label style="display:block; font-size:0.78rem; font-weight:700; margin-bottom:6px;">Your hash — paste this into Cloudflare's <code>ADMIN_PASSWORD_HASH</code> secret</label>
+      <textarea id="hash-output" readonly></textarea>
+      <div class="actions">
+        <button class="btn-ghost" id="btn-copy">Copy to clipboard</button>
+        <span class="copied" id="copied-note">Copied!</span>
+      </div>
+      <p class="hint" style="margin-top:10px;">This hash is safe to paste into Cloudflare's dashboard — it cannot be turned back into your password. Your actual password isn't stored anywhere by this page; once you close this tab, only you know it.</p>
+    </div>
+  </div>
+
+  <div class="card">
+    <h2>2. Double-check it (optional but recommended)</h2>
+    <p class="hint" style="margin:0 0 14px;">Paste the hash from above and re-type your password, to confirm it will really let you log in before you save it into Cloudflare.</p>
+    <div class="field">
+      <label for="verify-hash">Hash</label>
+      <input type="text" id="verify-hash" class="mono" placeholder="pbkdf2$150000$..." />
+    </div>
+    <div class="field">
+      <label for="verify-pw">Password</label>
+      <input type="password" id="verify-pw" autocomplete="off" />
+    </div>
+    <button class="btn-primary" id="btn-verify">Check</button>
+    <div id="verify-msg"></div>
+  </div>
+
+  <footer>Nothing on this page ever leaves your browser. Safe to open offline.</footer>
+</div>
+
+<script>
+  // ---- Same PBKDF2 implementation as the Worker's crypto-core.mjs, so a
+  // hash generated here verifies correctly there. Pure Web Crypto, no
+  // dependencies, no network calls anywhere on this page. ----
+
+  const te = new TextEncoder();
+  const ITERATIONS = 150000;
+
+  function toB64Url(bytes) {
+    let bin = "";
+    bytes.forEach((b) => (bin += String.fromCharCode(b)));
+    return btoa(bin).replace(/\+/g, "-").replace(/\//g, "_").replace(/=+$/, "");
+  }
+  function fromB64Url(str) {
+    str = str.replace(/-/g, "+").replace(/_/g, "/");
+    while (str.length % 4) str += "=";
+    const bin = atob(str);
+    const bytes = new Uint8Array(bin.length);
+    for (let i = 0; i < bin.length; i++) bytes[i] = bin.charCodeAt(i);
+    return bytes;
+  }
+  function randomBytes(n) {
+    const b = new Uint8Array(n);
+    crypto.getRandomValues(b);
+    return b;
+  }
+  async function pbkdf2Raw(password, saltBytes, iterations) {
+    const keyMaterial = await crypto.subtle.importKey("raw", te.encode(password), "PBKDF2", false, ["deriveBits"]);
+    const bits = await crypto.subtle.deriveBits(
+      { name: "PBKDF2", salt: saltBytes, iterations, hash: "SHA-256" }, keyMaterial, 256
+    );
+    return new Uint8Array(bits);
+  }
+  async function hashPassword(password, iterations = ITERATIONS) {
+    const salt = randomBytes(16);
+    const hash = await pbkdf2Raw(password, salt, iterations);
+    return `pbkdf2$${iterations}$${toB64Url(salt)}$${toB64Url(hash)}`;
+  }
+  async function verifyPassword(password, stored) {
+    const parts = String(stored || "").split("$");
+    if (parts.length !== 4 || parts[0] !== "pbkdf2") return false;
+    const iterations = parseInt(parts[1], 10);
+    const salt = fromB64Url(parts[2]);
+    const expected = fromB64Url(parts[3]);
+    const actual = await pbkdf2Raw(password, salt, iterations);
+    if (actual.length !== expected.length) return false;
+    let diff = 0;
+    for (let i = 0; i < actual.length; i++) diff |= actual[i] ^ expected[i];
+    return diff === 0;
+  }
+
+  const $ = (id) => document.getElementById(id);
+
+  // Confirm to the user (and to ourselves) that this page really is offline.
+  if (location.protocol === "file:") {
+    $("net-banner").classList.add("offline-ok");
+    $("net-banner").innerHTML = "<strong>You're viewing this as a local file — good.</strong> This page makes no network requests either way, but opening it from disk is the easiest way to be sure.";
+  }
+
+  $("show-pw").addEventListener("change", (e) => {
+    const t = e.target.checked ? "text" : "password";
+    $("pw1").type = t;
+    $("pw2").type = t;
+  });
+
+  $("btn-generate").addEventListener("click", async () => {
+    const pw1 = $("pw1").value;
+    const pw2 = $("pw2").value;
+    const msgEl = $("gen-msg");
+    msgEl.innerHTML = "";
+    $("output-box").style.display = "none";
+
+    if (!pw1 || pw1.length < 8) {
+      msgEl.innerHTML = '<div class="msg error">Use at least 8 characters — longer is better.</div>';
+      return;
+    }
+    if (pw1 !== pw2) {
+      msgEl.innerHTML = '<div class="msg error">The two entries don\'t match.</div>';
+      return;
+    }
+
+    $("btn-generate").disabled = true;
+    $("btn-generate").textContent = "Generating…";
+    try {
+      const hash = await hashPassword(pw1, ITERATIONS);
+      $("hash-output").value = hash;
+      $("output-box").style.display = "block";
+      msgEl.innerHTML = '<div class="msg ok">Done. Copy the hash below into Cloudflare — then forget the password never touched this screen again except in your own head (or password manager).</div>';
+    } finally {
+      $("btn-generate").disabled = false;
+      $("btn-generate").textContent = "Generate Hash";
+    }
+  });
+
+  $("btn-copy").addEventListener("click", async () => {
+    const val = $("hash-output").value;
+    try {
+      await navigator.clipboard.writeText(val);
+    } catch {
+      $("hash-output").select();
+      document.execCommand("copy");
+    }
+    $("copied-note").style.display = "inline";
+    setTimeout(() => { $("copied-note").style.display = "none"; }, 2000);
+  });
+
+  $("btn-verify").addEventListener("click", async () => {
+    const hash = $("verify-hash").value.trim();
+    const pw = $("verify-pw").value;
+    const msgEl = $("verify-msg");
+    msgEl.innerHTML = "";
+    if (!hash || !pw) {
+      msgEl.innerHTML = '<div class="msg error">Fill in both fields.</div>';
+      return;
+    }
+    const good = await verifyPassword(pw, hash);
+    msgEl.innerHTML = good
+      ? '<div class="msg ok">Match — this password and hash pair will work.</div>'
+      : '<div class="msg error">No match — regenerate the hash above and copy it again.</div>';
+  });
+</script>
+</body>
+</html>
