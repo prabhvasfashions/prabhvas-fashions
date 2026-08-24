@@ -11,85 +11,50 @@
 <link href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:wght@600;700&family=Karla:wght@400;500;600;700&family=JetBrains+Mono:wght@400;500&display=swap" rel="stylesheet" />
 <style>
   :root {
-    --ink: #1b1610;
-    --ink-soft: #6b6153;
-    --ivory: #f8f3e9;
-    --surface: #ffffff;
-    --surface-sunk: #f1ece0;
-    --line: #e4dac5;
-    --line-strong: #d3c7ab;
-    --rani: #c21f5b;
-    --gold: #c79a2e;
-    --good: #2f7a4f;
-    --good-soft: #e5f2e9;
-    --bad: #b3261e;
-    --bad-soft: #fbe9e7;
-    --warn-soft: #fdf3e0;
+    --ink: #1b1610; --ink-soft: #6b6153; --ivory: #f8f3e9; --surface: #ffffff;
+    --surface-sunk: #f1ece0; --line: #e4dac5; --line-strong: #d3c7ab;
+    --rani: #c21f5b; --gold: #c79a2e; --good: #2f7a4f; --good-soft: #e5f2e9;
+    --bad: #b3261e; --bad-soft: #fbe9e7; --warn-soft: #fdf3e0;
   }
-
   * { box-sizing: border-box; }
-
-  body {
-    margin: 0;
-    background: var(--ivory);
-    color: var(--ink);
-    font-family: 'Karla', -apple-system, 'Segoe UI', sans-serif;
-    line-height: 1.55;
-  }
-
+  body { margin: 0; background: var(--ivory); color: var(--ink); font-family: 'Karla', -apple-system, 'Segoe UI', sans-serif; line-height: 1.55; }
   h1, h2, .display { font-family: 'Cormorant Garamond', Georgia, serif; font-weight: 700; margin: 0; }
   code, .mono { font-family: 'JetBrains Mono', monospace; }
-
   a { color: var(--rani); }
   button { font-family: inherit; cursor: pointer; }
   input, select, textarea { font-family: inherit; }
+  .wrap { max-width: 1080px; margin: 0 auto; padding: clamp(20px, 4vw, 40px); }
 
-  .wrap { max-width: 980px; margin: 0 auto; padding: clamp(20px, 4vw, 40px); }
-
-  /* ---------- top bar ---------- */
-  .topbar {
-    background: var(--ink);
-    color: var(--ivory);
-  }
+  .topbar { background: var(--ink); color: var(--ivory); }
   .topbar .wrap { display: flex; align-items: center; justify-content: space-between; padding-top: 16px; padding-bottom: 16px; gap: 16px; flex-wrap: wrap; }
   .topbar h1 { font-size: 1.4rem; color: var(--ivory); }
   .topbar .sub { font-size: 0.78rem; color: #cfc6b4; margin-top: 2px; }
   .topbar a.back { color: #cfc6b4; font-size: 0.8rem; text-decoration: none; }
   .topbar a.back:hover { color: var(--ivory); }
-
-  .conn-pill {
-    display: inline-flex; align-items: center; gap: 6px;
-    font-size: 0.76rem; font-weight: 600;
-    background: rgba(255,255,255,0.1); padding: 6px 12px; border-radius: 100px;
-  }
+  .conn-pill { display: inline-flex; align-items: center; gap: 6px; font-size: 0.76rem; font-weight: 600; background: rgba(255,255,255,0.1); padding: 6px 12px; border-radius: 100px; }
   .conn-pill .dot { width: 7px; height: 7px; border-radius: 50%; background: var(--good); }
 
-  /* ---------- login card ---------- */
-  .login-card {
-    max-width: 560px;
-    margin: clamp(40px, 8vw, 80px) auto;
-    background: var(--surface);
-    border: 1px solid var(--line);
-    border-radius: 6px;
-    padding: clamp(28px, 5vw, 40px);
-  }
+  .tabnav { display: flex; gap: 18px; flex-wrap: wrap; align-items: center; background: var(--ink); border-top: 1px solid rgba(255,255,255,0.08); }
+  .tabnav .wrap { padding-top: 10px; padding-bottom: 10px; display: flex; gap: 18px; flex-wrap: wrap; }
+  .tabnav button { background: none; border: none; color: #cfc6b4; font-size: 0.84rem; font-weight: 600; padding: 4px 0; }
+  .tabnav button.active, .tabnav button:hover { color: var(--ivory); }
+  .tabnav button.active { border-bottom: 2px solid var(--rani); }
+
+  .login-card { max-width: 560px; margin: clamp(40px, 8vw, 80px) auto; background: var(--surface); border: 1px solid var(--line); border-radius: 6px; padding: clamp(28px, 5vw, 40px); }
   .login-card h2 { font-size: 1.7rem; margin-bottom: 8px; }
   .login-card p.lead { color: var(--ink-soft); font-size: 0.92rem; margin: 0 0 24px; }
 
   .field { margin-bottom: 16px; }
   .field label { display: block; font-size: 0.78rem; font-weight: 700; letter-spacing: 0.02em; margin-bottom: 6px; }
-  .field input, .field select, .field textarea {
-    width: 100%; padding: 10px 12px; border: 1px solid var(--line-strong); border-radius: 4px;
-    font-size: 0.92rem; background: var(--surface); color: var(--ink);
-  }
+  .field input, .field select, .field textarea { width: 100%; padding: 10px 12px; border: 1px solid var(--line-strong); border-radius: 4px; font-size: 0.92rem; background: var(--surface); color: var(--ink); }
   .field input:focus, .field select:focus, .field textarea:focus { outline: 2px solid var(--rani); outline-offset: 1px; }
   .field .hint { font-size: 0.76rem; color: var(--ink-soft); margin-top: 5px; }
   .field-row { display: grid; grid-template-columns: 1fr 1fr; gap: 12px; }
+  .field-row.cols-3 { grid-template-columns: 1fr 1fr 1fr; }
+  .checkbox-row { display: flex; align-items: center; gap: 8px; }
+  .checkbox-row input { width: auto; }
 
-  .btn {
-    display: inline-flex; align-items: center; justify-content: center; gap: 8px;
-    border: none; border-radius: 4px; padding: 11px 20px; font-weight: 700; font-size: 0.88rem;
-  }
+  .btn { display: inline-flex; align-items: center; justify-content: center; gap: 8px; border: none; border-radius: 4px; padding: 11px 20px; font-weight: 700; font-size: 0.88rem; text-decoration: none; }
   .btn-primary { background: var(--rani); color: #fff; }
   .btn-primary:hover { background: #a91a4c; }
   .btn-primary:disabled { background: var(--line-strong); color: var(--ink-soft); cursor: not-allowed; }
@@ -106,73 +71,68 @@
   details.howto li { margin-bottom: 6px; }
   details.howto code { background: var(--surface-sunk); padding: 1px 5px; border-radius: 3px; }
 
-  .msg { border-radius: 4px; padding: 10px 14px; font-size: 0.85rem; margin-top: 14px; }
+  .msg { border-radius: 4px; padding: 10px 14px; font-size: 0.85rem; margin: 0 0 16px; }
   .msg.error { background: var(--bad-soft); color: var(--bad); border: 1px solid #f0c9c5; }
   .msg.ok { background: var(--good-soft); color: var(--good); border: 1px solid #bfe3cb; }
+  .msg.warn { background: var(--warn-soft); color: #8a6416; border: 1px solid #e9d49b; }
 
-  /* ---------- dashboard ---------- */
-  #dashboard { display: none; }
+  #app { display: none; }
+  .page-head { display: flex; align-items: center; justify-content: space-between; flex-wrap: wrap; gap: 12px; margin: 24px 0 18px; }
+  .page-head h1 { font-size: 1.5rem; }
+  .page-head .actions { display: flex; gap: 10px; flex-wrap: wrap; }
+  .status-line { font-size: 0.82rem; color: var(--ink-soft); }
+  .status-line.dirty { color: var(--gold); font-weight: 700; }
 
-  .toolbar {
-    display: flex; align-items: center; justify-content: space-between; flex-wrap: wrap; gap: 12px;
-    margin: 24px 0 18px;
-  }
-  .toolbar .status { font-size: 0.82rem; color: var(--ink-soft); }
-  .toolbar .status.dirty { color: var(--gold); font-weight: 700; }
-  .toolbar .actions { display: flex; gap: 10px; flex-wrap: wrap; }
+  .stat-grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(150px, 1fr)); gap: 14px; margin-bottom: 26px; }
+  .stat-card { background: var(--surface); border: 1px solid var(--line); border-radius: 6px; padding: 16px 18px; }
+  .stat-card .num { font-family: 'Cormorant Garamond', serif; font-size: 1.9rem; font-weight: 700; color: var(--rani); }
+  .stat-card .label { font-size: 0.76rem; color: var(--ink-soft); margin-top: 2px; }
 
-  .product-row {
-    display: grid;
-    grid-template-columns: 64px 1fr auto;
-    gap: 16px;
-    align-items: center;
-    background: var(--surface);
-    border: 1px solid var(--line);
-    border-radius: 5px;
-    padding: 12px 14px;
-    margin-bottom: 10px;
-  }
-  .product-row.deleted { opacity: 0.45; }
-  .product-row .thumb { width: 64px; height: 64px; border-radius: 3px; overflow: hidden; background: var(--ink); flex: none; }
-  .product-row .thumb img { width: 100%; height: 100%; object-fit: contain; }
-  .product-row .details .name { font-weight: 700; font-size: 0.96rem; }
-  .product-row .details .meta { font-size: 0.8rem; color: var(--ink-soft); margin-top: 2px; }
-  .product-row .details .badges { margin-top: 6px; display: flex; gap: 6px; flex-wrap: wrap; }
-  .badge { font-size: 0.68rem; font-weight: 700; padding: 2px 8px; border-radius: 100px; letter-spacing: 0.02em; }
+  .card-block { background: var(--surface); border: 1px solid var(--line); border-radius: 6px; padding: 20px; margin-bottom: 18px; }
+  .card-block h2 { font-size: 1.15rem; margin-bottom: 14px; }
+
+  .data-table { width: 100%; border-collapse: collapse; background: var(--surface); border: 1px solid var(--line); border-radius: 6px; overflow: hidden; }
+  .data-table th, .data-table td { text-align: left; padding: 11px 12px; border-bottom: 1px solid var(--line); font-size: 0.86rem; vertical-align: middle; }
+  .data-table th { background: var(--surface-sunk); font-size: 0.7rem; text-transform: uppercase; letter-spacing: 0.04em; color: var(--ink-soft); }
+  .data-table tr:last-child td { border-bottom: none; }
+  .data-table .row-actions { display: flex; gap: 8px; justify-content: flex-end; flex-wrap: wrap; }
+  .table-wrap { overflow-x: auto; border-radius: 6px; }
+  .data-table input[type=text], .data-table input[type=number] { padding: 6px 8px; font-size: 0.85rem; }
+
+  .thumb { width: 46px; height: 46px; border-radius: 3px; overflow: hidden; background: var(--ink); flex: none; }
+  .thumb img { width: 100%; height: 100%; object-fit: contain; }
+
+  .badge { font-size: 0.66rem; font-weight: 700; padding: 2px 8px; border-radius: 100px; letter-spacing: 0.02em; white-space: nowrap; }
   .badge.cat { background: var(--surface-sunk); color: var(--ink-soft); }
   .badge.ready { background: var(--good-soft); color: var(--good); }
   .badge.draft { background: var(--warn-soft); color: #8a6416; }
   .badge.soldout { background: var(--bad-soft); color: var(--bad); }
-  .product-row .row-actions { display: flex; gap: 8px; }
 
   .empty-state { text-align: center; padding: 50px 20px; color: var(--ink-soft); border: 1px dashed var(--line-strong); border-radius: 6px; }
 
-  /* ---------- editor panel (slide-over) ---------- */
-  .editor-backdrop {
-    position: fixed; inset: 0; background: rgba(27,22,16,0.45); display: none; z-index: 40;
-  }
-  .editor-panel {
-    position: fixed; top: 0; right: 0; height: 100%; width: min(480px, 100%);
-    background: var(--surface); box-shadow: -8px 0 24px rgba(27,22,16,0.15);
-    z-index: 41; overflow-y: auto; padding: 26px;
-  }
-  .editor-panel h2 { font-size: 1.4rem; margin-bottom: 18px; }
+  .editor-backdrop { position: fixed; inset: 0; background: rgba(27,22,16,0.45); display: none; z-index: 40; }
+  .editor-panel { position: fixed; top: 0; right: 0; height: 100%; width: min(640px, 100%); background: var(--surface); box-shadow: -8px 0 24px rgba(27,22,16,0.15); z-index: 41; overflow-y: auto; padding: 26px; display: none; }
+  .editor-panel h2 { font-size: 1.4rem; margin-bottom: 4px; }
   .editor-panel .close-x { float: right; background: none; border: none; font-size: 1.4rem; color: var(--ink-soft); line-height: 1; }
 
-  .checkbox-row { display: flex; align-items: center; gap: 8px; }
-  .checkbox-row input { width: auto; }
+  .variant-row { display: grid; grid-template-columns: 76px 1fr 1fr 1fr 100px 90px auto; gap: 8px; align-items: end; padding: 14px 0; border-bottom: 1px solid var(--line); }
+  .variant-row:last-child { border-bottom: none; }
+  .variant-row .field { margin-bottom: 0; }
+  .variant-row .current-thumb { width: 44px; height: 44px; border-radius: 3px; overflow: hidden; background: var(--ink); margin-bottom: 4px; }
+  .variant-row .current-thumb img { width: 100%; height: 100%; object-fit: contain; }
+  .variant-row .remove-btn { background: transparent; border: none; color: var(--bad); font-size: 1.2rem; line-height: 1; padding: 8px; }
+  .variant-row .mini-label { font-size: 0.7rem; color: var(--ink-soft); margin-bottom: 4px; display: block; }
 
-  .current-photo { display: flex; align-items: center; gap: 10px; margin-bottom: 8px; }
-  .current-photo img { width: 56px; height: 56px; object-fit: contain; background: var(--ink); border-radius: 3px; }
-  .current-photo span { font-size: 0.78rem; color: var(--ink-soft); }
+  .totp-key { background: var(--surface-sunk); border: 1px solid var(--line-strong); border-radius: 4px; padding: 12px 14px; font-size: 0.9rem; word-break: break-all; margin: 10px 0; }
 
   footer.page-foot { text-align: center; padding: 30px; font-size: 0.78rem; color: var(--ink-soft); }
 
+  @media (max-width: 900px) {
+    .variant-row { grid-template-columns: 1fr 1fr; }
+    .field-row, .field-row.cols-3 { grid-template-columns: 1fr; }
+  }
   @media (max-width: 640px) {
     .field-row { grid-template-columns: 1fr; }
-    .product-row { grid-template-columns: 48px 1fr; }
-    .product-row .row-actions { grid-column: 1 / -1; justify-content: flex-end; }
-    .product-row .thumb { width: 48px; height: 48px; }
   }
 </style>
 </head>
@@ -181,25 +141,68 @@
 <div class="topbar">
   <div class="wrap">
     <div>
-      <h1>Prabhvas Fashions — Admin</h1>
+      <h1 id="topbar-title">Prabhvas Fashions — Admin</h1>
       <p class="sub"><a class="back" href="index.html">&larr; View live site</a></p>
     </div>
-    <span id="conn-pill" class="conn-pill" style="display:none;"><span class="dot"></span><span id="conn-text"></span></span>
+    <span id="conn-pill" class="conn-pill" style="display:none;"><span class="dot"></span><span id="conn-text">Signed in</span></span>
   </div>
 </div>
+<nav class="tabnav" id="tabnav" style="display:none;">
+  <div class="wrap">
+    <button data-view="dashboard" class="active">Dashboard</button>
+    <button data-view="products">Products</button>
+    <button data-view="categories">Categories</button>
+    <button data-view="settings">Settings</button>
+    <button id="btn-signout" style="margin-left:auto;color:var(--gold);">Sign out</button>
+  </div>
+</nav>
 
 <div class="wrap">
 
+  <!-- ===================== ONE-TIME INSTALL ===================== -->
+  <div id="install-card" class="login-card" style="display:none;">
+    <h2>Set up your admin account</h2>
+    <p class="lead">This runs once. Your password is hashed immediately on the server and never stored in plain text — not here, not anywhere.</p>
+    <div id="install-msg"></div>
+    <div id="install-form">
+      <div class="field">
+        <label for="i-password">Password</label>
+        <input type="password" id="i-password" autocomplete="new-password" />
+        <p class="hint">At least 8 characters — longer is better.</p>
+      </div>
+      <div class="field">
+        <label for="i-confirm">Confirm password</label>
+        <input type="password" id="i-confirm" autocomplete="new-password" />
+      </div>
+      <div class="field checkbox-row">
+        <input type="checkbox" id="i-totp" checked />
+        <label for="i-totp" style="margin:0;">Enable authenticator-app 2FA (recommended)</label>
+      </div>
+      <div class="field">
+        <label for="i-email">Email (optional — for emailed 2FA codes)</label>
+        <input type="email" id="i-email" placeholder="you@example.com" />
+      </div>
+      <button class="btn btn-primary btn-block" id="btn-install">Create admin account</button>
+    </div>
+    <div id="install-result" style="display:none;">
+      <div class="msg ok">Admin account created.</div>
+      <div id="install-totp-block" style="display:none;">
+        <p class="lead" style="margin-bottom:8px;">Add this to your authenticator app — choose "Enter a setup key manually":</p>
+        <div class="totp-key mono" id="install-totp-secret"></div>
+      </div>
+      <div class="msg warn" style="margin-top:16px;">Save this somewhere safe now if you need to — this key will not be shown again.</div>
+      <button class="btn btn-primary btn-block" id="btn-install-continue" style="margin-top:10px;">Continue to sign in</button>
+    </div>
+  </div>
+
   <!-- ===================== LOGIN — STEP 1: PASSWORD ===================== -->
-  <div id="login-card" class="login-card">
+  <div id="login-card" class="login-card" style="display:none;">
     <h2>Admin sign in</h2>
     <p class="lead">Enter your admin password to continue. You'll then be asked for a 6-digit verification code.</p>
-
     <div class="field">
       <label for="f-password">Password</label>
       <input type="password" id="f-password" placeholder="Your admin password" autocomplete="current-password" />
     </div>
-
     <button class="btn btn-primary btn-block" id="btn-login">Continue</button>
     <div id="login-msg"></div>
   </div>
@@ -208,94 +211,136 @@
   <div id="twofa-card" class="login-card" style="display:none;">
     <h2>Verification code</h2>
     <p class="lead" id="twofa-lead">Enter the 6-digit code from your authenticator app, or the one just emailed to you.</p>
-
     <div class="field">
       <label for="f-code">6-digit code</label>
       <input type="text" id="f-code" inputmode="numeric" pattern="[0-9]*" maxlength="6" placeholder="123456" autocomplete="one-time-code" />
     </div>
-
     <button class="btn btn-primary btn-block" id="btn-verify">Verify &amp; Sign In</button>
     <button class="btn btn-ghost btn-block" id="btn-back-to-password" style="margin-top:10px;">&larr; Back</button>
     <div id="twofa-msg"></div>
   </div>
 
-  <!-- ===================== DASHBOARD ===================== -->
-  <div id="dashboard">
-    <div class="toolbar">
-      <span class="status" id="status-text">No unsaved changes</span>
-      <div class="actions">
-        <button class="btn btn-ghost btn-sm" id="btn-add">+ Add Product</button>
-        <button class="btn btn-ghost btn-sm" id="btn-disconnect">Disconnect</button>
-        <button class="btn btn-primary" id="btn-publish" disabled>Publish Changes</button>
+  <!-- ===================== APP ===================== -->
+  <div id="app">
+
+    <!-- ---- Dashboard ---- -->
+    <div id="view-dashboard" class="view">
+      <div class="page-head">
+        <h1>Dashboard</h1>
+        <div class="actions"><button class="btn btn-primary" id="btn-add-from-dash">+ Add Product</button></div>
+      </div>
+      <div class="stat-grid" id="stat-grid"></div>
+      <div class="card-block">
+        <h2>Products</h2>
+        <div id="dash-recent"></div>
       </div>
     </div>
-    <div id="publish-msg"></div>
-    <div id="product-list"></div>
-  </div>
 
+    <!-- ---- Products ---- -->
+    <div id="view-products" class="view" style="display:none;">
+      <div class="page-head">
+        <h1>Products</h1>
+        <div class="actions"><button class="btn btn-primary" id="btn-add-product">+ Add Product</button></div>
+      </div>
+      <div class="card-block"><div id="products-list"></div></div>
+    </div>
+
+    <!-- ---- Categories ---- -->
+    <div id="view-categories" class="view" style="display:none;">
+      <div class="page-head"><h1>Categories</h1></div>
+      <div class="card-block">
+        <h2>Add a category</h2>
+        <div class="field-row cols-3">
+          <div class="field"><label for="cat-new-name">Name</label><input type="text" id="cat-new-name" placeholder="e.g. Short Tops, or Frozo Print" /></div>
+          <div class="field"><label for="cat-new-parent">Parent category</label><select id="cat-new-parent"><option value="">None — top-level category</option></select></div>
+          <div class="field"><label for="cat-new-sort">Sort order</label><input type="number" id="cat-new-sort" value="0" /></div>
+        </div>
+        <p class="hint" style="margin-bottom:14px;">Leave "Parent category" as None for a main category (like "Short Tops"). Pick a parent to make this a subcategory (like "Frozo Print" under "Short Tops") — subcategories show as tabs on the live site.</p>
+        <button class="btn btn-primary" id="btn-add-category">Add category</button>
+      </div>
+      <div class="card-block">
+        <h2>All categories</h2>
+        <div id="categories-list"></div>
+      </div>
+    </div>
+
+    <!-- ---- Settings ---- -->
+    <div id="view-settings" class="view" style="display:none;">
+      <div class="page-head"><h1>Settings</h1></div>
+      <div id="settings-msg"></div>
+
+      <div class="card-block">
+        <h2>Site details</h2>
+        <div class="field-row">
+          <div class="field"><label for="s-name">Site name</label><input type="text" id="s-name" /></div>
+          <div class="field"><label for="s-currency">Currency label</label><input type="text" id="s-currency" /></div>
+        </div>
+        <div class="field"><label for="s-tagline">Tagline</label><input type="text" id="s-tagline" /></div>
+        <div class="field-row">
+          <div class="field"><label for="s-whatsapp">WhatsApp number</label><input type="text" id="s-whatsapp" placeholder="e.g. 971586711803" /><p class="hint">Digits only, with country code, no + or spaces.</p></div>
+          <div class="field"><label for="s-instagram">Instagram URL (optional)</label><input type="url" id="s-instagram" placeholder="https://instagram.com/..." /></div>
+        </div>
+        <button class="btn btn-ghost" id="btn-save-site-settings">Save site settings (stages — click Publish to go live)</button>
+      </div>
+
+      <div class="card-block">
+        <h2>Change password</h2>
+        <div class="field"><label for="pw-current">Current password</label><input type="password" id="pw-current" autocomplete="current-password" /></div>
+        <div class="field-row">
+          <div class="field"><label for="pw-new">New password</label><input type="password" id="pw-new" autocomplete="new-password" /></div>
+          <div class="field"><label for="pw-confirm">Confirm new password</label><input type="password" id="pw-confirm" autocomplete="new-password" /></div>
+        </div>
+        <button class="btn btn-primary" id="btn-change-password">Change password</button>
+        <p class="hint" style="margin-top:8px;">Takes effect immediately — this does not need Publish.</p>
+      </div>
+
+      <div class="card-block">
+        <h2>Two-factor authentication</h2>
+        <p class="hint" style="margin-bottom:14px;">At least one method below must stay on.</p>
+        <div id="totp-status"></div>
+        <div id="totp-new-secret" style="display:none;">
+          <div class="msg warn"><strong>Scan this into your authenticator app now</strong> — it won't be shown again.</div>
+          <div class="totp-key mono" id="totp-new-secret-text"></div>
+        </div>
+        <h3 style="font-size:0.95rem;margin:20px 0 8px;">Email codes</h3>
+        <div class="field-row">
+          <div class="field" style="flex:1;"><label for="email-2fa">Email address</label><input type="email" id="email-2fa" placeholder="Leave blank to turn off" /></div>
+        </div>
+        <button class="btn btn-ghost btn-sm" id="btn-save-email-2fa">Save email</button>
+      </div>
+    </div>
+
+  </div>
 </div>
 
-<!-- ===================== EDITOR SLIDE-OVER ===================== -->
+<!-- ===================== PRODUCT EDITOR SLIDE-OVER ===================== -->
 <div class="editor-backdrop" id="editor-backdrop"></div>
-<div class="editor-panel" id="editor-panel" style="display:none;">
+<div class="editor-panel" id="editor-panel">
   <button class="close-x" id="editor-close">&times;</button>
   <h2 id="editor-title">Add Product</h2>
+  <p class="hint" style="margin-bottom:18px;">This only stages the change — click <strong>Publish Changes</strong> to make it live.</p>
 
-  <div class="current-photo" id="current-photo-row" style="display:none;">
-    <img id="current-photo-img" src="" alt="" />
-    <span>Current photo</span>
-  </div>
-
-  <div class="field">
-    <label for="e-photo">Photo <span id="photo-required-note"></span></label>
-    <input type="file" id="e-photo" accept="image/*" />
-    <p class="hint">Leave empty to keep the current photo. New photos are uploaded when you publish.</p>
-  </div>
-
-  <div class="field">
-    <label for="e-category">Category</label>
-    <select id="e-category"></select>
-  </div>
-
-  <div class="field">
-    <label for="e-name">Product name</label>
-    <input type="text" id="e-name" placeholder="e.g. Pleated Wide-Leg Palazzo" />
-  </div>
-
-  <div class="field-row">
-    <div class="field">
-      <label for="e-variant">Colour / variant</label>
-      <input type="text" id="e-variant" placeholder="e.g. Midnight Black" />
+  <div class="card-block">
+    <div class="field-row">
+      <div class="field"><label for="e-category">Category</label><select id="e-category"></select></div>
+      <div class="field"><label for="e-name">Product name</label><input type="text" id="e-name" placeholder="e.g. Pleated Wide-Leg Palazzo" /></div>
     </div>
-    <div class="field">
-      <label for="e-sizes">Size(s)</label>
-      <input type="text" id="e-sizes" placeholder="e.g. Free Size (S-2XL)" />
+    <div class="field"><label for="e-desc">Description</label><textarea id="e-desc" rows="3"></textarea></div>
+    <div class="field-row cols-3">
+      <div class="field"><label for="e-price">Base price (AED)</label><input type="number" id="e-price" min="0" step="0.01" /><p class="hint">Used unless a SKU below has its own price override.</p></div>
+      <div class="field"><label for="e-sort">Sort order</label><input type="number" id="e-sort" value="0" /></div>
+      <div class="field checkbox-row" style="align-self:end;padding-bottom:10px;"><input type="checkbox" id="e-ready" /><label for="e-ready" style="margin:0;">Published</label></div>
     </div>
   </div>
 
-  <div class="field-row">
-    <div class="field">
-      <label for="e-price">Selling price (AED)</label>
-      <input type="number" id="e-price" min="0" step="0.01" />
-    </div>
-    <div class="field">
-      <label for="e-stock">Stock quantity</label>
-      <input type="number" id="e-stock" min="0" step="1" />
-    </div>
+  <div class="card-block">
+    <h2>SKUs — colours &amp; sizes</h2>
+    <p class="hint" style="margin-bottom:14px;">Each row is one sellable option with its own stock, and optionally its own photo and price. A product needs at least one.</p>
+    <div id="variant-rows"></div>
+    <button type="button" class="btn btn-ghost btn-sm" id="btn-add-variant" style="margin-top:14px;">+ Add another SKU</button>
   </div>
 
-  <div class="field">
-    <label for="e-desc">Short description</label>
-    <textarea id="e-desc" rows="3" placeholder="One line customers will see on the site"></textarea>
-  </div>
-
-  <div class="field checkbox-row">
-    <input type="checkbox" id="e-ready" />
-    <label for="e-ready" style="margin:0;">Ready — show this on the live site</label>
-  </div>
-
-  <button class="btn btn-primary btn-block" id="btn-save-item">Save to List</button>
-  <p class="hint" style="margin-top:8px;">This only stages the change — click <strong>Publish Changes</strong> on the main screen to make it live.</p>
+  <button class="btn btn-primary btn-block" id="btn-save-product">Save to List</button>
 </div>
 
 <footer class="page-foot">Prabhvas Fashions admin &middot; changes publish straight to your live site via GitHub.</footer>
@@ -304,24 +349,23 @@
   // Fill this in once, right after you deploy the Cloudflare Worker — see
   // the setup guide. It looks like "https://prabhvas-admin.<your-subdomain>.workers.dev".
   const WORKER_URL = "https://prabhvas-admin.prabhvasfashions.workers.dev";
-
-  const CATEGORIES = [
-    "Palazzos", "Kurtis / Tops", "Nighties", "Lehengas",
-    "Sarees", "Dupattas", "Jewelry", "Footwear", "Bags", "Other",
-  ];
   const PHOTO_DIR = "assets/products";
   const SESSION_KEY = "prabhvas_admin_session";
+  const $ = (id) => document.getElementById(id);
 
   let state = {
-    token: null,        // session token issued after password + 2FA
-    challenge: null,    // short-lived token from /api/login, used to complete /api/verify-2fa
-    products: [],        // working copy
-    productsSha: null,   // sha of products.json as last fetched, for optimistic-concurrency publishing
-    dirty: false,
-    editingIndex: null,  // index into state.products while editor is open, or null for "new"
+    token: null,
+    challenge: null,
+    categories: [],
+    products: [],
+    settings: {},
+    shas: { products: null, categories: null, settings: null },
+    dirty: { products: false, categories: false, settings: false },
+    editingProductIndex: null,
+    currentView: "dashboard",
   };
 
-  const $ = (id) => document.getElementById(id);
+  function isDirty() { return state.dirty.products || state.dirty.categories || state.dirty.settings; }
 
   async function api(path, opts = {}) {
     const headers = { "Content-Type": "application/json", ...(opts.headers || {}) };
@@ -350,29 +394,108 @@
     return String(s).toLowerCase().replace(/[^a-z0-9]+/g, "-").replace(/(^-|-$)/g, "") || "item";
   }
 
-  function uniqueId(base) {
-    const existing = new Set(state.products.map((p) => p.id));
+  function uniqueId(base, existingIds) {
     let id = base, n = 2;
-    while (existing.has(id)) { id = `${base}-${n}`; n++; }
+    while (existingIds.has(id)) { id = `${base}-${n}`; n++; }
     return id;
   }
 
-  function setStatus() {
-    const el = $("status-text");
-    if (state.dirty) {
-      el.textContent = "Unsaved changes — click Publish to make them live";
-      el.classList.add("dirty");
-      $("btn-publish").disabled = false;
-    } else {
-      el.textContent = "No unsaved changes";
-      el.classList.remove("dirty");
-      $("btn-publish").disabled = true;
-    }
+  function escapeHtml(s) {
+    return String(s == null ? "" : s).replace(/[&<>"']/g, (c) => ({ "&": "&amp;", "<": "&lt;", ">": "&gt;", '"': "&quot;", "'": "&#39;" }[c]));
   }
 
-  function markDirty() { state.dirty = true; setStatus(); }
+  function findCategory(id) { return state.categories.find((c) => c.id === id); }
+  function topLevelCategories() { return state.categories.filter((c) => !c.parentId).sort((a, b) => (a.sortOrder || 0) - (b.sortOrder || 0)); }
+  function childCategories(parentId) { return state.categories.filter((c) => c.parentId === parentId).sort((a, b) => (a.sortOrder || 0) - (b.sortOrder || 0)); }
+  function hasChildren(id) { return state.categories.some((c) => c.parentId === id); }
 
-  // ---------- LOGIN: STEP 1 — PASSWORD ----------
+  function categoryName(id) {
+    const c = findCategory(id);
+    if (!c) return "(unknown)";
+    if (c.parentId) {
+      const parent = findCategory(c.parentId);
+      return (parent ? parent.name + " › " : "") + c.name;
+    }
+    return c.name;
+  }
+
+  function variantPrice(v, p) {
+    return v.priceOverride != null && v.priceOverride !== "" ? Number(v.priceOverride) : Number(p.basePrice);
+  }
+
+  function formatPrice(n) {
+    return (state.settings.currency || "AED") + " " + Number(n).toFixed(2);
+  }
+
+  // ============================================================
+  // BOOTSTRAP — check install status, then show install or login
+  // ============================================================
+  (async function bootstrap() {
+    if (WORKER_URL.includes("REPLACE-ME")) {
+      $("login-card").style.display = "block";
+      $("login-msg").innerHTML = '<div class="msg error">The admin panel isn\'t connected to its Worker yet — see the setup guide.</div>';
+      return;
+    }
+    try {
+      const status = await api("/api/install-status");
+      if (status.needsInstall) {
+        $("install-card").style.display = "block";
+        return;
+      }
+    } catch (err) {
+      $("login-card").style.display = "block";
+      $("login-msg").innerHTML = `<div class="msg error">Couldn't reach the server: ${escapeHtml(err.message)}</div>`;
+      return;
+    }
+    // Resume an existing session if we have one.
+    const existing = sessionStorage.getItem(SESSION_KEY);
+    if (existing) {
+      state.token = existing;
+      try { await enterApp(); return; } catch { /* falls through to login */ }
+    }
+    $("login-card").style.display = "block";
+  })();
+
+  // ============================================================
+  // INSTALL
+  // ============================================================
+  $("btn-install").addEventListener("click", async () => {
+    const password = $("i-password").value;
+    const confirm = $("i-confirm").value;
+    const enableTotp = $("i-totp").checked;
+    const email = $("i-email").value.trim();
+    const msgEl = $("install-msg");
+    msgEl.innerHTML = "";
+
+    if (password.length < 8) { msgEl.innerHTML = '<div class="msg error">Password must be at least 8 characters.</div>'; return; }
+    if (password !== confirm) { msgEl.innerHTML = '<div class="msg error">Passwords do not match.</div>'; return; }
+    if (!enableTotp && !email) { msgEl.innerHTML = '<div class="msg error">Enable at least one 2FA method.</div>'; return; }
+
+    $("btn-install").disabled = true;
+    $("btn-install").textContent = "Creating…";
+    try {
+      const data = await api("/api/install", { method: "POST", body: JSON.stringify({ password, enableTotp, email }) });
+      $("install-form").style.display = "none";
+      $("install-result").style.display = "block";
+      if (data.totpSecret) {
+        $("install-totp-block").style.display = "block";
+        $("install-totp-secret").textContent = data.totpSecret;
+      }
+    } catch (err) {
+      msgEl.innerHTML = `<div class="msg error">${escapeHtml(err.message)}</div>`;
+    } finally {
+      $("btn-install").disabled = false;
+      $("btn-install").textContent = "Create admin account";
+    }
+  });
+  $("btn-install-continue").addEventListener("click", () => {
+    $("install-card").style.display = "none";
+    $("login-card").style.display = "block";
+  });
+
+  // ============================================================
+  // LOGIN + 2FA
+  // ============================================================
   $("btn-login").addEventListener("click", submitPassword);
   $("f-password").addEventListener("keydown", (e) => { if (e.key === "Enter") submitPassword(); });
 
@@ -380,14 +503,7 @@
     const password = $("f-password").value;
     const msgEl = $("login-msg");
     msgEl.innerHTML = "";
-    if (!password) {
-      msgEl.innerHTML = '<div class="msg error">Enter your password.</div>';
-      return;
-    }
-    if (WORKER_URL.includes("REPLACE-ME")) {
-      msgEl.innerHTML = '<div class="msg error">The admin panel isn\'t connected to its Worker yet — see the setup guide.</div>';
-      return;
-    }
+    if (!password) { msgEl.innerHTML = '<div class="msg error">Enter your password.</div>'; return; }
     $("btn-login").disabled = true;
     $("btn-login").textContent = "Checking…";
     try {
@@ -397,22 +513,19 @@
       const parts = [];
       if (data.totpEnabled) parts.push("the code from your authenticator app");
       if (data.emailSent) parts.push("the code just emailed to you");
-      $("twofa-lead").textContent = parts.length
-        ? `Enter ${parts.join(" or ")}.`
-        : "Enter your 6-digit verification code.";
+      $("twofa-lead").textContent = parts.length ? `Enter ${parts.join(" or ")}.` : "Enter your 6-digit verification code.";
       $("login-card").style.display = "none";
       $("twofa-card").style.display = "block";
       $("f-code").value = "";
       $("f-code").focus();
     } catch (err) {
-      msgEl.innerHTML = `<div class="msg error">${err.message}</div>`;
+      msgEl.innerHTML = `<div class="msg error">${escapeHtml(err.message)}</div>`;
     } finally {
       $("btn-login").disabled = false;
       $("btn-login").textContent = "Continue";
     }
   }
 
-  // ---------- LOGIN: STEP 2 — 2FA CODE ----------
   $("btn-verify").addEventListener("click", submitCode);
   $("f-code").addEventListener("keydown", (e) => { if (e.key === "Enter") submitCode(); });
   $("btn-back-to-password").addEventListener("click", () => {
@@ -425,170 +538,242 @@
     const code = $("f-code").value.trim();
     const msgEl = $("twofa-msg");
     msgEl.innerHTML = "";
-    if (!/^\d{6}$/.test(code)) {
-      msgEl.innerHTML = '<div class="msg error">Enter the 6-digit code.</div>';
-      return;
-    }
+    if (!/^\d{6}$/.test(code)) { msgEl.innerHTML = '<div class="msg error">Enter the 6-digit code.</div>'; return; }
     $("btn-verify").disabled = true;
     $("btn-verify").textContent = "Verifying…";
     try {
       const data = await api("/api/verify-2fa", { method: "POST", body: JSON.stringify({ challenge: state.challenge, code }) });
       state.token = data.token;
       sessionStorage.setItem(SESSION_KEY, data.token);
-      await enterDashboard();
+      await enterApp();
     } catch (err) {
-      msgEl.innerHTML = `<div class="msg error">${err.message}</div>`;
+      msgEl.innerHTML = `<div class="msg error">${escapeHtml(err.message)}</div>`;
     } finally {
       $("btn-verify").disabled = false;
       $("btn-verify").textContent = "Verify & Sign In";
     }
   }
 
-  async function enterDashboard() {
-    await loadProducts();
-    $("login-card").style.display = "none";
-    $("twofa-card").style.display = "none";
-    $("dashboard").style.display = "block";
-    $("conn-pill").style.display = "inline-flex";
-    $("conn-text").textContent = "Signed in";
-  }
-
-  $("btn-disconnect").addEventListener("click", () => {
-    if (state.dirty && !confirm("You have unpublished changes that will be lost. Sign out anyway?")) return;
+  $("btn-signout").addEventListener("click", () => {
+    if (isDirty() && !confirm("You have unpublished changes that will be lost. Sign out anyway?")) return;
     signOut();
   });
 
   function signOut() {
     sessionStorage.removeItem(SESSION_KEY);
-    state = { token: null, challenge: null, products: [], productsSha: null, dirty: false, editingIndex: null };
-    $("dashboard").style.display = "none";
+    state = { token: null, challenge: null, categories: [], products: [], settings: {}, shas: { products: null, categories: null, settings: null }, dirty: { products: false, categories: false, settings: false }, editingProductIndex: null, currentView: "dashboard" };
+    $("app").style.display = "none";
+    $("tabnav").style.display = "none";
     $("twofa-card").style.display = "none";
+    $("install-card").style.display = "none";
     $("login-card").style.display = "block";
     $("conn-pill").style.display = "none";
     $("f-password").value = "";
   }
 
-  async function loadProducts() {
+  async function enterApp() {
+    await loadData();
+    $("login-card").style.display = "none";
+    $("twofa-card").style.display = "none";
+    $("install-card").style.display = "none";
+    $("app").style.display = "block";
+    $("tabnav").style.display = "block";
+    $("conn-pill").style.display = "inline-flex";
+    updatePublishUi();
+    switchView("dashboard");
+  }
+
+  async function loadData() {
     try {
-      const data = await api("/api/products");
+      const data = await api("/api/data");
+      state.categories = data.categories || [];
       state.products = data.products || [];
-      state.productsSha = data.sha || null;
+      state.settings = data.settings || {};
+      state.shas = data.shas || {};
     } catch (err) {
       if (err.status === 401) {
         signOut();
         $("login-msg").innerHTML = '<div class="msg error">Your session expired — please sign in again.</div>';
-        throw err;
       }
       throw err;
     }
-    state.dirty = false;
-    setStatus();
-    renderList();
+    state.dirty = { products: false, categories: false, settings: false };
+    populateSettingsForm();
   }
 
-  // Resume an existing session (survives a page refresh within the same
-  // browser tab; cleared automatically when the tab is closed).
-  (async function tryResumeSession() {
-    const existing = sessionStorage.getItem(SESSION_KEY);
-    if (!existing || WORKER_URL.includes("REPLACE-ME")) return;
-    state.token = existing;
-    try {
-      await enterDashboard();
-    } catch {
-      // loadProducts() already handled sign-out messaging on 401
-    }
-  })();
+  // ============================================================
+  // TAB NAVIGATION
+  // ============================================================
+  document.querySelectorAll("#tabnav button[data-view]").forEach((btn) => {
+    btn.addEventListener("click", () => switchView(btn.dataset.view));
+  });
 
-  // ---------- LIST ----------
-  function renderList() {
-    const el = $("product-list");
-    if (!state.products.length) {
-      el.innerHTML = '<div class="empty-state">No products yet — click "+ Add Product" to add your first one.</div>';
+  function switchView(view) {
+    state.currentView = view;
+    document.querySelectorAll(".view").forEach((el) => (el.style.display = "none"));
+    $("view-" + view).style.display = "block";
+    document.querySelectorAll("#tabnav button[data-view]").forEach((btn) => {
+      btn.classList.toggle("active", btn.dataset.view === view);
+    });
+    if (view === "dashboard") renderDashboard();
+    if (view === "products") renderProducts();
+    if (view === "categories") renderCategories();
+  }
+
+  // ============================================================
+  // DASHBOARD
+  // ============================================================
+  function renderDashboard() {
+    const activeProducts = state.products.filter((p) => !p._deleted);
+    const live = activeProducts.filter((p) => p.ready);
+    const totalSkus = activeProducts.reduce((n, p) => n + p.variants.length, 0);
+    const soldOut = activeProducts.reduce((n, p) => n + p.variants.filter((v) => Number(v.stock) <= 0).length, 0);
+
+    $("stat-grid").innerHTML = `
+      <div class="stat-card"><div class="num">${activeProducts.length}</div><div class="label">Total products</div></div>
+      <div class="stat-card"><div class="num">${live.length}</div><div class="label">Live on site</div></div>
+      <div class="stat-card"><div class="num">${totalSkus}</div><div class="label">Total SKUs</div></div>
+      <div class="stat-card"><div class="num">${soldOut}</div><div class="label">SKUs sold out</div></div>
+      <div class="stat-card"><div class="num">${state.categories.length}</div><div class="label">Categories</div></div>
+    `;
+
+    const recent = activeProducts.slice(0, 5);
+    if (!recent.length) {
+      $("dash-recent").innerHTML = '<div class="empty-state">No products yet — click "+ Add Product" to add your first one.</div>';
       return;
     }
-    el.innerHTML = state.products.map((p, i) => {
-      const soldOut = Number(p.stock) <= 0;
-      return `
-        <div class="product-row ${p._deleted ? "deleted" : ""}" data-index="${i}">
-          <div class="thumb"><img src="${p._photoPreview || p.photo || ""}" alt="" onerror="this.style.opacity=0" /></div>
-          <div class="details">
-            <div class="name">${escapeHtml(p.name)} ${p.variant ? "&mdash; " + escapeHtml(p.variant) : ""}</div>
-            <div class="meta">AED ${escapeHtml(p.price)} &middot; ${escapeHtml(p.sizes || "")}</div>
-            <div class="badges">
-              <span class="badge cat">${escapeHtml(p.category)}</span>
-              <span class="badge ${p.ready ? "ready" : "draft"}">${p.ready ? "Live" : "Draft"}</span>
-              ${soldOut ? '<span class="badge soldout">Sold out</span>' : ""}
-              ${p._deleted ? '<span class="badge soldout">Marked for deletion</span>' : ""}
-            </div>
-          </div>
-          <div class="row-actions">
+    $("dash-recent").innerHTML = `<div class="table-wrap"><table class="data-table">
+      <tr><th>Product</th><th>Category</th><th>Status</th><th></th></tr>
+      ${recent.map((p) => {
+        const idx = state.products.indexOf(p);
+        return `<tr>
+          <td>${escapeHtml(p.name)}</td>
+          <td><span class="badge cat">${escapeHtml(categoryName(p.categoryId))}</span></td>
+          <td><span class="badge ${p.ready ? "ready" : "draft"}">${p.ready ? "Live" : "Draft"}</span></td>
+          <td class="row-actions"><button class="btn btn-ghost btn-sm" data-edit-product="${idx}">Edit</button></td>
+        </tr>`;
+      }).join("")}
+    </table></div>`;
+  }
+
+  $("btn-add-from-dash").addEventListener("click", () => openProductEditor(null));
+  document.body.addEventListener("click", (e) => {
+    const btn = e.target.closest("button[data-edit-product]");
+    if (btn) openProductEditor(Number(btn.dataset.editProduct));
+  });
+
+  // ============================================================
+  // PRODUCTS LIST
+  // ============================================================
+  function renderProducts() {
+    const rows = state.products.map((p, i) => ({ p, i }));
+    if (!rows.length) {
+      $("products-list").innerHTML = '<div class="empty-state">No products yet — click "+ Add Product" to add your first one.</div>';
+      return;
+    }
+    $("products-list").innerHTML = `<div class="table-wrap"><table class="data-table">
+      <tr><th></th><th>Name</th><th>Category</th><th>Price</th><th>SKUs</th><th>Stock</th><th>Status</th><th></th></tr>
+      ${rows.map(({ p, i }) => {
+        const thumb = (p.variants.find((v) => v.photo || v._photoPreview) || {});
+        const totalStock = p.variants.reduce((n, v) => n + (Number(v.stock) || 0), 0);
+        const prices = p.variants.map((v) => variantPrice(v, p));
+        const priceLabel = Math.min(...prices) === Math.max(...prices)
+          ? formatPrice(prices[0])
+          : `${formatPrice(Math.min(...prices))}–${formatPrice(Math.max(...prices))}`;
+        const rowStyle = p._deleted ? ' style="opacity:0.45;"' : "";
+        return `<tr${rowStyle}>
+          <td><div class="thumb">${thumb.photo || thumb._photoPreview ? `<img src="${escapeHtml(thumb._photoPreview || thumb.photo)}" alt="" />` : ""}</div></td>
+          <td>${escapeHtml(p.name)}</td>
+          <td><span class="badge cat">${escapeHtml(categoryName(p.categoryId))}</span></td>
+          <td>${priceLabel}</td>
+          <td>${p.variants.length}</td>
+          <td>${totalStock}${totalStock === 0 ? ' <span class="badge soldout">sold out</span>' : ""}</td>
+          <td>${p._deleted
+            ? '<span class="badge soldout">Marked for deletion</span>'
+            : `<span class="badge ${p.ready ? "ready" : "draft"}">${p.ready ? "Live" : "Draft"}</span>`}</td>
+          <td class="row-actions">
             ${p._deleted
-              ? `<button class="btn btn-ghost btn-sm" data-action="undelete" data-index="${i}">Undo</button>`
-              : `<button class="btn btn-ghost btn-sm" data-action="edit" data-index="${i}">Edit</button>
-                 <button class="btn btn-danger btn-sm" data-action="delete" data-index="${i}">Delete</button>`
-            }
-          </div>
-        </div>`;
-    }).join("");
+              ? `<button class="btn btn-ghost btn-sm" data-undelete-product="${i}">Undo</button>`
+              : `<button class="btn btn-ghost btn-sm" data-edit-product="${i}">Edit</button>
+                 <button class="btn btn-danger btn-sm" data-delete-product="${i}">Delete</button>`}
+          </td>
+        </tr>`;
+      }).join("")}
+    </table></div>`;
   }
 
-  function escapeHtml(s) {
-    return String(s).replace(/[&<>"']/g, (c) => ({ "&": "&amp;", "<": "&lt;", ">": "&gt;", '"': "&quot;", "'": "&#39;" }[c]));
-  }
-
-  $("product-list").addEventListener("click", (e) => {
-    const btn = e.target.closest("button[data-action]");
-    if (!btn) return;
-    const i = Number(btn.dataset.index);
-    const action = btn.dataset.action;
-    if (action === "edit") openEditor(i);
-    if (action === "delete") {
+  $("btn-add-product").addEventListener("click", () => openProductEditor(null));
+  document.body.addEventListener("click", (e) => {
+    const delBtn = e.target.closest("button[data-delete-product]");
+    if (delBtn) {
+      const i = Number(delBtn.dataset.deleteProduct);
       if (confirm(`Remove "${state.products[i].name}" from the site?`)) {
         state.products[i]._deleted = true;
-        markDirty();
-        renderList();
+        state.dirty.products = true;
+        renderProducts();
+        updatePublishUi();
       }
+      return;
     }
-    if (action === "undelete") {
+    const undoBtn = e.target.closest("button[data-undelete-product]");
+    if (undoBtn) {
+      const i = Number(undoBtn.dataset.undeleteProduct);
       delete state.products[i]._deleted;
-      markDirty();
-      renderList();
+      state.dirty.products = true;
+      renderProducts();
+      updatePublishUi();
     }
   });
 
-  // ---------- EDITOR ----------
+  // ============================================================
+  // PRODUCT EDITOR
+  // ============================================================
+  // Products can only be assigned to a LEAF category: a top-level category
+  // with no subcategories, or a subcategory itself. A top-level category
+  // that has subcategories is grouped as an optgroup label, not selectable.
   function populateCategorySelect() {
-    $("e-category").innerHTML = CATEGORIES.map((c) => `<option value="${c}">${c}</option>`).join("");
+    $("e-category").innerHTML = topLevelCategories().map((top) => {
+      const children = childCategories(top.id);
+      if (!children.length) {
+        return `<option value="${escapeHtml(top.id)}">${escapeHtml(top.name)}</option>`;
+      }
+      return `<optgroup label="${escapeHtml(top.name)}">${children.map((c) =>
+        `<option value="${escapeHtml(c.id)}">${escapeHtml(c.name)}</option>`
+      ).join("")}</optgroup>`;
+    }).join("");
   }
-  populateCategorySelect();
 
-  $("btn-add").addEventListener("click", () => openEditor(null));
+  // Any leaf category — used to pick the FIRST valid selection for a new product.
+  function firstLeafCategoryId() {
+    for (const top of topLevelCategories()) {
+      const children = childCategories(top.id);
+      if (!children.length) return top.id;
+      if (children.length) return children[0].id;
+    }
+    return null;
+  }
+
   $("editor-close").addEventListener("click", closeEditor);
   $("editor-backdrop").addEventListener("click", closeEditor);
 
-  function openEditor(index) {
-    state.editingIndex = index;
-    $("e-photo").value = "";
+  function openProductEditor(index) {
+    const defaultLeaf = firstLeafCategoryId();
+    if (!defaultLeaf) { alert("Add a category first, on the Categories tab. (If you only have main categories with subcategories under them, add at least one subcategory too — products go on subcategories, not their parent.)"); return; }
+    state.editingProductIndex = index;
+    populateCategorySelect();
     const p = index === null ? null : state.products[index];
 
     $("editor-title").textContent = p ? "Edit Product" : "Add Product";
-    $("e-category").value = p ? p.category : CATEGORIES[0];
+    $("e-category").value = p ? p.categoryId : defaultLeaf;
     $("e-name").value = p ? p.name : "";
-    $("e-variant").value = p ? (p.variant || "") : "";
-    $("e-sizes").value = p ? (p.sizes || "") : "";
-    $("e-price").value = p ? p.price : "";
-    $("e-stock").value = p ? p.stock : 0;
     $("e-desc").value = p ? (p.description || "") : "";
+    $("e-price").value = p ? p.basePrice : "";
+    $("e-sort").value = p ? (p.sortOrder || 0) : 0;
     $("e-ready").checked = p ? !!p.ready : false;
 
-    if (p && p.photo) {
-      $("current-photo-row").style.display = "flex";
-      $("current-photo-img").src = p.photo;
-      $("photo-required-note").textContent = "";
-    } else {
-      $("current-photo-row").style.display = "none";
-      $("photo-required-note").textContent = "(required for new products)";
-    }
+    $("variant-rows").innerHTML = "";
+    const variants = p ? p.variants : [{}];
+    variants.forEach((v) => addVariantRow(v));
 
     $("editor-backdrop").style.display = "block";
     $("editor-panel").style.display = "block";
@@ -599,101 +784,373 @@
     $("editor-panel").style.display = "none";
   }
 
-  $("btn-save-item").addEventListener("click", () => {
+  function addVariantRow(v) {
+    v = v || {};
+    const row = document.createElement("div");
+    row.className = "variant-row";
+    row.dataset.existingPhoto = v.photo || "";
+    const preview = v._photoPreview || v.photo || "";
+    row.innerHTML = `
+      <div class="field">
+        <span class="mini-label">Photo</span>
+        <div class="current-thumb" style="${preview ? "" : "display:none;"}"><img src="${escapeHtml(preview)}" alt="" /></div>
+        <input type="file" accept="image/*" class="v-photo" />
+      </div>
+      <div class="field"><span class="mini-label">SKU</span><input type="text" class="v-sku" value="${escapeHtml(v.sku || "")}" placeholder="e.g. PLZ-BLK-FREE" /></div>
+      <div class="field"><span class="mini-label">Colour</span><input type="text" class="v-color" value="${escapeHtml(v.color || "")}" placeholder="e.g. Midnight Black" /></div>
+      <div class="field"><span class="mini-label">Size</span><input type="text" class="v-size" value="${escapeHtml(v.size || "")}" placeholder="e.g. Free Size" /></div>
+      <div class="field"><span class="mini-label">Price override</span><input type="number" step="0.01" min="0" class="v-price" value="${v.priceOverride != null ? v.priceOverride : ""}" placeholder="optional" /></div>
+      <div class="field"><span class="mini-label">Stock</span><input type="number" min="0" class="v-stock" value="${v.stock != null ? v.stock : 0}" /></div>
+      <button type="button" class="remove-btn" title="Remove this SKU">&times;</button>
+    `;
+    $("variant-rows").appendChild(row);
+    row.querySelector(".v-photo").addEventListener("change", (e) => {
+      const f = e.target.files[0];
+      if (!f) return;
+      let thumbEl = row.querySelector(".current-thumb");
+      if (!thumbEl.querySelector("img")) thumbEl.innerHTML = "<img alt=''/>";
+      thumbEl.style.display = "block";
+      thumbEl.querySelector("img").src = URL.createObjectURL(f);
+    });
+    row.querySelector(".remove-btn").addEventListener("click", () => row.remove());
+  }
+
+  $("btn-add-variant").addEventListener("click", () => addVariantRow({}));
+
+  $("btn-save-product").addEventListener("click", () => {
     const name = $("e-name").value.trim();
-    const price = parseFloat($("e-price").value);
+    const basePrice = parseFloat($("e-price").value);
     if (!name) { alert("Product name is required."); return; }
-    if (isNaN(price) || price < 0) { alert("Enter a valid selling price."); return; }
+    if (isNaN(basePrice) || basePrice < 0) { alert("Enter a valid base price."); return; }
 
-    const file = $("e-photo").files[0] || null;
-    const isNew = state.editingIndex === null;
-    if (isNew && !file) { alert("A photo is required for a new product."); return; }
+    const rows = Array.from(document.querySelectorAll("#variant-rows .variant-row"));
+    const variants = [];
+    const skusSeen = new Set();
+    for (const row of rows) {
+      const sku = row.querySelector(".v-sku").value.trim();
+      if (!sku) continue; // blank row — ignore
+      const skuLower = sku.toLowerCase();
+      if (skusSeen.has(skuLower)) { alert(`SKU "${sku}" is used more than once in this product.`); throw new Error("dup sku"); }
+      skusSeen.add(skuLower);
 
+      const priceOverrideRaw = row.querySelector(".v-price").value.trim();
+      const variant = {
+        sku,
+        color: row.querySelector(".v-color").value.trim(),
+        size: row.querySelector(".v-size").value.trim(),
+        priceOverride: priceOverrideRaw === "" ? null : parseFloat(priceOverrideRaw),
+        stock: parseInt(row.querySelector(".v-stock").value, 10) || 0,
+        photo: row.dataset.existingPhoto || null,
+      };
+      const file = row.querySelector(".v-photo").files[0];
+      if (file) {
+        const ext = (file.name.split(".").pop() || "jpg").toLowerCase();
+        variant._photoFile = file;
+        variant._photoPreview = URL.createObjectURL(file);
+        // computed once we know the product id, below
+        variant._photoExt = ext;
+      }
+      variants.push(variant);
+    }
+    if (!variants.length) { alert("Add at least one SKU."); return; }
+
+    const isNew = state.editingProductIndex === null;
+    const existingIds = new Set(state.products.map((p) => p.id));
     const record = isNew
-      ? { id: uniqueId(slugify(name + "-" + ($("e-variant").value || ""))) }
-      : { ...state.products[state.editingIndex] };
+      ? { id: uniqueId(slugify(name), existingIds) }
+      : { ...state.products[state.editingProductIndex] };
 
-    record.category = $("e-category").value;
+    record.categoryId = $("e-category").value;
     record.name = name;
-    record.variant = $("e-variant").value.trim();
-    record.sizes = $("e-sizes").value.trim();
-    record.price = price;
-    record.stock = parseInt($("e-stock").value, 10) || 0;
     record.description = $("e-desc").value.trim();
+    record.basePrice = basePrice;
+    record.sortOrder = parseInt($("e-sort").value, 10) || 0;
     record.ready = $("e-ready").checked;
     delete record._deleted;
 
-    const applyAndClose = () => {
-      if (isNew) state.products.push(record);
-      else state.products[state.editingIndex] = record;
-      markDirty();
-      renderList();
-      closeEditor();
-    };
+    variants.forEach((v) => {
+      if (v._photoFile) {
+        v.photo = `${PHOTO_DIR}/${record.id}-${slugify(v.sku)}.${v._photoExt}`;
+        delete v._photoExt;
+      }
+    });
+    record.variants = variants;
 
-    if (file) {
-      const ext = (file.name.split(".").pop() || "jpg").toLowerCase();
-      record._photoFile = file;
-      record._photoPreview = URL.createObjectURL(file);
-      record.photo = `${PHOTO_DIR}/${record.id}.${ext}`;
-      applyAndClose();
-    } else {
-      applyAndClose();
+    if (isNew) state.products.push(record);
+    else state.products[state.editingProductIndex] = record;
+
+    state.dirty.products = true;
+    closeEditor();
+    if (state.currentView === "products") renderProducts();
+    if (state.currentView === "dashboard") renderDashboard();
+    updatePublishUi();
+  });
+
+  // ============================================================
+  // CATEGORIES
+  // ============================================================
+  function populateNewCategoryParentSelect() {
+    $("cat-new-parent").innerHTML = '<option value="">None — top-level category</option>' +
+      topLevelCategories().map((c) => `<option value="${escapeHtml(c.id)}">${escapeHtml(c.name)}</option>`).join("");
+  }
+
+  function categoryRowHtml(c, isChild) {
+    const count = state.products.filter((p) => !p._deleted && p.categoryId === c.id).length;
+    const childless = !hasChildren(c.id);
+    const canDelete = isChild ? count === 0 : (childless && count === 0);
+    const deleteBlockedReason = !childless ? "Delete its subcategories first" : "Move or delete its products first";
+    const parentOptions = topLevelCategories().filter((t) => t.id !== c.id);
+    const parentSelect = childless
+      ? `<select class="cat-parent" data-id="${escapeHtml(c.id)}" style="min-width:150px;">
+           <option value="">None — top-level</option>
+           ${parentOptions.map((t) => `<option value="${escapeHtml(t.id)}" ${c.parentId === t.id ? "selected" : ""}>${escapeHtml(t.name)}</option>`).join("")}
+         </select>`
+      : `<span class="hint">Top-level (has subcategories)</span>`;
+    return `<tr>
+      <td style="${isChild ? "padding-left:28px;" : ""}">${isChild ? "&#8618; " : ""}<input type="text" class="cat-name" data-id="${escapeHtml(c.id)}" value="${escapeHtml(c.name)}" style="min-width:140px;display:inline-block;width:auto;" /></td>
+      <td>${parentSelect}</td>
+      <td><input type="number" class="cat-sort" data-id="${escapeHtml(c.id)}" value="${c.sortOrder || 0}" style="width:70px;" /></td>
+      <td>${count}</td>
+      <td class="row-actions">
+        <button class="btn btn-ghost btn-sm" data-save-cat="${escapeHtml(c.id)}">Save</button>
+        ${canDelete
+          ? `<button class="btn btn-danger btn-sm" data-delete-cat="${escapeHtml(c.id)}">Delete</button>`
+          : `<span class="hint" title="${escapeHtml(deleteBlockedReason)}">Delete</span>`}
+      </td>
+    </tr>`;
+  }
+
+  function renderCategories() {
+    populateNewCategoryParentSelect();
+    if (!state.categories.length) {
+      $("categories-list").innerHTML = '<div class="empty-state">No categories yet — add your first one above.</div>';
+      return;
+    }
+    let rowsHtml = "";
+    topLevelCategories().forEach((top) => {
+      rowsHtml += categoryRowHtml(top, false);
+      childCategories(top.id).forEach((child) => { rowsHtml += categoryRowHtml(child, true); });
+    });
+    $("categories-list").innerHTML = `<div class="table-wrap"><table class="data-table">
+      <tr><th>Name</th><th>Parent</th><th>Sort</th><th>Products</th><th></th></tr>
+      ${rowsHtml}
+    </table></div>`;
+  }
+
+  $("btn-add-category").addEventListener("click", () => {
+    const name = $("cat-new-name").value.trim();
+    const sortOrder = parseInt($("cat-new-sort").value, 10) || 0;
+    const parentId = $("cat-new-parent").value || null;
+    if (!name) { alert("Category name is required."); return; }
+    const existingIds = new Set(state.categories.map((c) => c.id));
+    const id = uniqueId(slugify(name), existingIds);
+    state.categories.push({ id, name, sortOrder, parentId });
+    state.dirty.categories = true;
+    $("cat-new-name").value = "";
+    $("cat-new-sort").value = "0";
+    $("cat-new-parent").value = "";
+    renderCategories();
+    updatePublishUi();
+  });
+
+  document.body.addEventListener("click", (e) => {
+    const saveBtn = e.target.closest("button[data-save-cat]");
+    if (saveBtn) {
+      const id = saveBtn.dataset.saveCat;
+      const nameInput = document.querySelector(`.cat-name[data-id="${CSS.escape(id)}"]`);
+      const sortInput = document.querySelector(`.cat-sort[data-id="${CSS.escape(id)}"]`);
+      const parentSelect = document.querySelector(`.cat-parent[data-id="${CSS.escape(id)}"]`);
+      const name = nameInput.value.trim();
+      if (!name) { alert("Category name is required."); return; }
+      const cat = findCategory(id);
+      cat.name = name;
+      cat.sortOrder = parseInt(sortInput.value, 10) || 0;
+      if (parentSelect) {
+        const newParentId = parentSelect.value || null;
+        if (newParentId && findCategory(newParentId) && findCategory(newParentId).parentId) {
+          alert("Can't nest more than one level deep."); return;
+        }
+        cat.parentId = newParentId;
+      }
+      state.dirty.categories = true;
+      updatePublishUi();
+      renderCategories();
+      return;
+    }
+    const delBtn = e.target.closest("button[data-delete-cat]");
+    if (delBtn) {
+      const id = delBtn.dataset.deleteCat;
+      if (hasChildren(id)) { alert("This category has subcategories — delete or move those first."); return; }
+      const inUse = state.products.some((p) => !p._deleted && p.categoryId === id);
+      if (inUse) { alert("Can't delete — this category still has products. Move or delete those first."); return; }
+      if (!confirm("Delete this category?")) return;
+      state.categories = state.categories.filter((c) => c.id !== id);
+      state.dirty.categories = true;
+      renderCategories();
+      updatePublishUi();
     }
   });
 
-  // ---------- PUBLISH ----------
-  $("btn-publish").addEventListener("click", async () => {
-    if (!state.dirty) return;
+  // ============================================================
+  // SETTINGS
+  // ============================================================
+  function populateSettingsForm() {
+    $("s-name").value = state.settings.siteName || "";
+    $("s-currency").value = state.settings.currency || "AED";
+    $("s-tagline").value = state.settings.tagline || "";
+    $("s-whatsapp").value = state.settings.whatsappNumber || "";
+    $("s-instagram").value = state.settings.instagramUrl || "";
+    renderTotpStatus();
+    $("email-2fa").value = "";
+  }
+
+  $("btn-save-site-settings").addEventListener("click", () => {
+    state.settings = {
+      ...state.settings,
+      siteName: $("s-name").value.trim() || "Prabhvas Fashions",
+      currency: $("s-currency").value.trim() || "AED",
+      tagline: $("s-tagline").value.trim(),
+      whatsappNumber: $("s-whatsapp").value.replace(/[^0-9]/g, ""),
+      instagramUrl: $("s-instagram").value.trim(),
+    };
+    state.dirty.settings = true;
+    updatePublishUi();
+    $("settings-msg").innerHTML = '<div class="msg ok">Staged — click Publish Changes to go live.</div>';
+  });
+
+  $("btn-change-password").addEventListener("click", async () => {
+    const currentPassword = $("pw-current").value;
+    const newPassword = $("pw-new").value;
+    const confirm = $("pw-confirm").value;
+    const msgEl = $("settings-msg");
+    msgEl.innerHTML = "";
+    if (newPassword.length < 8) { msgEl.innerHTML = '<div class="msg error">New password must be at least 8 characters.</div>'; return; }
+    if (newPassword !== confirm) { msgEl.innerHTML = '<div class="msg error">New passwords do not match.</div>'; return; }
+    try {
+      await api("/api/change-password", { method: "POST", body: JSON.stringify({ currentPassword, newPassword }) });
+      $("pw-current").value = ""; $("pw-new").value = ""; $("pw-confirm").value = "";
+      msgEl.innerHTML = '<div class="msg ok">Password changed.</div>';
+    } catch (err) {
+      msgEl.innerHTML = `<div class="msg error">${escapeHtml(err.message)}</div>`;
+    }
+  });
+
+  function renderTotpStatus() {
+    // We don't know from /api/data whether TOTP is on (it's not exposed for
+    // security) — instead we lazily reflect state after any change here, and
+    // otherwise show a neutral status with both actions available.
+    $("totp-status").innerHTML = `
+      <div style="display:flex;gap:10px;flex-wrap:wrap;">
+        <button class="btn btn-ghost btn-sm" id="btn-totp-regenerate">Generate new authenticator key</button>
+        <button class="btn btn-danger btn-sm" id="btn-totp-disable">Turn off authenticator app</button>
+      </div>`;
+    $("btn-totp-regenerate").addEventListener("click", async () => {
+      if (!confirm("This replaces your current authenticator key (or creates one if you don't have one) — you'll need to (re-)scan it. Continue?")) return;
+      try {
+        const data = await api("/api/totp/regenerate", { method: "POST" });
+        $("totp-new-secret").style.display = "block";
+        $("totp-new-secret-text").textContent = data.totpSecret;
+        $("settings-msg").innerHTML = '<div class="msg ok">New authenticator key generated — scan it now, shown once above.</div>';
+      } catch (err) {
+        $("settings-msg").innerHTML = `<div class="msg error">${escapeHtml(err.message)}</div>`;
+      }
+    });
+    $("btn-totp-disable").addEventListener("click", async () => {
+      if (!confirm("Turn off authenticator-app 2FA?")) return;
+      try {
+        await api("/api/totp/disable", { method: "POST" });
+        $("settings-msg").innerHTML = '<div class="msg ok">Authenticator-app 2FA turned off.</div>';
+      } catch (err) {
+        $("settings-msg").innerHTML = `<div class="msg error">${escapeHtml(err.message)}</div>`;
+      }
+    });
+  }
+
+  $("btn-save-email-2fa").addEventListener("click", async () => {
+    const email = $("email-2fa").value.trim();
+    try {
+      await api("/api/email-2fa", { method: "POST", body: JSON.stringify({ email }) });
+      $("settings-msg").innerHTML = `<div class="msg ok">${email ? "Email saved — codes can now be sent there." : "Email removed."}</div>`;
+    } catch (err) {
+      $("settings-msg").innerHTML = `<div class="msg error">${escapeHtml(err.message)}</div>`;
+    }
+  });
+
+  // ============================================================
+  // PUBLISH (global — collects whatever is dirty across all tabs)
+  // ============================================================
+  function updatePublishUi() {
+    // Publish bar lives inside the tabnav area for constant visibility.
+    let bar = $("publish-bar");
+    if (!bar) {
+      bar = document.createElement("div");
+      bar.id = "publish-bar";
+      bar.style.cssText = "position:sticky;bottom:0;background:var(--surface);border-top:1px solid var(--line);padding:12px 0;z-index:30;";
+      bar.innerHTML = `<div class="wrap" style="display:flex;align-items:center;justify-content:space-between;gap:12px;flex-wrap:wrap;">
+        <span class="status-line" id="status-text">No unsaved changes</span>
+        <div style="display:flex;gap:10px;"><button class="btn btn-primary" id="btn-publish" disabled>Publish Changes</button></div>
+      </div><div class="wrap" id="publish-msg" style="padding-top:0;"></div>`;
+      document.body.appendChild(bar);
+      $("btn-publish").addEventListener("click", publishChanges);
+    }
+    const dirty = isDirty();
+    $("status-text").textContent = dirty ? "Unsaved changes — click Publish to make them live" : "No unsaved changes";
+    $("status-text").classList.toggle("dirty", dirty);
+    $("btn-publish").disabled = !dirty;
+  }
+
+  async function publishChanges() {
+    if (!isDirty()) return;
     const msgEl = $("publish-msg");
     msgEl.innerHTML = "";
     $("btn-publish").disabled = true;
     $("btn-publish").textContent = "Publishing…";
     try {
-      // 1. Collect any new photos as base64, keyed by their destination path.
       const photos = {};
       for (const p of state.products) {
-        if (p._photoFile) {
-          photos[p.photo] = await fileToBase64(p._photoFile);
+        for (const v of p.variants) {
+          if (v._photoFile) photos[v.photo] = await fileToBase64(v._photoFile);
         }
       }
 
-      // 2. Build the published array (drop internal-only fields, drop deleted items)
-      const published = state.products
-        .filter((p) => !p._deleted)
-        .map(({ _deleted, _photoFile, _photoPreview, ...clean }) => clean);
+      const payload = { shas: state.shas, photos };
+      if (state.dirty.products) {
+        payload.products = state.products.filter((p) => !p._deleted).map((p) => ({
+          ...p,
+          variants: p.variants.map(({ _photoFile, _photoPreview, ...clean }) => clean),
+        }));
+      }
+      if (state.dirty.categories) payload.categories = state.categories;
+      if (state.dirty.settings) payload.settings = state.settings;
 
-      // 3. Send everything to the Worker in one call — it uploads the
-      //    photos and commits products.json server-side, using the GitHub
-      //    token it holds privately.
-      const data = await api("/api/publish", {
-        method: "POST",
-        body: JSON.stringify({ products: published, sha: state.productsSha, photos }),
-      });
-      state.productsSha = data.sha || state.productsSha;
-      state.products = published;
-      state.dirty = false;
-      setStatus();
-      renderList();
+      const data = await api("/api/publish", { method: "POST", body: JSON.stringify(payload) });
+      state.shas = { ...state.shas, ...data.shas };
+      if (payload.products) state.products = payload.products;
+      if (payload.categories) state.categories = payload.categories;
+      state.dirty = { products: false, categories: false, settings: false };
+      updatePublishUi();
+      if (state.currentView === "products") renderProducts();
+      if (state.currentView === "categories") renderCategories();
+      if (state.currentView === "dashboard") renderDashboard();
       msgEl.innerHTML = '<div class="msg ok">Published. Your live site will update within about a minute — <a href="index.html" target="_blank" rel="noopener">check it here</a>.</div>';
     } catch (err) {
       if (err.status === 401) {
         signOut();
         $("login-msg").innerHTML = '<div class="msg error">Your session expired — please sign in again.</div>';
       } else if (err.status === 409) {
-        msgEl.innerHTML = `<div class="msg error">${err.message} <button class="btn btn-ghost btn-sm" id="btn-reload-after-conflict" style="margin-left:8px;">Refresh now</button></div>`;
+        msgEl.innerHTML = `<div class="msg error">${escapeHtml(err.message)} <button class="btn btn-ghost btn-sm" id="btn-reload-after-conflict" style="margin-left:8px;">Refresh now</button></div>`;
         $("btn-reload-after-conflict")?.addEventListener("click", () => location.reload());
       } else {
-        msgEl.innerHTML = `<div class="msg error">Publish failed: ${err.message}</div>`;
+        msgEl.innerHTML = `<div class="msg error">Publish failed: ${escapeHtml(err.message)}</div>`;
       }
     } finally {
       $("btn-publish").textContent = "Publish Changes";
-      setStatus();
+      updatePublishUi();
     }
-  });
+  }
 
   window.addEventListener("beforeunload", (e) => {
-    if (state.dirty) { e.preventDefault(); e.returnValue = ""; }
+    if (isDirty()) { e.preventDefault(); e.returnValue = ""; }
   });
 </script>
 

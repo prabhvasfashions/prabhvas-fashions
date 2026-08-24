@@ -1,0 +1,12 @@
+[
+  { "id": "palazzos", "name": "Palazzos", "sortOrder": 1 },
+  { "id": "kurtis-tops", "name": "Kurtis / Tops", "sortOrder": 2 },
+  { "id": "nighties", "name": "Nighties", "sortOrder": 3 },
+  { "id": "lehengas", "name": "Lehengas", "sortOrder": 4 },
+  { "id": "sarees", "name": "Sarees", "sortOrder": 5 },
+  { "id": "dupattas", "name": "Dupattas", "sortOrder": 6 },
+  { "id": "jewelry", "name": "Jewelry", "sortOrder": 7 },
+  { "id": "footwear", "name": "Footwear", "sortOrder": 8 },
+  { "id": "bags", "name": "Bags", "sortOrder": 9 },
+  { "id": "other", "name": "Other", "sortOrder": 10 }
+]
