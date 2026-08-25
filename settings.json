@@ -10,7 +10,7 @@
   "mojUrl": "",
   "contactEmail": "",
   "heroImages": ["assets/hero-photo.jpg"],
-  "heroRotateSeconds": 60,
+  "heroRotateSeconds": 10,
   "deliveryZones": [],
   "collectionPoints": [],
   "deliverySlots": [],

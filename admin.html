@@ -220,6 +220,11 @@
     <div id="install-msg"></div>
     <div id="install-form">
       <div class="field">
+        <label for="i-setup-key">Setup key</label>
+        <input type="password" id="i-setup-key" autocomplete="off" placeholder="Given to you when the Worker was deployed" />
+        <p class="hint">Whoever deployed this Worker set an INSTALL_TOKEN secret in Cloudflare — enter it here. This prevents anyone who finds this page before you claim it from setting up their own admin account first.</p>
+      </div>
+      <div class="field">
         <label for="i-password">Password</label>
         <input type="password" id="i-password" autocomplete="new-password" />
         <p class="hint">At least 8 characters — longer is better.</p>
@@ -296,6 +301,12 @@
         <h1>Products</h1>
         <div class="actions"><button class="btn btn-primary" id="btn-add-product">+ Add Product</button></div>
       </div>
+      <div class="card-block">
+        <h2>Bulk upload products</h2>
+        <p class="hint" style="margin-bottom:14px;">Add many products at once from a spreadsheet instead of one at a time. One row per SKU (colour/size) — give the same <strong>Product Name</strong> to every row that's really the same product in a different colour or size, and they'll be grouped together as one product with multiple SKUs. Columns: <strong>Category</strong> (must already exist — add it on the Categories tab or in the upload above first), <strong>Subcategory</strong> (optional), <strong>Product Name</strong>, <strong>Description</strong> (optional), <strong>Base Price</strong>, <strong>SKU</strong> (optional — auto-generated if left blank), <strong>Colour</strong> (optional), <strong>Size</strong> (optional), <strong>Price Override</strong> (optional — only if this SKU is priced differently from Base Price), <strong>Stock</strong>. This adds to your existing products — uploading a row for a product that already exists (matched by name) adds its SKUs to that product rather than duplicating it.</p>
+        <label class="btn btn-ghost btn-sm" style="margin:0;">Upload CSV/Excel<input type="file" id="products-upload" accept=".csv,.xlsx,.xls" style="display:none;" /></label>
+        <p class="hint" id="products-upload-hint" style="margin-top:8px;">A .csv always works; a .xlsx needs an internet connection to load the Excel reader.</p>
+      </div>
       <div class="card-block"><div id="products-list"></div></div>
     </div>
 
@@ -311,6 +322,12 @@
         </div>
         <p class="hint" style="margin-bottom:14px;">Leave "Parent category" as None for a main category (like "Short Tops"). Pick a parent to make this a subcategory (like "Frozo Print" under "Short Tops") — subcategories show as tabs on the live site.</p>
         <button class="btn btn-primary" id="btn-add-category">Add category</button>
+      </div>
+      <div class="card-block">
+        <h2>Bulk upload categories</h2>
+        <p class="hint" style="margin-bottom:14px;">Add many categories (and subcategories) at once from a spreadsheet instead of one at a time above. Columns: <strong>Category</strong>, <strong>Parent Category</strong> (optional — leave blank for a top-level category, or name an existing/uploaded top-level category to make this a subcategory), <strong>Sort Order</strong> (optional). This adds to your existing categories — it never removes or replaces any.</p>
+        <label class="btn btn-ghost btn-sm" style="margin:0;">Upload CSV/Excel<input type="file" id="categories-upload" accept=".csv,.xlsx,.xls" style="display:none;" /></label>
+        <p class="hint" id="categories-upload-hint" style="margin-top:8px;">A .csv always works; a .xlsx needs an internet connection to load the Excel reader.</p>
       </div>
       <div class="card-block">
         <h2>All categories</h2>
@@ -477,6 +494,7 @@
           <a class="btn btn-ghost" id="faq-download-pdf" href="assets/Prabhvas-Fashions-Admin-Guide.pdf" target="_blank" rel="noopener" download>📄 Download Admin Guide (PDF)</a>
           <button type="button" class="btn btn-ghost" id="faq-install-btn">📱 Install Admin App</button>
         </div>
+        <p class="hint" id="faq-install-outcome" style="display:none;"></p>
         <details class="howto" id="faq-install-howto">
           <summary>Manual install steps (if "Install Admin App" doesn't prompt anything)</summary>
           <ol>
@@ -533,6 +551,13 @@
             <p>Saving only stages the change — it doesn't go live until you click the global <strong>Publish Changes</strong> button.</p>
           </div>
         </details>
+        <details class="faq-item">
+          <summary>Can I bulk-upload products or categories from a spreadsheet?</summary>
+          <div class="faq-answer">
+            <p>Yes — both the Categories and Products tabs have an <strong>Upload CSV/Excel</strong> button, for loading a batch at once instead of one at a time. Unlike the delivery-zones upload (which replaces the whole list), this one only <strong>adds</strong> — it never deletes or overwrites something already there, so re-uploading the same file (or a file with a few new rows added) is always safe.</p>
+            <p>Categories need a <strong>Category</strong> column, plus optional <strong>Parent Category</strong> and <strong>Sort Order</strong> columns. Products need <strong>Category</strong>, <strong>Product Name</strong>, and <strong>Base Price</strong>, plus optional <strong>Subcategory</strong>, <strong>Description</strong>, <strong>SKU</strong>, <strong>Colour</strong>, <strong>Size</strong>, <strong>Price Override</strong>, and <strong>Stock</strong> — give each colour/size its own row, and rows with the same Product Name get grouped into that one product's SKUs. A spreadsheet can't carry photos, so uploaded products start with none — add those afterward in the editor. Either uploader tells you afterward what loaded and lists anything it had to skip, with a plain-English reason.</p>
+          </div>
+        </details>
 
         <p class="faq-category-title">Settings</p>
         <details class="faq-item">
@@ -564,7 +589,8 @@
         <details class="faq-item">
           <summary>What does "Customer capture" (the entry gate) do?</summary>
           <div class="faq-answer">
-            <p>A single toggle controls whether every visitor must share their name and phone number (email and area optional) before they can browse the storefront at all. This is a deliberate trade-off — some casual visitors will leave rather than fill in a form — so it's entirely your call, and easy to switch off again later. Tick "Require visitor details before browsing" to turn it on, then Save &amp; Publish.</p>
+            <p>A single toggle controls whether every visitor must get past a welcome screen before they can browse the storefront at all. This is a deliberate trade-off — some casual visitors will leave rather than fill in a form — so it's entirely your call, and easy to switch off again later. Tick "Require visitor details before browsing" to turn it on, then Save &amp; Publish.</p>
+            <p>The gate always opens on a mandatory choice — <strong>"I'm an Existing Customer"</strong> or <strong>"I'm New Here"</strong> — even for someone who's visited before, so there's no accidental shortcut past it. Existing Customer just asks for their mobile number and checks it against your real customer records, greeting them by name on a match (or offering to switch to New Here if it doesn't match). New Here shows the full form — name and phone required, email and area optional.</p>
             <p>Whether or not the gate is on, every order still captures the customer's name and phone automatically — the gate is only for building a fuller list that includes people who browse but never order.</p>
           </div>
         </details>
@@ -619,7 +645,7 @@
         <details class="faq-item">
           <summary>How do I send a Proforma Invoice?</summary>
           <div class="faq-answer">
-            <p>Each order card has a <strong>Send Proforma Invoice</strong> button. Clicking it builds a PDF invoice (itemised costing, delivery/collection details, total) and opens WhatsApp with a message to that customer, pre-filled with a link to view/download the PDF and a second link they can tap to formally accept the order — you just hit Send in WhatsApp. Send this from whichever device/browser has your shop's WhatsApp signed in, since that's what makes it go out through your business number.</p>
+            <p>Each order card has a <strong>Send Proforma Invoice</strong> button. Clicking it builds a designed PDF invoice — branded header, status badge, Bill To/Delivery cards, an itemised table, and a totals box, in your storefront's own colours — and opens WhatsApp with a message to that customer, pre-filled with a link to view/download the PDF and a second link they can tap to formally accept the order — you just hit Send in WhatsApp. Send this from whichever device/browser has your shop's WhatsApp signed in, since that's what makes it go out through your business number.</p>
           </div>
         </details>
         <details class="faq-item">
@@ -644,6 +670,12 @@
           <summary>How do I approve or reject a review?</summary>
           <div class="faq-answer">
             <p>Open the Reviews tab, then click <strong>Approve</strong> to publish a review to the live site immediately (no Publish step needed), or <strong>Reject</strong> to discard it. You can also delete an already-published review later from the same tab. General feedback (not tied to a product) goes through the exact same Approve/Reject flow.</p>
+          </div>
+        </details>
+        <details class="faq-item">
+          <summary>What does the "Verified — Order #..." badge on a pending review mean?</summary>
+          <div class="faq-answer">
+            <p>From the storefront's Feedback button, a shopper can choose "Review something I ordered" instead of a free-standing review — they look their own order up by phone (the same lookup Track Order uses) and pick the exact product from it. The Worker only accepts that link if a real order actually exists with that number, that phone, and that product, so this badge means the review is genuinely tied to a real purchase, not just a claim. Once approved, it shows a "✓ Verified Purchase" badge to shoppers on the live site — the order number itself is never published, only that badge.</p>
           </div>
         </details>
 
@@ -734,6 +766,17 @@
     const headers = { "Content-Type": "application/json", ...(opts.headers || {}) };
     if (state.token) headers.Authorization = "Bearer " + state.token;
     const res = await fetch(WORKER_URL + path, { ...opts, headers });
+
+    // Sliding session: the Worker hands back a freshly-dated token on every
+    // authenticated response (as long as the one we sent was still valid).
+    // Swap it in so the 2-hour window keeps rolling forward while you're
+    // actively using the panel, instead of hard-cutting mid-edit.
+    const renewed = res.headers.get("X-Session-Token");
+    if (renewed && renewed !== state.token) {
+      state.token = renewed;
+      sessionStorage.setItem(SESSION_KEY, renewed);
+    }
+
     let data = null;
     try { data = await res.json(); } catch { /* no body */ }
     if (!res.ok) {
@@ -823,6 +866,7 @@
   // INSTALL
   // ============================================================
   $("btn-install").addEventListener("click", async () => {
+    const setupKey = $("i-setup-key").value;
     const password = $("i-password").value;
     const confirm = $("i-confirm").value;
     const enableTotp = $("i-totp").checked;
@@ -830,6 +874,7 @@
     const msgEl = $("install-msg");
     msgEl.innerHTML = "";
 
+    if (!setupKey) { msgEl.innerHTML = '<div class="msg error">Enter the setup key given to you when this Worker was deployed.</div>'; return; }
     if (password.length < 8) { msgEl.innerHTML = '<div class="msg error">Password must be at least 8 characters.</div>'; return; }
     if (password !== confirm) { msgEl.innerHTML = '<div class="msg error">Passwords do not match.</div>'; return; }
     if (!enableTotp && !email) { msgEl.innerHTML = '<div class="msg error">Enable at least one 2FA method.</div>'; return; }
@@ -837,7 +882,7 @@
     $("btn-install").disabled = true;
     $("btn-install").textContent = "Creating…";
     try {
-      const data = await api("/api/install", { method: "POST", body: JSON.stringify({ password, enableTotp, email }) });
+      const data = await api("/api/install", { method: "POST", body: JSON.stringify({ setupKey, password, enableTotp, email }) });
       $("install-form").style.display = "none";
       $("install-result").style.display = "block";
       if (data.totpSecret) {
@@ -1522,6 +1567,7 @@
             <div>
               <strong>${escapeHtml(r.name || "Anonymous")}</strong>
               <span style="color:var(--rani);margin-left:8px;">${starsPlain(r.rating)}</span>
+              ${r.orderNumber ? `<span class="msg ok" style="display:inline-block;padding:1px 8px;font-size:0.72rem;margin:0 0 0 8px;">Verified — Order #${escapeHtml(r.orderNumber)}</span>` : ""}
               <p class="hint" style="margin:4px 0 0;">on <strong>${escapeHtml(productNameFor(r.productId))}</strong> &middot; ${escapeHtml((r.submittedAt || "").slice(0, 10))}</p>
               ${r.text ? `<p style="margin:8px 0 0;">${escapeHtml(r.text)}</p>` : '<p class="hint" style="margin:8px 0 0;">(no written comment)</p>'}
               ${(r.email || r.phone) ? `<p class="hint" style="margin:8px 0 0;">Contact: ${[escapeHtml(r.email), escapeHtml(r.phone)].filter(Boolean).join(" · ")} — for your reference only, this is never published.</p>` : ""}
@@ -1544,7 +1590,7 @@
           <tr>
             <td>${escapeHtml(productNameFor(r.productId))}</td>
             <td style="color:var(--rani);white-space:nowrap;">${starsPlain(r.rating)}</td>
-            <td>${escapeHtml(r.name || "Anonymous")}</td>
+            <td>${escapeHtml(r.name || "Anonymous")}${r.verified ? ' <span class="hint" title="Linked to a real order at submission time" style="color:var(--good);">&#10003; Verified</span>' : ""}</td>
             <td>${escapeHtml(r.text || "")}</td>
             <td>${escapeHtml(r.date || "")}</td>
             <td class="row-actions"><button class="btn btn-danger btn-sm" data-delete-review="${escapeHtml(r.id)}">Delete</button></td>
@@ -1566,7 +1612,7 @@
         const idx = state.pendingReviews.findIndex((r) => r.id === id);
         if (idx !== -1) {
           const [r] = state.pendingReviews.splice(idx, 1);
-          state.reviews.push({ id: r.id, productId: r.productId, name: r.name, rating: r.rating, text: r.text, date: (r.submittedAt || "").slice(0, 10) });
+          state.reviews.push({ id: r.id, productId: r.productId, name: r.name, rating: r.rating, text: r.text, date: (r.submittedAt || "").slice(0, 10), verified: !!r.orderNumber });
         }
       } else {
         await api("/api/reviews/reject", { method: "POST", body: JSON.stringify({ id }) });
@@ -1944,6 +1990,282 @@
     }
   });
 
+  // ---- bulk upload: shared file-reading helper (Categories + Products) ----
+  // Same CSV-always / .xlsx-if-online approach as the delivery-zones upload
+  // above, factored out since both new uploads need it too.
+  async function readSpreadsheetRows(file) {
+    if (/\.csv$/i.test(file.name)) {
+      return parseCsv(await file.text());
+    }
+    if (typeof XLSX === "undefined") {
+      const err = new Error("Couldn't load the Excel reader (no internet connection?) — save your file as CSV and try again.");
+      err.isXlsxUnavailable = true;
+      throw err;
+    }
+    const buf = await file.arrayBuffer();
+    const wb = XLSX.read(buf, { type: "array" });
+    const sheet = wb.Sheets[wb.SheetNames[0]];
+    return XLSX.utils.sheet_to_json(sheet, { header: 1, raw: false }).map((r) => r.map((c) => String(c ?? "")));
+  }
+
+  // ---- bulk upload: categories (with sub-categories) ----
+  // Turns parsed spreadsheet rows (first row = header) into new category
+  // objects to ADD to state.categories — existing categories are matched by
+  // name and left untouched, never duplicated or removed. Two passes so a
+  // subcategory row can name a parent added earlier in this very same
+  // upload, regardless of row order. Returns null only if it can't find a
+  // Category name column at all; per-row problems (an unknown or
+  // already-nested parent) are collected into `errors` instead of failing
+  // the whole upload.
+  function categoriesFromRows(rows) {
+    if (!rows.length) return null;
+    const header = rows[0].map((h) => String(h || "").toLowerCase().replace(/[^a-z]/g, ""));
+    const findCol = (names) => { for (const n of names) { const i = header.indexOf(n); if (i !== -1) return i; } return -1; };
+    const nameIdx = findCol(["category", "categoryname", "name"]);
+    const parentIdx = findCol(["parentcategory", "parent", "subcategoryof"]);
+    const sortIdx = findCol(["sortorder", "order", "sort"]);
+    if (nameIdx === -1) return null;
+
+    const dataRows = rows.slice(1).filter((r) => (r[nameIdx] || "").trim());
+    const topRows = dataRows.filter((r) => !(parentIdx !== -1 && (r[parentIdx] || "").trim()));
+    const subRows = dataRows.filter((r) => parentIdx !== -1 && (r[parentIdx] || "").trim());
+
+    const byName = new Map(); // any category name (top or sub) -> id
+    const topLevelKeys = new Set(); // only names of TOP-LEVEL categories — a parent must be one of these
+    (state.categories || []).forEach((c) => {
+      byName.set(c.name.toLowerCase(), c.id);
+      if (!c.parentId) topLevelKeys.add(c.name.toLowerCase());
+    });
+    const existingIds = new Set((state.categories || []).map((c) => c.id));
+    const added = [];
+    const errors = [];
+    let nextSort = (state.categories || []).reduce((m, c) => Math.max(m, c.sortOrder || 0), 0);
+
+    topRows.forEach((r) => {
+      const name = r[nameIdx].trim();
+      const key = name.toLowerCase();
+      if (byName.has(key)) return; // already exists — skip, don't duplicate
+      nextSort += 1;
+      const id = uniqueId(slugify(name), existingIds);
+      existingIds.add(id);
+      byName.set(key, id);
+      topLevelKeys.add(key);
+      added.push({ id, name, parentId: null, sortOrder: sortIdx !== -1 && r[sortIdx] ? Number(r[sortIdx]) || nextSort : nextSort });
+    });
+
+    subRows.forEach((r) => {
+      const name = r[nameIdx].trim();
+      const parentName = r[parentIdx].trim();
+      const parentKey = parentName.toLowerCase();
+      const key = name.toLowerCase();
+      if (!topLevelKeys.has(parentKey)) {
+        errors.push(`"${name}": parent category "${parentName}" not found (or it's itself a subcategory — only one level of nesting is supported). Add "${parentName}" first, as its own row with no Parent Category.`);
+        return;
+      }
+      if (byName.has(key)) return; // already exists — skip, don't duplicate
+      nextSort += 1;
+      const id = uniqueId(slugify(name), existingIds);
+      existingIds.add(id);
+      byName.set(key, id);
+      added.push({ id, name, parentId: byName.get(parentKey), sortOrder: sortIdx !== -1 && r[sortIdx] ? Number(r[sortIdx]) || nextSort : nextSort });
+    });
+
+    return { added, errors };
+  }
+
+  $("categories-upload").addEventListener("change", async (e) => {
+    const file = e.target.files[0];
+    if (!file) return;
+    const hintEl = $("categories-upload-hint");
+    try {
+      const rows = await readSpreadsheetRows(file);
+      const result = categoriesFromRows(rows);
+      if (!result) {
+        hintEl.innerHTML = '<span style="color:var(--bad);">Couldn\'t find a "Category" column — check the header row.</span>';
+        return;
+      }
+      const { added, errors } = result;
+      if (added.length) {
+        state.categories = [...state.categories, ...added];
+        state.dirty.categories = true;
+        updatePublishUi();
+        renderCategories(); // also refreshes the "Parent category" dropdown above
+      }
+      const parts = [];
+      if (added.length) parts.push(`Added ${added.length} categor${added.length === 1 ? "y" : "ies"} — click Publish Changes to go live.`);
+      if (errors.length) parts.push(`${errors.length} row(s) skipped: ${errors.join(" ")}`);
+      if (!added.length && !errors.length) parts.push("Nothing new to add — every category in the file already exists.");
+      hintEl.innerHTML = errors.length ? `<span style="color:var(--bad);">${parts.join(" ")}</span>` : parts.join(" ");
+    } catch (err) {
+      hintEl.innerHTML = `<span style="color:var(--bad);">${escapeHtml(err.message)}</span>`;
+    } finally {
+      e.target.value = "";
+    }
+  });
+
+  // ---- bulk upload: products ----
+  // One row per SKU (colour/size) — rows sharing the same Product Name
+  // (case-insensitive) are grouped as variants of one product; a name that
+  // matches an existing product ADDS its SKUs to that product instead of
+  // creating a duplicate. Category/Subcategory are matched by name against
+  // categories that already exist (including ones just added by the
+  // Categories upload above, moments earlier) — an unrecognised category
+  // name fails just that row with a clear message rather than guessing or
+  // silently creating one. Photos aren't part of the spreadsheet — a
+  // spreadsheet cell can't carry image bytes — so uploaded SKUs start with
+  // no photo; add each one afterward in the product editor before marking
+  // the product Published.
+  function productsFromRows(rows) {
+    if (!rows.length) return null;
+    const header = rows[0].map((h) => String(h || "").toLowerCase().replace(/[^a-z]/g, ""));
+    const findCol = (names) => { for (const n of names) { const i = header.indexOf(n); if (i !== -1) return i; } return -1; };
+    const catIdx = findCol(["category"]);
+    const subcatIdx = findCol(["subcategory"]);
+    const nameIdx = findCol(["productname", "name", "product"]);
+    const descIdx = findCol(["description", "desc"]);
+    const priceIdx = findCol(["baseprice", "price", "sellingprice"]);
+    const skuIdx = findCol(["sku"]);
+    const colorIdx = findCol(["colour", "color"]);
+    const sizeIdx = findCol(["size", "sizes"]);
+    const overrideIdx = findCol(["priceoverride", "override"]);
+    const stockIdx = findCol(["stock", "stockqty", "qty", "quantity"]);
+    if (nameIdx === -1 || catIdx === -1 || priceIdx === -1) return null;
+
+    const catByName = new Map();
+    (state.categories || []).forEach((c) => catByName.set(c.name.toLowerCase(), c));
+
+    const existingProductIds = new Set((state.products || []).map((p) => p.id));
+    const existingSkus = new Set();
+    (state.products || []).forEach((p) => (p.variants || []).forEach((v) => v.sku && existingSkus.add(String(v.sku).toLowerCase())));
+
+    const productsByKey = new Map(); // lowercased product name -> product object (existing or newly created)
+    (state.products || []).forEach((p) => productsByKey.set(p.name.toLowerCase(), p));
+
+    const errors = [];
+    const touchedKeys = new Set();
+
+    rows.slice(1).forEach((r, i) => {
+      const rowNum = i + 2; // spreadsheet row number: +1 for 0-index, +1 for the header row
+      const productName = (r[nameIdx] || "").trim();
+      if (!productName) return; // blank row
+
+      const catName = (r[catIdx] || "").trim();
+      const subcatName = subcatIdx !== -1 ? (r[subcatIdx] || "").trim() : "";
+      if (!catName) { errors.push(`Row ${rowNum} ("${productName}"): missing Category.`); return; }
+
+      let categoryId;
+      if (subcatName) {
+        const sub = catByName.get(subcatName.toLowerCase());
+        if (!sub || !sub.parentId) { errors.push(`Row ${rowNum} ("${productName}"): subcategory "${subcatName}" not found.`); return; }
+        const parent = findCategory(sub.parentId);
+        if (!parent || parent.name.toLowerCase() !== catName.toLowerCase()) {
+          errors.push(`Row ${rowNum} ("${productName}"): "${subcatName}" isn't a subcategory of "${catName}".`);
+          return;
+        }
+        categoryId = sub.id;
+      } else {
+        const cat = catByName.get(catName.toLowerCase());
+        if (!cat) { errors.push(`Row ${rowNum} ("${productName}"): category "${catName}" not found — add it on the Categories tab first.`); return; }
+        if ((state.categories || []).some((c) => c.parentId === cat.id)) {
+          errors.push(`Row ${rowNum} ("${productName}"): "${catName}" has subcategories — pick one of those in the Subcategory column instead.`);
+          return;
+        }
+        categoryId = cat.id;
+      }
+
+      const basePrice = Number(r[priceIdx]);
+      if (!Number.isFinite(basePrice) || basePrice < 0 || r[priceIdx] === "" || r[priceIdx] == null) {
+        errors.push(`Row ${rowNum} ("${productName}"): missing or invalid Base Price.`);
+        return;
+      }
+
+      const stockRaw = stockIdx !== -1 ? r[stockIdx] : "";
+      const stock = stockRaw !== "" && Number.isFinite(Number(stockRaw)) ? Math.max(0, Math.round(Number(stockRaw))) : 0;
+      const overrideRaw = overrideIdx !== -1 ? (r[overrideIdx] || "").trim() : "";
+      const priceOverride = overrideRaw !== "" && Number.isFinite(Number(overrideRaw)) && Number(overrideRaw) >= 0 ? Number(overrideRaw) : null;
+
+      const color = colorIdx !== -1 ? (r[colorIdx] || "").trim() : "";
+      const size = sizeIdx !== -1 ? (r[sizeIdx] || "").trim() : "";
+      let sku = skuIdx !== -1 ? (r[skuIdx] || "").trim() : "";
+      if (!sku) {
+        const base = (slugify(productName) + (color ? "-" + slugify(color) : "") + (size ? "-" + slugify(size) : "")).toUpperCase();
+        let candidate = base, n = 2;
+        while (existingSkus.has(candidate.toLowerCase())) { candidate = `${base}-${n}`; n++; }
+        sku = candidate;
+      }
+      if (existingSkus.has(sku.toLowerCase())) {
+        errors.push(`Row ${rowNum} ("${productName}"): SKU "${sku}" is already used by another product or an earlier row in this file.`);
+        return;
+      }
+      existingSkus.add(sku.toLowerCase());
+
+      const variant = { sku, color, size, priceOverride, stock, photo: "" };
+
+      const key = productName.toLowerCase();
+      let product = productsByKey.get(key);
+      if (!product) {
+        product = {
+          id: uniqueId(slugify(productName), existingProductIds),
+          categoryId,
+          name: productName,
+          description: descIdx !== -1 ? (r[descIdx] || "").trim() : "",
+          basePrice,
+          ready: false,
+          sortOrder: (state.products || []).length + productsByKey.size + 1,
+          variants: [],
+        };
+        existingProductIds.add(product.id);
+        productsByKey.set(key, product);
+      }
+      product.variants.push(variant);
+      touchedKeys.add(key);
+    });
+
+    const touchedProducts = [...touchedKeys].map((k) => productsByKey.get(k));
+    return { touchedProducts, errors };
+  }
+
+  $("products-upload").addEventListener("change", async (e) => {
+    const file = e.target.files[0];
+    if (!file) return;
+    const hintEl = $("products-upload-hint");
+    try {
+      const rows = await readSpreadsheetRows(file);
+      const result = productsFromRows(rows);
+      if (!result) {
+        hintEl.innerHTML = '<span style="color:var(--bad);">Couldn\'t find "Category", "Product Name" and "Base Price" columns — check the header row.</span>';
+        return;
+      }
+      const { touchedProducts, errors } = result;
+      if (touchedProducts.length) {
+        const existingIds = new Set(state.products.map((p) => p.id));
+        const brandNew = touchedProducts.filter((p) => !existingIds.has(p.id));
+        const updatedExisting = touchedProducts.filter((p) => existingIds.has(p.id));
+        // Existing products were mutated in place (their variants array grew) —
+        // only truly new products need appending to the list.
+        state.products = [...state.products, ...brandNew];
+        state.dirty.products = true;
+        updatePublishUi();
+        renderProducts();
+        const skuCount = touchedProducts.reduce((sum, p) => sum + p.variants.length, 0);
+        const bits = [];
+        if (brandNew.length) bits.push(`${brandNew.length} new product(s)`);
+        if (updatedExisting.length) bits.push(`${updatedExisting.length} existing product(s) got new SKUs`);
+        const parts = [`Loaded ${skuCount} SKU(s) across ${bits.join(" and ")} — click Publish Changes to go live. New products start unpublished (Draft) — add photos and mark them Published when ready.`];
+        if (errors.length) parts.push(`${errors.length} row(s) skipped: ${errors.join(" ")}`);
+        hintEl.innerHTML = errors.length ? `<span style="color:var(--bad);">${parts.join(" ")}</span>` : parts.join(" ");
+      } else {
+        hintEl.innerHTML = errors.length
+          ? `<span style="color:var(--bad);">Nothing loaded. ${errors.join(" ")}</span>`
+          : "Nothing to load — the file had no usable rows.";
+      }
+    } catch (err) {
+      hintEl.innerHTML = `<span style="color:var(--bad);">${escapeHtml(err.message)}</span>`;
+    } finally {
+      e.target.value = "";
+    }
+  });
+
   // ---- self-collection points ----
   function renderCollectionPoints() {
     const points = state.settings.collectionPoints || [];
@@ -2160,9 +2482,19 @@
     if (newPassword.length < 8) { msgEl.innerHTML = '<div class="msg error">New password must be at least 8 characters.</div>'; return; }
     if (newPassword !== confirm) { msgEl.innerHTML = '<div class="msg error">New passwords do not match.</div>'; return; }
     try {
-      await api("/api/change-password", { method: "POST", body: JSON.stringify({ currentPassword, newPassword }) });
+      const result = await api("/api/change-password", { method: "POST", body: JSON.stringify({ currentPassword, newPassword }) });
+      // Changing the password bumps the server-side token epoch, which
+      // invalidates every session token issued before this moment —
+      // including the one this very request was sent with. The Worker
+      // hands back a freshly-stamped token in the response body (not just
+      // the usual X-Session-Token header) precisely so this tab can keep
+      // going instead of being logged out by its own password change.
+      if (result && result.token) {
+        state.token = result.token;
+        sessionStorage.setItem(SESSION_KEY, result.token);
+      }
       $("pw-current").value = ""; $("pw-new").value = ""; $("pw-confirm").value = "";
-      msgEl.innerHTML = '<div class="msg ok">Password changed.</div>';
+      msgEl.innerHTML = '<div class="msg ok">Password changed. You\'ve been signed out on any other device.</div>';
     } catch (err) {
       msgEl.innerHTML = `<div class="msg error">${escapeHtml(err.message)}</div>`;
     }
@@ -2301,22 +2633,72 @@
 
   // "Install Admin App" button on the FAQ tab's Downloads card — captures
   // the browser's native install prompt (Chrome/Edge/Android) and fires it
-  // on click; falls back to the manual how-to steps when it isn't offered
-  // (iOS Safari, or a browser that doesn't support installable web apps).
+  // on click. The button and the message beneath it now reflect what
+  // actually happened (already installed / installed / cancelled) instead
+  // of always showing the same static label and instructions regardless of
+  // outcome; the manual how-to steps are still there as a fallback for
+  // browsers with no native install prompt (iOS Safari, etc).
   let deferredAdminInstallPrompt = null;
+
+  function isRunningInstalledAdmin() {
+    return (window.matchMedia && window.matchMedia("(display-mode: standalone)").matches) || window.navigator.standalone === true;
+  }
+
+  function setAdminInstallOutcome(text, kind) {
+    const el = document.getElementById("faq-install-outcome");
+    if (!el) return;
+    if (!text) { el.style.display = "none"; el.textContent = ""; el.className = "hint"; return; }
+    el.textContent = text;
+    el.className = "hint" + (kind ? " " + kind : "");
+    el.style.display = "block";
+  }
+
+  function refreshAdminInstallButton() {
+    const btn = document.getElementById("faq-install-btn");
+    if (!btn) return;
+    if (isRunningInstalledAdmin()) {
+      btn.disabled = true;
+      btn.textContent = "✓ Already installed";
+      setAdminInstallOutcome("You're using the installed admin app right now.", "msg ok");
+    } else {
+      btn.disabled = false;
+      btn.textContent = "📱 Install Admin App";
+    }
+  }
+
   window.addEventListener("beforeinstallprompt", (e) => {
     e.preventDefault();
     deferredAdminInstallPrompt = e;
   });
-  window.addEventListener("appinstalled", () => { deferredAdminInstallPrompt = null; });
+  window.addEventListener("appinstalled", () => {
+    deferredAdminInstallPrompt = null;
+    setAdminInstallOutcome("✓ Installed! Look for it on your home screen or app list.", "msg ok");
+    refreshAdminInstallButton();
+  });
   const faqInstallBtn = document.getElementById("faq-install-btn");
   if (faqInstallBtn) {
+    refreshAdminInstallButton();
     faqInstallBtn.addEventListener("click", async () => {
+      if (isRunningInstalledAdmin()) return;
       if (deferredAdminInstallPrompt) {
         deferredAdminInstallPrompt.prompt();
-        try { await deferredAdminInstallPrompt.userChoice; } catch (err) { /* dismissed */ }
+        let outcome = "dismissed";
+        try {
+          const choice = await deferredAdminInstallPrompt.userChoice;
+          outcome = (choice && choice.outcome) || "dismissed";
+        } catch (err) {
+          outcome = "dismissed";
+        }
         deferredAdminInstallPrompt = null;
+        if (outcome === "accepted") {
+          setAdminInstallOutcome("✓ Installed! Look for it on your home screen or app list.", "msg ok");
+        } else {
+          setAdminInstallOutcome('Installation cancelled — tap "Install Admin App" again anytime, or use the manual steps below.', "msg warn");
+          const howto = document.getElementById("faq-install-howto");
+          if (howto) howto.open = true;
+        }
       } else {
+        setAdminInstallOutcome("No one-tap install offered by this browser — follow the manual steps below.", "msg warn");
         const howto = document.getElementById("faq-install-howto");
         if (howto) {
           howto.open = true;

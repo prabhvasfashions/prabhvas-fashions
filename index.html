@@ -160,6 +160,10 @@
   .qv-price { font-family: 'Cormorant Garamond', serif; font-weight: 700; font-size: 1.7rem; color: var(--rani); }
   .qv-stock-note { font-size: 0.8rem; color: var(--ink-soft); }
   .qv-stock-note.out { color: var(--rani); font-weight: 700; }
+
+  .install-outcome-msg { font-size: 0.92rem; font-weight: 600; padding: 10px 12px; border-radius: 8px; margin-bottom: 14px; }
+  .install-outcome-msg.ok { background: #e9f6ec; color: #1e6b34; }
+  .install-outcome-msg.info { background: #fdf1de; color: #8a5a12; }
   @media (max-width: 700px) { .qv-modal { grid-template-columns: 1fr; } }
 
   /* ---------- quick-view: delivery / self-collection ---------- */
@@ -217,6 +221,8 @@
   .gate-modal { position: relative; background: var(--surface); border-radius: 10px; max-width: 420px; width: 100%; max-height: 90vh; overflow-y: auto; padding: clamp(24px, 4vw, 34px); }
   .gate-modal h3 { font-size: 1.3rem; margin-bottom: 6px; }
   .gate-modal p.meta { color: var(--ink-soft); font-size: 0.88rem; margin-bottom: 18px; }
+  .gate-back-link { display: block; width: 100%; text-align: center; background: none; border: none; color: var(--ink-soft); font-size: 0.82rem; margin-top: 12px; cursor: pointer; text-decoration: underline; }
+  .gate-back-link:hover { color: var(--ink); }
 
   .contact-backdrop { position: fixed; inset: 0; background: rgba(27,22,16,0.55); display: none; z-index: 50; align-items: center; justify-content: center; padding: 20px; }
   .contact-backdrop.open { display: flex; }
@@ -298,6 +304,23 @@
   .reviews-form-msg { font-size: 0.82rem; margin-top: 10px; text-align: center; }
   .reviews-form-msg.ok { color: var(--teal); }
   .reviews-form-msg.err { color: var(--rani); }
+
+  .rv-choice-wrap { display: flex; flex-direction: column; gap: 10px; margin: 4px 0 20px; }
+  .rv-choice-btn { width: 100%; text-align: left; background: var(--ivory); border: 1px solid var(--line); border-radius: 10px; padding: 14px 16px; cursor: pointer; font-family: inherit; }
+  .rv-choice-btn strong { display: block; font-size: 0.92rem; margin-bottom: 2px; }
+  .rv-choice-btn span { font-size: 0.8rem; color: var(--ink-soft); }
+  .rv-choice-btn:hover { border-color: var(--rani); }
+  .rv-back-link { display: inline-block; background: none; border: none; color: var(--rani); font-family: inherit; font-size: 0.82rem; font-weight: 600; cursor: pointer; padding: 0; margin-bottom: 14px; }
+  .rv-order-pick-card { border: 1px solid var(--line); border-radius: 10px; padding: 12px 14px; background: var(--ivory); margin-bottom: 12px; }
+  .rv-order-pick-head { display: flex; align-items: center; justify-content: space-between; gap: 10px; margin-bottom: 8px; }
+  .rv-order-pick-number { font-family: 'Cormorant Garamond', serif; font-weight: 700; font-size: 1rem; }
+  .rv-order-pick-date { font-size: 0.78rem; color: var(--ink-soft); }
+  .rv-item-pick-btn { display: block; width: 100%; text-align: left; background: var(--surface); border: 1px solid var(--line); border-radius: 7px; padding: 9px 12px; margin-bottom: 6px; cursor: pointer; font-family: inherit; font-size: 0.84rem; }
+  .rv-item-pick-btn:last-child { margin-bottom: 0; }
+  .rv-item-pick-btn:hover { border-color: var(--rani); background: #fff; }
+  .rv-reviewing-for { background: var(--ivory); border-radius: 8px; padding: 10px 14px; margin-bottom: 16px; font-size: 0.84rem; }
+  .rv-reviewing-for strong { display: block; font-size: 0.9rem; margin-bottom: 1px; }
+  .verified-badge { display: inline-flex; align-items: center; gap: 3px; font-size: 0.7rem; font-weight: 700; color: var(--teal); background: rgba(14,124,116,0.12); border-radius: 100px; padding: 2px 8px; margin-left: 8px; letter-spacing: 0.01em; }
 
   @media (max-width: 1150px) {
     .topbar nav .section-link { display: none; }
@@ -499,9 +522,10 @@
   <div class="contact-modal" id="install-modal">
     <button class="contact-close" id="install-close" aria-label="Close">&times;</button>
     <h3>Get the Mobile App</h3>
-    <p class="meta">Install Prabhvas Fashions on your phone for a faster, full-screen shopping experience — no app store needed.</p>
+    <p class="meta" id="install-intro">Install Prabhvas Fashions on your phone for a faster, full-screen shopping experience — no app store needed.</p>
+    <p class="install-outcome-msg" id="install-outcome-msg" style="display:none;"></p>
     <button type="button" class="btn-submit-review" id="install-now-btn" style="display:none;width:100%;margin-bottom:18px;">Install Now</button>
-    <div class="contact-options">
+    <div class="contact-options" id="install-manual-steps">
       <div class="contact-option install-instructions">
         <span class="opt-text"><strong>Android (Chrome)</strong><span>Tap the menu ⋮ and choose "Install app" or "Add to Home screen"</span></span>
       </div>
@@ -525,7 +549,36 @@
     <div id="reviews-summary-wrap"></div>
     <div class="reviews-list" id="reviews-list"></div>
 
-    <div class="reviews-form-wrap">
+    <!-- General feedback only: pick whether this is about something ordered
+         (so it can be tied to a specific order + product) or feedback with
+         no particular order in mind. Hidden entirely when the modal was
+         opened from a specific product's own Reviews link. -->
+    <div id="rv-choice-wrap" class="rv-choice-wrap" style="display:none;">
+      <button type="button" class="rv-choice-btn" id="rv-choice-order">
+        <strong>Review something I ordered</strong>
+        <span>Look up your order and pick the product</span>
+      </button>
+      <button type="button" class="rv-choice-btn" id="rv-choice-general">
+        <strong>General feedback</strong>
+        <span>Not about a specific order</span>
+      </button>
+    </div>
+
+    <div id="rv-lookup-wrap" style="display:none;">
+      <button type="button" class="rv-back-link" id="rv-lookup-back">‹ Back</button>
+      <div class="field"><input type="tel" id="rv-lookup-phone" placeholder="The mobile number you ordered with" maxlength="20" /></div>
+      <button type="button" class="btn-submit-review" id="rv-lookup-submit">Find My Orders</button>
+      <p class="reviews-form-msg" id="rv-lookup-msg"></p>
+    </div>
+
+    <div id="rv-orders-wrap" style="display:none;">
+      <button type="button" class="rv-back-link" id="rv-orders-back">‹ Back</button>
+      <div id="rv-orders-list"></div>
+    </div>
+
+    <div class="reviews-form-wrap" id="reviews-form-wrap">
+      <button type="button" class="rv-back-link" id="rv-form-back" style="display:none;">‹ Choose a different product</button>
+      <div id="rv-reviewing-for" style="display:none;" class="rv-reviewing-for"></div>
       <h4>Write a Review</h4>
       <div class="star-picker" id="rv-star-picker">
         <button type="button" class="star-btn" data-star="1">★</button>
@@ -637,8 +690,24 @@
 <div class="gate-backdrop" id="gate-backdrop">
   <div class="gate-modal" id="gate-modal">
     <h3 id="gate-heading">Welcome!</h3>
-    <p class="meta" id="gate-subheading">Tell us a little about you before you browse — it just takes a moment.</p>
-    <div id="gate-form-wrap">
+    <p class="meta" id="gate-subheading">Are you a returning customer, or new here? It just takes a moment.</p>
+
+    <!-- Step 1: mandatory existing-vs-new choice -->
+    <div id="gate-choice-wrap">
+      <button type="button" class="btn-whatsapp" id="gate-choice-existing" style="justify-content:center;width:100%;margin-bottom:10px;">I'm an Existing Customer</button>
+      <button type="button" class="btn-whatsapp muted" id="gate-choice-new" style="justify-content:center;width:100%;">I'm New Here</button>
+    </div>
+
+    <!-- Step 2a: existing customer — just their phone number, checked against real records -->
+    <div id="gate-existing-wrap" style="display:none;">
+      <div class="qv-field"><label for="gate-existing-phone">Mobile number</label><input type="tel" id="gate-existing-phone" placeholder="The number you ordered or visited with" maxlength="20" /></div>
+      <p class="qv-hint" id="gate-existing-msg"></p>
+      <button type="button" class="btn-whatsapp" id="gate-existing-submit" style="justify-content:center;width:100%;">Continue</button>
+      <button type="button" class="gate-back-link" id="gate-existing-back">&larr; Not you? Choose again</button>
+    </div>
+
+    <!-- Step 2b: new customer — full details -->
+    <div id="gate-form-wrap" style="display:none;">
       <div class="qv-field"><label for="gate-name">Your name</label><input type="text" id="gate-name" placeholder="Required" maxlength="80" /></div>
       <div class="qv-field"><label for="gate-phone">Phone number</label><input type="text" id="gate-phone" placeholder="Required" maxlength="20" /></div>
       <div class="qv-field"><label for="gate-email">Email (optional)</label><input type="email" id="gate-email" placeholder="you@example.com" maxlength="120" /></div>
@@ -646,7 +715,10 @@
       <input type="text" id="gate-website" name="website" autocomplete="off" tabindex="-1" style="position:absolute;left:-9999px;opacity:0;height:0;" />
       <p class="qv-hint" id="gate-msg"></p>
       <button type="button" class="btn-whatsapp" id="gate-submit" style="justify-content:center;width:100%;">Continue to the collection</button>
+      <button type="button" class="gate-back-link" id="gate-new-back">&larr; Already a customer? Choose again</button>
     </div>
+
+    <!-- Step 3: welcome, shown after either path succeeds -->
     <div id="gate-welcome-wrap" style="display:none;text-align:center;">
       <p style="font-size:1.05rem;font-weight:700;margin-bottom:6px;" id="gate-welcome-name"></p>
       <p class="meta" id="gate-welcome-msg" style="margin-bottom:18px;"></p>
@@ -1108,7 +1180,12 @@
       stockNote.textContent = "Currently sold out — message us to ask about restock.";
       stockNote.classList.add("out");
     } else {
-      stockNote.textContent = variant.size ? `Size: ${variant.size}` : "In stock";
+      // Show the actual number available for the selected colour/size, not
+      // just a generic "In stock" — updates live as the shopper switches
+      // between variants above.
+      const stockCount = Math.max(0, Math.round(Number(variant.stock)) || 0);
+      const stockLabel = `${stockCount} in stock`;
+      stockNote.textContent = variant.size ? `Size: ${variant.size} · ${stockLabel}` : stockLabel;
       stockNote.classList.remove("out");
     }
 
@@ -1584,6 +1661,16 @@
     greetingEl.style.display = "block";
   }
 
+  // Shows exactly one of the gate's four panels at a time: the mandatory
+  // existing-vs-new choice, the existing-customer phone check, the
+  // new-customer details form, or the final welcome message.
+  function showGateStep(step) {
+    document.getElementById("gate-choice-wrap").style.display = step === "choice" ? "block" : "none";
+    document.getElementById("gate-existing-wrap").style.display = step === "existing" ? "block" : "none";
+    document.getElementById("gate-form-wrap").style.display = step === "new" ? "block" : "none";
+    document.getElementById("gate-welcome-wrap").style.display = step === "welcome" ? "block" : "none";
+  }
+
   function initVisitorGate() {
     if (!SETTINGS.requireVisitorGate) return;
     if (sessionStorage.getItem(GATE_SESSION_KEY) === "1") {
@@ -1591,16 +1678,20 @@
       return;
     }
 
-    const savedName = localStorage.getItem(GATE_NAME_KEY) || "";
-    const savedPhone = localStorage.getItem(GATE_PHONE_KEY) || "";
-    document.getElementById("gate-heading").textContent = savedName ? `Welcome back, ${savedName}!` : "Welcome!";
-    document.getElementById("gate-subheading").textContent = savedName
-      ? "Just confirm your details to continue."
-      : "Tell us a little about you before you browse — it just takes a moment.";
-    document.getElementById("gate-name").value = savedName;
-    document.getElementById("gate-phone").value = savedPhone;
-    document.getElementById("gate-form-wrap").style.display = "block";
-    document.getElementById("gate-welcome-wrap").style.display = "none";
+    // Always starts at the mandatory choice screen — no shortcuts, even for
+    // a name/phone remembered locally from a previous visit on this device;
+    // that's only used to prefill the existing-customer phone field below.
+    document.getElementById("gate-heading").textContent = "Welcome!";
+    document.getElementById("gate-subheading").textContent = "Are you a returning customer, or new here? It just takes a moment.";
+    document.getElementById("gate-existing-phone").value = localStorage.getItem(GATE_PHONE_KEY) || "";
+    document.getElementById("gate-existing-msg").textContent = "";
+    document.getElementById("gate-existing-msg").classList.remove("err");
+    document.getElementById("gate-name").value = "";
+    document.getElementById("gate-phone").value = "";
+    document.getElementById("gate-email").value = "";
+    document.getElementById("gate-area").value = "";
+    document.getElementById("gate-msg").textContent = "";
+    showGateStep("choice");
     document.getElementById("gate-backdrop").classList.add("open");
   }
 
@@ -1612,6 +1703,67 @@
     if (name && nameInput && !nameInput.value) nameInput.value = name;
     if (phone && phoneInput && !phoneInput.value) phoneInput.value = phone;
   }
+
+  document.getElementById("gate-choice-existing").addEventListener("click", () => {
+    document.getElementById("gate-existing-msg").textContent = "";
+    document.getElementById("gate-existing-msg").classList.remove("err");
+    showGateStep("existing");
+  });
+  document.getElementById("gate-choice-new").addEventListener("click", () => showGateStep("new"));
+  document.getElementById("gate-existing-back").addEventListener("click", () => showGateStep("choice"));
+  document.getElementById("gate-new-back").addEventListener("click", () => showGateStep("choice"));
+
+  // Existing-customer path: only a phone number, checked against real
+  // customer records (built from past entry-gate submissions and orders —
+  // see upsertVisitor/handleVisitorLookup) rather than just trusting
+  // whatever's typed. No match means a friendly nudge to double-check the
+  // number or switch to New Customer, per how this was scoped.
+  document.getElementById("gate-existing-submit").addEventListener("click", async () => {
+    const msgEl = document.getElementById("gate-existing-msg");
+    msgEl.textContent = "";
+    msgEl.classList.remove("err");
+    const showError = (t) => { msgEl.textContent = t; msgEl.classList.add("err"); };
+
+    const phone = document.getElementById("gate-existing-phone").value.trim();
+    if (!phone) return showError("Please enter your mobile number.");
+
+    const btn = document.getElementById("gate-existing-submit");
+    btn.disabled = true;
+    btn.textContent = "Checking…";
+
+    let data;
+    try {
+      const res = await fetch(WORKER_URL + "/api/visitors/lookup", {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({ phone }),
+      });
+      data = await res.json().catch(() => ({}));
+      if (!res.ok) throw new Error(data.error || "Something went wrong — please try again.");
+    } catch (err) {
+      btn.disabled = false;
+      btn.textContent = "Continue";
+      return showError(err.message || "Couldn't reach the server — please try again.");
+    }
+
+    btn.disabled = false;
+    btn.textContent = "Continue";
+
+    if (!data.found) {
+      return showError('We couldn\'t find that number. Please double-check it, or choose "I\'m New Here" if this is your first time.');
+    }
+
+    sessionStorage.setItem(GATE_SESSION_KEY, "1");
+    localStorage.setItem(GATE_PHONE_KEY, phone);
+    if (data.name) localStorage.setItem(GATE_NAME_KEY, data.name);
+    prefillCheckoutFromVisitor();
+    updateVisitorGreeting();
+
+    document.getElementById("gate-welcome-name").textContent = data.name ? `Welcome back, ${data.name}!` : "Welcome back!";
+    document.getElementById("gate-welcome-msg").textContent =
+      `Great to see you again — have a look around, and message us on WhatsApp any time you need a hand.`;
+    showGateStep("welcome");
+  });
 
   document.getElementById("gate-submit").addEventListener("click", async () => {
     const msgEl = document.getElementById("gate-msg");
@@ -1652,11 +1804,10 @@
     prefillCheckoutFromVisitor();
     updateVisitorGreeting();
 
-    document.getElementById("gate-form-wrap").style.display = "none";
-    document.getElementById("gate-welcome-wrap").style.display = "block";
     document.getElementById("gate-welcome-name").textContent = `Welcome, ${name}!`;
     document.getElementById("gate-welcome-msg").textContent =
       `Thanks for stopping by ${SETTINGS.siteName || "Prabhvas Fashions"} — have a look around, and message us on WhatsApp any time you need a hand.`;
+    showGateStep("welcome");
     btn.disabled = false;
     btn.textContent = "Continue to the collection";
   });
@@ -1680,20 +1831,66 @@
   // ---- install app modal (PWA) ----
   // Chrome/Edge/Android fire this event when the site qualifies for
   // installation; we stash it and only trigger the native prompt once the
-  // shopper actually asks to install, from inside our own modal.
+  // shopper actually asks to install, from inside our own modal. Everything
+  // shown in the modal now reflects the real, current outcome — already
+  // installed, a native one-tap prompt available, just installed, just
+  // dismissed, or (no native prompt support, e.g. iOS Safari) manual steps
+  // as the only real option — instead of always showing the same static
+  // instructions regardless of what actually happened.
   let deferredInstallPrompt = null;
+
+  function isRunningInstalled() {
+    return (window.matchMedia && window.matchMedia("(display-mode: standalone)").matches) || window.navigator.standalone === true;
+  }
+
+  function setInstallOutcome(text, kind) {
+    const el = document.getElementById("install-outcome-msg");
+    if (!text) { el.style.display = "none"; el.textContent = ""; el.className = "install-outcome-msg"; return; }
+    el.textContent = text;
+    el.className = "install-outcome-msg" + (kind ? " " + kind : "");
+    el.style.display = "block";
+  }
+
+  // Rebuilds the modal's body to match the current, real state — called on
+  // every open, and again after an install attempt resolves.
+  function refreshInstallModal() {
+    const nowBtn = document.getElementById("install-now-btn");
+    const manualSteps = document.getElementById("install-manual-steps");
+    const intro = document.getElementById("install-intro");
+    if (isRunningInstalled()) {
+      intro.textContent = "You're using the installed app right now.";
+      setInstallOutcome("✓ Already installed on this device.", "ok");
+      nowBtn.style.display = "none";
+      manualSteps.style.display = "none";
+    } else if (deferredInstallPrompt) {
+      intro.textContent = "Install Prabhvas Fashions on your phone for a faster, full-screen shopping experience — no app store needed.";
+      nowBtn.style.display = "block";
+      manualSteps.style.display = "none"; // one-tap install is available — the manual steps would be redundant
+    } else {
+      intro.textContent = "Install Prabhvas Fashions on your phone for a faster, full-screen shopping experience — no app store needed.";
+      nowBtn.style.display = "none";
+      manualSteps.style.display = "";
+    }
+  }
+
   window.addEventListener("beforeinstallprompt", (e) => {
     e.preventDefault();
     deferredInstallPrompt = e;
-    const btn = document.getElementById("install-now-btn");
-    if (btn) btn.style.display = "block";
+    if (document.getElementById("install-backdrop").classList.contains("open")) refreshInstallModal();
   });
   window.addEventListener("appinstalled", () => {
     deferredInstallPrompt = null;
-    const btn = document.getElementById("install-now-btn");
-    if (btn) btn.style.display = "none";
+    if (document.getElementById("install-backdrop").classList.contains("open")) {
+      setInstallOutcome("✓ Installed! Look for it on your home screen.", "ok");
+      document.getElementById("install-now-btn").style.display = "none";
+      document.getElementById("install-manual-steps").style.display = "none";
+    }
   });
-  function openInstallModal() { document.getElementById("install-backdrop").classList.add("open"); }
+  function openInstallModal() {
+    setInstallOutcome(null);
+    refreshInstallModal();
+    document.getElementById("install-backdrop").classList.add("open");
+  }
   function closeInstallModal() { document.getElementById("install-backdrop").classList.remove("open"); }
   document.getElementById("footer-install-btn").addEventListener("click", openInstallModal);
   document.getElementById("install-close").addEventListener("click", closeInstallModal);
@@ -1705,10 +1902,26 @@
     const btn = document.getElementById("install-now-btn");
     btn.disabled = true;
     deferredInstallPrompt.prompt();
-    try { await deferredInstallPrompt.userChoice; } catch (err) { /* dismissed */ }
+    let outcome = "dismissed";
+    try {
+      const choice = await deferredInstallPrompt.userChoice;
+      outcome = (choice && choice.outcome) || "dismissed";
+    } catch (err) {
+      outcome = "dismissed";
+    }
     deferredInstallPrompt = null;
-    btn.style.display = "none";
     btn.disabled = false;
+    if (outcome === "accepted") {
+      // appinstalled (above) also fires shortly after this on most
+      // browsers and will refresh the message again once it does.
+      setInstallOutcome("✓ Installed! Look for it on your home screen.", "ok");
+      btn.style.display = "none";
+      document.getElementById("install-manual-steps").style.display = "none";
+    } else {
+      setInstallOutcome("Installation cancelled — tap \"Install Now\" again anytime, or use the steps below.", "info");
+      btn.style.display = "none";
+      document.getElementById("install-manual-steps").style.display = "";
+    }
   });
 
   // ---- track order modal ----
@@ -1807,7 +2020,7 @@
   // ============================================================
   // REVIEWS MODAL
   // ============================================================
-  const rvState = { productId: null, product: null, rating: 0 };
+  const rvState = { productId: null, product: null, rating: 0, orderNumber: "", productLabel: "", cameFromOrderFlow: false };
 
   function renderReviewsSummaryAndList(productId) {
     const list = reviewsFor(productId).slice().sort((a, b) => (b.date || "").localeCompare(a.date || ""));
@@ -1831,7 +2044,7 @@
     listWrap.innerHTML = list.map((r) => `
       <div class="review-item">
         <div class="review-head">
-          <span class="review-name">${escapeHtml(r.name || "Anonymous")}</span>
+          <span class="review-name">${escapeHtml(r.name || "Anonymous")}${r.verified ? '<span class="verified-badge">✓ Verified Purchase</span>' : ""}</span>
           <span class="review-date">${escapeHtml(r.date || "")}</span>
         </div>
         <div class="stars">${starsHtml(Number(r.rating || 0))}</div>
@@ -1866,16 +2079,104 @@
   // as product reviews, just filed under this fixed id instead of a real one.
   const GENERAL_FEEDBACK_ID = "_site_feedback";
 
+  // The modal has 4 possible steps, only relevant when opened as general
+  // feedback (a product-specific "Reviews" link skips straight to "form"):
+  //   choice -> lookup -> orders -> form
+  // "choice" lets the visitor say whether this is about something they
+  // ordered; "lookup" asks for the phone number to find their orders (the
+  // same /api/orders/track endpoint Track Order already uses, so this adds
+  // no new way to enumerate someone else's orders); "orders" lists what
+  // came back so they can pick the exact product; "form" is the existing
+  // star-rating write-a-review form, just relabelled when it's tied to a
+  // specific order.
+  function showReviewStep(step) {
+    document.getElementById("rv-choice-wrap").style.display = step === "choice" ? "flex" : "none";
+    document.getElementById("rv-lookup-wrap").style.display = step === "lookup" ? "block" : "none";
+    document.getElementById("rv-orders-wrap").style.display = step === "orders" ? "block" : "none";
+    document.getElementById("reviews-form-wrap").style.display = step === "form" ? "block" : "none";
+    // The summary/list of existing reviews only makes sense once we know
+    // which product (or the general feedback bucket) we're looking at —
+    // hide it during the choose-your-order steps so the modal isn't
+    // showing an unrelated product's reviews while picking.
+    document.getElementById("reviews-summary-wrap").style.display = step === "form" ? "" : "none";
+    document.getElementById("reviews-list").style.display = step === "form" ? "" : "none";
+  }
+
+  function renderReviewingForBanner() {
+    const el = document.getElementById("rv-reviewing-for");
+    const backBtn = document.getElementById("rv-form-back");
+    if (rvState.cameFromOrderFlow && rvState.productLabel) {
+      el.style.display = "block";
+      el.innerHTML = `<strong>${escapeHtml(rvState.productLabel)}</strong>Order #${escapeHtml(rvState.orderNumber)}`;
+      backBtn.style.display = "inline-block";
+    } else {
+      el.style.display = "none";
+      backBtn.style.display = "none";
+    }
+  }
+
+  // Note: this deliberately doesn't touch the modal heading or the
+  // reviews-product-name subtitle — callers set those first (the direct
+  // "Reviews" link on a product page shows that product's name; the
+  // general-feedback flow shows the site-wide tagline throughout its
+  // choice/lookup/orders steps), and the order-specific "reviewing for"
+  // banner below adds whatever extra context this particular path needs.
+  function openReviewToForm(productId, product, orderNumber, productLabel) {
+    rvState.productId = productId;
+    rvState.product = product || null;
+    rvState.orderNumber = orderNumber || "";
+    rvState.productLabel = productLabel || (product ? product.name : "");
+    rvState.cameFromOrderFlow = !!orderNumber;
+    renderReviewsSummaryAndList(productId);
+    resetReviewForm();
+    renderReviewingForBanner();
+    showReviewStep("form");
+    // Carry the phone the visitor already typed into the lookup step
+    // forward into the review form, since it's the same person.
+    const lookupPhone = document.getElementById("rv-lookup-phone").value.trim();
+    if (lookupPhone) document.getElementById("rv-phone").value = lookupPhone;
+  }
+
+  function reviewOrderCardHtml(o) {
+    const placedDate = (o.createdAt || "").slice(0, 10);
+    const itemButtons = (o.items || []).map((it, idx) => {
+      const label = `${it.productName}${it.variantLabel ? ` (${it.variantLabel})` : ""}`;
+      return `<button type="button" class="rv-item-pick-btn" data-order-number="${escapeHtml(String(o.orderNumber || ""))}" data-item-index="${idx}">${escapeHtml(label)}</button>`;
+    }).join("");
+    return `<div class="rv-order-pick-card" data-order-number="${escapeHtml(String(o.orderNumber || ""))}">
+      <div class="rv-order-pick-head">
+        <span class="rv-order-pick-number">Order #${escapeHtml(String(o.orderNumber || ""))}</span>
+        <span class="rv-order-pick-date">${escapeHtml(placedDate)}</span>
+      </div>
+      ${itemButtons}
+    </div>`;
+  }
+
+  let rvOrdersFound = [];
+
   function openReviewsModal(productId) {
     const isGeneral = productId === GENERAL_FEEDBACK_ID;
     const product = isGeneral ? null : PRODUCTS.find((p) => p.id === productId);
-    rvState.productId = productId;
-    rvState.product = product;
-    document.getElementById("reviews-modal-heading").textContent = isGeneral ? "Customer Feedback" : "Reviews";
-    document.getElementById("reviews-product-name").textContent = isGeneral
-      ? "Tell us about your experience with Prabhvas Fashions"
-      : (product ? product.name : "");
-    renderReviewsSummaryAndList(productId);
+    document.getElementById("rv-lookup-phone").value = "";
+    document.getElementById("rv-lookup-msg").textContent = "";
+    document.getElementById("rv-lookup-msg").className = "reviews-form-msg";
+    document.getElementById("rv-orders-list").innerHTML = "";
+    rvOrdersFound = [];
+
+    if (isGeneral) {
+      document.getElementById("reviews-modal-heading").textContent = "Customer Feedback";
+      document.getElementById("reviews-product-name").textContent = "Tell us about your experience with Prabhvas Fashions";
+      rvState.productId = GENERAL_FEEDBACK_ID;
+      rvState.product = null;
+      rvState.orderNumber = "";
+      rvState.productLabel = "";
+      rvState.cameFromOrderFlow = false;
+      showReviewStep("choice");
+    } else {
+      document.getElementById("reviews-modal-heading").textContent = "Reviews";
+      document.getElementById("reviews-product-name").textContent = product ? product.name : "";
+      openReviewToForm(productId, product, "", "");
+    }
     resetReviewForm();
     document.getElementById("reviews-backdrop").classList.add("open");
   }
@@ -1894,6 +2195,74 @@
   document.addEventListener("click", (e) => {
     const btn = e.target.closest("[data-open-reviews]");
     if (btn) openReviewsModal(btn.dataset.openReviews);
+  });
+
+  document.getElementById("rv-choice-order").addEventListener("click", () => {
+    const known = localStorage.getItem(GATE_PHONE_KEY);
+    if (known) document.getElementById("rv-lookup-phone").value = known;
+    showReviewStep("lookup");
+  });
+  document.getElementById("rv-choice-general").addEventListener("click", () => {
+    openReviewToForm(GENERAL_FEEDBACK_ID, null, "", "");
+  });
+  document.getElementById("rv-lookup-back").addEventListener("click", () => showReviewStep("choice"));
+  document.getElementById("rv-orders-back").addEventListener("click", () => showReviewStep("lookup"));
+  document.getElementById("rv-form-back").addEventListener("click", () => {
+    if (rvOrdersFound.length) showReviewStep("orders");
+    else showReviewStep("choice");
+  });
+
+  document.getElementById("rv-lookup-submit").addEventListener("click", async () => {
+    const msgEl = document.getElementById("rv-lookup-msg");
+    const phone = document.getElementById("rv-lookup-phone").value.trim();
+    msgEl.textContent = "";
+    msgEl.className = "reviews-form-msg";
+
+    if (!phone) {
+      msgEl.textContent = "Please enter the mobile number you ordered with.";
+      msgEl.className = "reviews-form-msg err";
+      return;
+    }
+
+    const btn = document.getElementById("rv-lookup-submit");
+    btn.disabled = true;
+    btn.textContent = "Looking up…";
+
+    try {
+      const res = await fetch(WORKER_URL + "/api/orders/track?phone=" + encodeURIComponent(phone));
+      const data = await res.json().catch(() => ({}));
+      if (!res.ok) throw new Error(data.error || "Something went wrong — please try again.");
+      rvOrdersFound = (data.orders || []).filter((o) => (o.items || []).length);
+      if (!rvOrdersFound.length) {
+        msgEl.textContent = "No orders found for that number. Double-check it, or leave general feedback instead.";
+        msgEl.className = "reviews-form-msg err";
+      } else {
+        document.getElementById("rv-orders-list").innerHTML = rvOrdersFound.map(reviewOrderCardHtml).join("");
+        showReviewStep("orders");
+      }
+    } catch (err) {
+      msgEl.textContent = err.message || "Couldn't reach the server — please try again.";
+      msgEl.className = "reviews-form-msg err";
+    } finally {
+      btn.disabled = false;
+      btn.textContent = "Find My Orders";
+    }
+  });
+  document.getElementById("rv-lookup-phone").addEventListener("keydown", (e) => {
+    if (e.key === "Enter") document.getElementById("rv-lookup-submit").click();
+  });
+
+  document.getElementById("rv-orders-list").addEventListener("click", (e) => {
+    const itemBtn = e.target.closest(".rv-item-pick-btn");
+    if (!itemBtn) return;
+    const orderNumber = itemBtn.dataset.orderNumber;
+    const order = rvOrdersFound.find((o) => String(o.orderNumber) === orderNumber);
+    if (!order) return;
+    const item = (order.items || [])[Number(itemBtn.dataset.itemIndex)];
+    if (!item || !item.productId) return;
+    const product = PRODUCTS.find((p) => p.id === item.productId);
+    const label = `${item.productName}${item.variantLabel ? ` (${item.variantLabel})` : ""}`;
+    openReviewToForm(item.productId, product, orderNumber, label);
   });
 
   document.getElementById("rv-submit").addEventListener("click", async () => {
@@ -1925,7 +2294,7 @@
       const res = await fetch(WORKER_URL + "/api/reviews", {
         method: "POST",
         headers: { "Content-Type": "application/json" },
-        body: JSON.stringify({ productId: rvState.productId, name, email, phone, rating: rvState.rating, text, website }),
+        body: JSON.stringify({ productId: rvState.productId, orderNumber: rvState.orderNumber, name, email, phone, rating: rvState.rating, text, website }),
       });
       const data = await res.json().catch(() => ({}));
       if (!res.ok) throw new Error(data.error || "Something went wrong.");
