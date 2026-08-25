@@ -293,7 +293,7 @@
     <!-- ---- Orders ---- -->
     <div id="view-orders" class="view" style="display:none;">
       <div class="page-head"><h1>Orders</h1></div>
-      <p class="hint" style="margin:-4px 0 20px;">Every delivery and self-collection order a customer submits lands here, with the WhatsApp message sent alongside it. Changing status here is immediate — it doesn't need Publish. Delivery zones, collection points, and the Aramex courier connection are all configured on the Settings tab.</p>
+      <p class="hint" style="margin:-4px 0 20px;">Every delivery and self-collection order a customer submits lands here, with the WhatsApp message sent alongside it. Changing status here is immediate — it doesn't need Publish. Delivery zones, collection points, and delivery time slots are all configured on the Settings tab.</p>
       <div class="card-block"><div id="orders-list"></div></div>
     </div>
 
@@ -338,7 +338,7 @@
 
       <div class="card-block">
         <h2>Delivery zones &amp; pricing</h2>
-        <p class="hint" style="margin-bottom:14px;">Priced by area at checkout. If Aramex is turned on below and reachable, a live Aramex rate is used instead automatically for that order — this table is always the fallback (and what's used while Aramex is off), so keep it filled in either way.</p>
+        <p class="hint" style="margin-bottom:14px;">Priced by area at checkout — this is the delivery charge customers see and pay.</p>
         <div id="zones-table-wrap"></div>
         <div style="display:flex;gap:10px;flex-wrap:wrap;align-items:center;margin-top:14px;">
           <button type="button" class="btn btn-ghost btn-sm" id="btn-add-zone">+ Add zone manually</button>
@@ -359,40 +359,6 @@
         <p class="hint" style="margin-bottom:14px;">The windows customers can choose from when scheduling a delivery — e.g. "9am – 12pm". These are requested windows, not a guaranteed courier booking, so keep them broad enough to actually meet.</p>
         <div id="slots-list"></div>
         <button type="button" class="btn btn-ghost btn-sm" id="btn-add-slot" style="margin-top:6px;">+ Add time slot</button>
-      </div>
-
-      <div class="card-block">
-        <h2>Courier (Aramex)</h2>
-        <p class="hint" style="margin-bottom:14px;">Off by default — delivery pricing uses the zone table above, and you book couriers manually, until you turn this on with your own Aramex account details. Saves immediately below, not through Publish. This talks to Aramex's real API, so only turn it on once you have a live Aramex business account with API access — see the setup guide for how to request one.</p>
-        <div id="aramex-msg"></div>
-        <div class="field checkbox-row"><input type="checkbox" id="ar-enabled" /><label for="ar-enabled" style="margin:0;">Turn on live Aramex rates &amp; booking</label></div>
-        <div class="field-row" style="margin-top:12px;">
-          <div class="field"><label for="ar-account">Account number</label><input type="text" id="ar-account" /></div>
-          <div class="field"><label for="ar-entity">Account entity</label><input type="text" id="ar-entity" placeholder="e.g. DXB" /></div>
-        </div>
-        <div class="field-row">
-          <div class="field"><label for="ar-country">Account country code</label><input type="text" id="ar-country" placeholder="AE" /></div>
-          <div class="field"><label for="ar-origin">Ships from (city)</label><input type="text" id="ar-origin" placeholder="Dubai" /></div>
-        </div>
-        <div class="field-row">
-          <div class="field"><label for="ar-username">Aramex username</label><input type="text" id="ar-username" placeholder="Leave blank to keep current" autocomplete="off" /></div>
-          <div class="field"><label for="ar-password">Aramex password</label><input type="password" id="ar-password" placeholder="Leave blank to keep current" autocomplete="off" /></div>
-        </div>
-        <div class="field" style="max-width:260px;"><label for="ar-pin">Account PIN</label><input type="text" id="ar-pin" placeholder="Leave blank to keep current" autocomplete="off" /></div>
-        <button class="btn btn-ghost" id="btn-save-aramex">Save courier settings</button>
-        <p class="hint" id="ar-cred-status" style="margin-top:10px;"></p>
-      </div>
-
-      <div class="card-block">
-        <h2>Schedule an Aramex pickup</h2>
-        <p class="hint" style="margin-bottom:14px;">Books one pickup covering every order currently marked "Booked" that doesn't have a pickup scheduled yet — Aramex normally does one consolidated pickup per day rather than one per shipment. Requires Aramex to be turned on above.</p>
-        <div class="field-row cols-3">
-          <div class="field"><label for="ar-pickup-date">Pickup date</label><input type="date" id="ar-pickup-date" /></div>
-          <div class="field"><label for="ar-ready-time">Ready time</label><input type="time" id="ar-ready-time" value="10:00" /></div>
-          <div class="field"><label for="ar-closing-time">Closing time</label><input type="time" id="ar-closing-time" value="18:00" /></div>
-        </div>
-        <button class="btn btn-primary btn-sm" id="btn-schedule-pickup">Schedule pickup</button>
-        <p class="hint" id="pickup-msg" style="margin-top:10px;"></p>
       </div>
 
       <div class="card-block">
@@ -1267,12 +1233,12 @@
   // ============================================================
   // ORDERS
   // ============================================================
-  const ORDER_STATUS_LABELS = { new: "New", confirmed: "Confirmed", booked: "Booked (Aramex)", in_transit: "In transit", delivered: "Delivered", collected: "Collected", cancelled: "Cancelled" };
+  const ORDER_STATUS_LABELS = { new: "New", confirmed: "Confirmed", booked: "Booked with courier", in_transit: "In transit", delivered: "Delivered", collected: "Collected", cancelled: "Cancelled" };
 
   function orderStatusLabel(s) { return ORDER_STATUS_LABELS[s] || s; }
 
   // Only offer sensible next steps for this order's fulfillment type (a
-  // collection order should never show "Booked (Aramex)", for instance) —
+  // collection order should never show "Booked with courier", for instance) —
   // but always keep whatever its current status is in the list too, so the
   // dropdown never mismatches reality.
   function orderStatusOptions(order) {
@@ -1297,9 +1263,6 @@
       const addressLine = o.fulfillment === "delivery" && o.delivery?.addressLine
         ? `<p class="hint" style="margin:4px 0 0;">${escapeHtml(o.delivery.addressLine)}${o.delivery.lat && o.delivery.lng ? ` &middot; <a href="https://www.google.com/maps?q=${o.delivery.lat},${o.delivery.lng}" target="_blank" rel="noopener">view pin ↗</a>` : ""}</p>`
         : "";
-      const aramexLine = o.aramex
-        ? `<p class="hint" style="margin:4px 0 0;">${o.aramex.awb ? `AWB ${escapeHtml(o.aramex.awb)} &middot; ${escapeHtml(o.aramex.lastStatus || "Booked")}` : ""}${o.aramex.pickupId ? ` &middot; pickup scheduled` : ""}${o.aramex.error ? ` — <span style="color:var(--bad);">${escapeHtml(o.aramex.error)}</span>` : ""}</p>`
-        : "";
       return `<div class="card-block" style="margin-bottom:12px;" data-order-id="${escapeHtml(o.id)}">
         <div style="display:flex;justify-content:space-between;gap:12px;flex-wrap:wrap;">
           <div>
@@ -1308,14 +1271,12 @@
             <p style="margin:6px 0 0;">${itemsLabel}</p>
             <p class="hint" style="margin:4px 0 0;">${fulfillmentLabel}</p>
             ${addressLine}
-            ${aramexLine}
             <p class="hint" style="margin:4px 0 0;">${escapeHtml((o.createdAt || "").slice(0, 16).replace("T", " "))} &middot; ${formatPrice(o.orderTotal)}</p>
           </div>
           <div style="display:flex;flex-direction:column;gap:8px;align-items:flex-end;flex:none;">
             <select class="order-status" data-order-status="${escapeHtml(o.id)}">
               ${orderStatusOptions(o).map((s) => `<option value="${s}" ${s === o.status ? "selected" : ""}>${orderStatusLabel(s)}</option>`).join("")}
             </select>
-            ${o.aramex?.awb ? `<button type="button" class="btn btn-ghost btn-sm" data-track-order="${escapeHtml(o.id)}">Refresh tracking</button>` : ""}
           </div>
         </div>
       </div>`;
@@ -1341,25 +1302,6 @@
     }
   });
 
-  $("orders-list").addEventListener("click", async (e) => {
-    const btn = e.target.closest("button[data-track-order]");
-    if (!btn) return;
-    const id = btn.dataset.trackOrder;
-    btn.disabled = true;
-    btn.textContent = "Refreshing…";
-    try {
-      const data = await api("/api/orders/track", { method: "POST", body: JSON.stringify({ id }) });
-      const idx = state.orders.findIndex((o) => o.id === id);
-      if (idx !== -1) state.orders[idx] = data.order;
-      renderOrders();
-    } catch (err) {
-      alert(err.message || "Something went wrong.");
-    } finally {
-      btn.disabled = false;
-      btn.textContent = "Refresh tracking";
-    }
-  });
-
   // ============================================================
   // SETTINGS
   // ============================================================
@@ -1379,7 +1321,6 @@
     renderZones();
     renderCollectionPoints();
     renderSlots();
-    loadAramexConfig();
     renderTotpStatus();
     $("email-2fa").value = "";
   }
@@ -1706,68 +1647,6 @@
     state.dirty.settings = true;
     updatePublishUi();
     renderSlots();
-  });
-
-  // ---- Aramex courier ----
-  // Saves immediately via its own endpoint (like your password/2FA above) —
-  // credentials are never staged into the Publish flow, and never touch the
-  // public GitHub repo.
-  async function loadAramexConfig() {
-    try {
-      const cfg = await api("/api/aramex/config");
-      $("ar-enabled").checked = !!cfg.enabled;
-      $("ar-account").value = cfg.accountNumber || "";
-      $("ar-entity").value = cfg.accountEntity || "";
-      $("ar-country").value = cfg.accountCountryCode || "AE";
-      $("ar-origin").value = cfg.originCity || "";
-      $("ar-username").value = "";
-      $("ar-password").value = "";
-      $("ar-pin").value = "";
-      $("ar-cred-status").textContent = cfg.hasCredentials ? "Credentials are saved." : "No credentials saved yet.";
-    } catch {
-      // Non-fatal — the rest of Settings still works.
-    }
-  }
-
-  $("btn-save-aramex").addEventListener("click", async () => {
-    const msgEl = $("aramex-msg");
-    msgEl.innerHTML = "";
-    try {
-      await api("/api/aramex/config", { method: "POST", body: JSON.stringify({
-        enabled: $("ar-enabled").checked,
-        accountNumber: $("ar-account").value.trim(),
-        accountEntity: $("ar-entity").value.trim(),
-        accountCountryCode: $("ar-country").value.trim() || "AE",
-        originCity: $("ar-origin").value.trim(),
-        username: $("ar-username").value.trim(),
-        password: $("ar-password").value,
-        accountPin: $("ar-pin").value.trim(),
-      }) });
-      msgEl.innerHTML = '<div class="msg ok">Courier settings saved.</div>';
-      await loadAramexConfig();
-    } catch (err) {
-      msgEl.innerHTML = `<div class="msg error">${escapeHtml(err.message)}</div>`;
-    }
-  });
-
-  $("btn-schedule-pickup").addEventListener("click", async () => {
-    const msgEl = $("pickup-msg");
-    msgEl.innerHTML = "";
-    const pickupDate = $("ar-pickup-date").value;
-    const readyTime = $("ar-ready-time").value;
-    const closingTime = $("ar-closing-time").value;
-    if (!pickupDate || !readyTime || !closingTime) { msgEl.innerHTML = '<div class="msg error">Fill in date, ready time, and closing time.</div>'; return; }
-    const btn = $("btn-schedule-pickup");
-    btn.disabled = true;
-    try {
-      const data = await api("/api/aramex/pickup", { method: "POST", body: JSON.stringify({ pickupDate, readyTime, closingTime }) });
-      msgEl.innerHTML = `<div class="msg ok">Pickup scheduled for ${data.count} order(s).</div>`;
-      await refreshOrders();
-    } catch (err) {
-      msgEl.innerHTML = `<div class="msg error">${escapeHtml(err.message)}</div>`;
-    } finally {
-      btn.disabled = false;
-    }
   });
 
   $("btn-save-site-settings").addEventListener("click", () => {
