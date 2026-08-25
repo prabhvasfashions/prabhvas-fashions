@@ -323,8 +323,10 @@
         <div style="display:flex;gap:10px;flex-wrap:wrap;align-items:center;margin-bottom:14px;">
           <button type="button" class="btn btn-ghost btn-sm" id="btn-refresh-customers">Refresh</button>
           <button type="button" class="btn btn-ghost btn-sm" id="btn-export-customers">Export CSV</button>
+          <button type="button" class="btn btn-ghost btn-sm" id="btn-backfill-customers">Import from past orders</button>
           <span class="hint" id="customers-count"></span>
         </div>
+        <p class="hint" id="customers-backfill-msg" style="margin-bottom:10px;"></p>
         <div id="customers-list"></div>
       </div>
     </div>
@@ -354,7 +356,8 @@
           <div class="field"><label for="s-snapchat">Snapchat URL (optional)</label><input type="url" id="s-snapchat" placeholder="https://snapchat.com/add/..." /></div>
         </div>
         <div class="field"><label for="s-moj">Moj URL (optional)</label><input type="url" id="s-moj" placeholder="https://mojapp.in/..." /></div>
-        <button class="btn btn-ghost" id="btn-save-site-settings">Save site settings (stages — click Publish to go live)</button>
+        <button class="btn btn-ghost" id="btn-save-site-settings">Save &amp; Publish</button>
+        <div id="site-settings-msg" style="margin-top:10px;"></div>
       </div>
 
       <div class="card-block">
@@ -363,9 +366,11 @@
         <div id="hero-photo-rows"></div>
         <div class="field" style="max-width:260px;margin-top:16px;">
           <label for="s-hero-interval">Change photo every (seconds)</label>
-          <input type="number" min="5" step="1" id="s-hero-interval" placeholder="60" />
+          <input type="number" min="5" step="1" id="s-hero-interval" placeholder="10" />
           <p class="hint">Only matters once you've added more than one photo above.</p>
         </div>
+        <button class="btn btn-ghost" id="btn-save-hero" style="margin-top:10px;">Save &amp; Publish</button>
+        <div id="hero-settings-msg" style="margin-top:10px;"></div>
       </div>
 
       <div class="card-block">
@@ -377,6 +382,8 @@
           <label class="btn btn-ghost btn-sm" style="margin:0;">Upload CSV/Excel<input type="file" id="zones-upload" accept=".csv,.xlsx,.xls" style="display:none;" /></label>
         </div>
         <p class="hint" id="zones-upload-hint" style="margin-top:8px;">Columns: Area, Emirate, Charge, Free Above (optional), Available (optional — "no" to hide a zone). A .csv always works; a .xlsx needs an internet connection to load the Excel reader.</p>
+        <button class="btn btn-ghost" id="btn-save-zones" style="margin-top:10px;">Save &amp; Publish</button>
+        <div id="zones-settings-msg" style="margin-top:10px;"></div>
       </div>
 
       <div class="card-block">
@@ -384,6 +391,8 @@
         <p class="hint" style="margin-bottom:14px;">Shown to customers who choose to collect their order themselves instead of having it delivered.</p>
         <div id="points-table-wrap"></div>
         <button type="button" class="btn btn-ghost btn-sm" id="btn-add-point" style="margin-top:6px;">+ Add collection point</button>
+        <button class="btn btn-ghost" id="btn-save-points" style="margin-top:10px;display:block;">Save &amp; Publish</button>
+        <div id="points-settings-msg" style="margin-top:10px;"></div>
       </div>
 
       <div class="card-block">
@@ -391,15 +400,19 @@
         <p class="hint" style="margin-bottom:14px;">The windows customers can choose from when scheduling a delivery — e.g. "9am – 12pm". These are requested windows, not a guaranteed courier booking, so keep them broad enough to actually meet.</p>
         <div id="slots-list"></div>
         <button type="button" class="btn btn-ghost btn-sm" id="btn-add-slot" style="margin-top:6px;">+ Add time slot</button>
+        <button class="btn btn-ghost" id="btn-save-slots" style="margin-top:10px;display:block;">Save &amp; Publish</button>
+        <div id="slots-settings-msg" style="margin-top:10px;"></div>
       </div>
 
       <div class="card-block">
         <h2>Customer capture</h2>
-        <p class="hint" style="margin-bottom:14px;">Require every visitor to share their name and phone number before they can browse the site — useful for building a customer list, but note that some casual visitors will leave rather than fill in a form first. Off by default, and easy to switch off again.</p>
+        <p class="hint" style="margin-bottom:14px;">Require every visitor to share their name and phone number before they can browse the site — useful for building a customer list, but note that some casual visitors will leave rather than fill in a form first. Easy to switch off again any time.</p>
         <label style="display:flex;align-items:center;gap:8px;font-weight:600;font-size:0.88rem;">
           <input type="checkbox" id="s-require-gate" style="width:auto;" />
           Require visitor details before browsing (entry gate)
         </label>
+        <button class="btn btn-ghost" id="btn-save-gate" style="margin-top:14px;">Save &amp; Publish</button>
+        <div id="gate-settings-msg" style="margin-top:10px;"></div>
       </div>
 
       <div class="card-block">
@@ -804,6 +817,25 @@
   }
 
   $("btn-refresh-customers").addEventListener("click", () => refreshCustomers().then(renderCustomers));
+
+  $("btn-backfill-customers").addEventListener("click", async () => {
+    const btn = $("btn-backfill-customers");
+    const msgEl = $("customers-backfill-msg");
+    btn.disabled = true;
+    msgEl.textContent = "Checking past orders…";
+    try {
+      const data = await api("/api/visitors/backfill", { method: "POST" });
+      msgEl.textContent = data.added
+        ? `Added ${data.added} customer${data.added === 1 ? "" : "s"} from past orders.`
+        : "Nothing to import — every past order's customer is already on this list.";
+      await refreshCustomers();
+      renderCustomers();
+    } catch (err) {
+      msgEl.textContent = `Couldn't import: ${err.message}`;
+    } finally {
+      btn.disabled = false;
+    }
+  });
 
   $("btn-export-customers").addEventListener("click", () => {
     const list = state.customers.slice().sort((a, b) => (b.lastSeenAt || "").localeCompare(a.lastSeenAt || ""));
@@ -1469,7 +1501,7 @@
     $("s-snapchat").value = state.settings.snapchatUrl || "";
     $("s-moj").value = state.settings.mojUrl || "";
     $("s-contact-email").value = state.settings.contactEmail || "";
-    $("s-hero-interval").value = state.settings.heroRotateSeconds || 60;
+    $("s-hero-interval").value = state.settings.heroRotateSeconds || 10;
     $("s-require-gate").checked = !!state.settings.requireVisitorGate;
     renderHeroPhotoRows();
     renderZones();
@@ -1803,26 +1835,87 @@
     renderSlots();
   });
 
-  $("btn-save-site-settings").addEventListener("click", () => {
-    state.settings = {
-      ...state.settings,
-      siteName: $("s-name").value.trim() || "Prabhvas Fashions",
-      currency: $("s-currency").value.trim() || "AED",
-      tagline: $("s-tagline").value.trim(),
-      whatsappNumber: $("s-whatsapp").value.replace(/[^0-9]/g, ""),
-      instagramUrl: $("s-instagram").value.trim(),
-      facebookUrl: $("s-facebook").value.trim(),
-      tiktokUrl: $("s-tiktok").value.trim(),
-      snapchatUrl: $("s-snapchat").value.trim(),
-      mojUrl: $("s-moj").value.trim(),
-      contactEmail: $("s-contact-email").value.trim(),
-      heroRotateSeconds: Math.max(5, parseInt($("s-hero-interval").value, 10) || 60),
-      requireVisitorGate: $("s-require-gate").checked,
-    };
-    state.dirty.settings = true;
-    updatePublishUi();
-    $("settings-msg").innerHTML = '<div class="msg ok">Staged — click Publish Changes to go live.</div>';
-  });
+  // ---- Each Settings card saves & publishes itself immediately, so a
+  // small change doesn't require finding the global Publish Changes bar.
+  // That bar stays around for Products/Categories, which still stage first.
+  async function saveSettingsSection(btnId, msgElId, { collect, includeHeroPhotos } = {}) {
+    const btn = $(btnId);
+    const msgEl = $(msgElId);
+    msgEl.innerHTML = "";
+    btn.disabled = true;
+    const originalText = btn.textContent;
+    btn.textContent = "Saving…";
+    try {
+      if (collect) collect();
+      state.dirty.settings = true;
+
+      const payload = { shas: state.shas, settings: state.settings };
+      if (includeHeroPhotos && Object.keys(heroPhotoFiles).length) {
+        const photos = {};
+        for (const [path, file] of Object.entries(heroPhotoFiles)) {
+          photos[path] = await fileToBase64(file);
+        }
+        payload.photos = photos;
+      }
+
+      const data = await api("/api/publish", { method: "POST", body: JSON.stringify(payload) });
+      state.shas = { ...state.shas, ...data.shas };
+      state.dirty.settings = false;
+      if (includeHeroPhotos) heroPhotoFiles = {};
+      updatePublishUi();
+      msgEl.innerHTML = '<div class="msg ok">Saved and published — live within about a minute.</div>';
+    } catch (err) {
+      if (err.status === 401) {
+        signOut();
+        $("login-msg").innerHTML = '<div class="msg error">Your session expired — please sign in again.</div>';
+      } else if (err.status === 409) {
+        msgEl.innerHTML = `<div class="msg error">${escapeHtml(err.message)} <button class="btn btn-ghost btn-sm" id="btn-reload-after-conflict-${btnId}">Refresh now</button></div>`;
+        $(`btn-reload-after-conflict-${btnId}`)?.addEventListener("click", () => location.reload());
+      } else {
+        msgEl.innerHTML = `<div class="msg error">Save failed: ${escapeHtml(err.message)}</div>`;
+      }
+    } finally {
+      btn.disabled = false;
+      btn.textContent = originalText;
+    }
+  }
+
+  $("btn-save-site-settings").addEventListener("click", () => saveSettingsSection("btn-save-site-settings", "site-settings-msg", {
+    collect: () => {
+      state.settings = {
+        ...state.settings,
+        siteName: $("s-name").value.trim() || "Prabhvas Fashions",
+        currency: $("s-currency").value.trim() || "AED",
+        tagline: $("s-tagline").value.trim(),
+        whatsappNumber: $("s-whatsapp").value.replace(/[^0-9]/g, ""),
+        instagramUrl: $("s-instagram").value.trim(),
+        facebookUrl: $("s-facebook").value.trim(),
+        tiktokUrl: $("s-tiktok").value.trim(),
+        snapchatUrl: $("s-snapchat").value.trim(),
+        mojUrl: $("s-moj").value.trim(),
+        contactEmail: $("s-contact-email").value.trim(),
+      };
+    },
+  }));
+
+  $("btn-save-hero").addEventListener("click", () => saveSettingsSection("btn-save-hero", "hero-settings-msg", {
+    collect: () => {
+      state.settings = { ...state.settings, heroRotateSeconds: Math.max(5, parseInt($("s-hero-interval").value, 10) || 10) };
+    },
+    includeHeroPhotos: true,
+  }));
+
+  $("btn-save-zones").addEventListener("click", () => saveSettingsSection("btn-save-zones", "zones-settings-msg"));
+
+  $("btn-save-points").addEventListener("click", () => saveSettingsSection("btn-save-points", "points-settings-msg"));
+
+  $("btn-save-slots").addEventListener("click", () => saveSettingsSection("btn-save-slots", "slots-settings-msg"));
+
+  $("btn-save-gate").addEventListener("click", () => saveSettingsSection("btn-save-gate", "gate-settings-msg", {
+    collect: () => {
+      state.settings = { ...state.settings, requireVisitorGate: $("s-require-gate").checked };
+    },
+  }));
 
   $("btn-change-password").addEventListener("click", async () => {
     const currentPassword = $("pw-current").value;

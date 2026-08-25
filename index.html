@@ -28,8 +28,8 @@
   .topbar { position: sticky; top: 0; z-index: 20; background: rgba(248, 243, 233, 0.92); backdrop-filter: blur(6px); border-bottom: 1px solid var(--line); }
   .topbar-inner { display: flex; align-items: center; justify-content: space-between; padding: 12px clamp(20px, 4vw, 48px); max-width: 1120px; margin: 0 auto; gap: 16px; }
   .brand-mark { display: flex; align-items: center; gap: 10px; text-decoration: none; }
-  .brand-mark img { width: 34px; height: 34px; }
-  .brand-mark span { font-family: 'Cormorant Garamond', serif; font-weight: 700; font-size: 1.25rem; letter-spacing: 0.02em; }
+  .brand-mark img { width: 42.5px; height: 42.5px; }
+  .brand-mark span { font-family: 'Cormorant Garamond', serif; font-weight: 700; font-size: 1.25rem; letter-spacing: 0.05em; text-transform: uppercase; color: var(--gold); white-space: nowrap; }
   .topbar nav { display: flex; align-items: center; gap: clamp(14px, 2vw, 28px); }
   .topbar nav .section-link { font-size: 0.82rem; font-weight: 600; text-decoration: none; color: var(--ink-soft); letter-spacing: 0.01em; background: none; border: none; font-family: inherit; padding: 0; cursor: pointer; }
   .topbar nav .section-link:hover { color: var(--ink); }
@@ -1729,7 +1729,7 @@
     layerA.style.backgroundImage = `url('${images[0]}')`;
     if (images.length <= 1) return;
 
-    const rotateMs = Math.max(5, Number(rotateSeconds) || 60) * 1000;
+    const rotateMs = Math.max(5, Number(rotateSeconds) || 10) * 1000;
     let index = 0;
     let showingA = true;
     setInterval(() => {
