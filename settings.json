@@ -3,5 +3,7 @@
   "tagline": "Signature pleated silhouettes and hand-picked ethnic wear, shipped across the UAE — same-day where it matters.",
   "whatsappNumber": "971586711803",
   "currency": "AED",
-  "instagramUrl": ""
+  "instagramUrl": "",
+  "contactEmail": "",
+  "heroImages": ["assets/hero-photo.jpg"]
 }
