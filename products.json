@@ -1,28 +1,181 @@
 [
   {
     "id": "pleated-wide-leg-palazzo",
-    "categoryId": "palazzos",
-    "name": "Pleated Wide-Leg Palazzo",
-    "description": "Micro-pleated wide-leg palazzo, modest-chic everyday wear.",
-    "basePrice": 65,
+    "categoryId": "plazzos",
+    "name": "Pleated Wide Leg Palazzo",
+    "description": "Micro pleated wide-leg palazzo, modest-chic everyday wear.",
+    "basePrice": 9,
+    "sortOrder": 0,
     "ready": true,
-    "sortOrder": 1,
     "variants": [
       {
-        "sku": "PLZ-BLK-FREE",
-        "color": "Midnight Black",
-        "size": "Free Size (S–2XL, stretch waist 26\"–40\")",
+        "sku": "PB010001",
+        "color": "White",
+        "size": "XL",
         "priceOverride": null,
-        "stock": 24,
-        "photo": "assets/products/palazzo-black.png"
+        "stock": 2,
+        "photo": "assets/products/pleated-wide-leg-palazzo-pb010001.jpeg"
       },
       {
-        "sku": "PLZ-IVR-FREE",
-        "color": "Pearl Ivory White",
-        "size": "Free Size (S–2XL, stretch waist 26\"–40\")",
+        "sku": "PB010002",
+        "color": "Black",
+        "size": "XL",
         "priceOverride": null,
-        "stock": 24,
-        "photo": "assets/products/palazzo-ivory.png"
+        "stock": 3,
+        "photo": "assets/products/pleated-wide-leg-palazzo-pb010002.jpg"
+      }
+    ]
+  },
+  {
+    "id": "trendy-women-pants",
+    "categoryId": "straight-pants",
+    "name": "Trendy Women Pants",
+    "description": "Classic Straight Fit Cotton Pants, Everyday Office To Casual Wear.",
+    "basePrice": 12,
+    "sortOrder": 0,
+    "ready": true,
+    "variants": [
+      {
+        "sku": "PB020001",
+        "color": "White",
+        "size": "L",
+        "priceOverride": null,
+        "stock": 1,
+        "photo": "assets/products/trendy-women-pants-pb020001.jpg"
+      },
+      {
+        "sku": "PB020002",
+        "color": "White",
+        "size": "XXL",
+        "priceOverride": null,
+        "stock": 1,
+        "photo": "assets/products/trendy-women-pants-pb020002.jpg"
+      },
+      {
+        "sku": "PB020003",
+        "color": "Black",
+        "size": "L",
+        "priceOverride": null,
+        "stock": 2,
+        "photo": "assets/products/trendy-women-pants-pb020003.jpg"
+      },
+      {
+        "sku": "PB020004",
+        "color": "Black",
+        "size": "XL",
+        "priceOverride": null,
+        "stock": 1,
+        "photo": "assets/products/trendy-women-pants-pb020004.jpg"
+      }
+    ]
+  },
+  {
+    "id": "womens-patiyala",
+    "categoryId": "patiyala-pants",
+    "name": "Womens Patiyala",
+    "description": "Stretch Fit, Ankle Length Leggings, Everyday Layering Essential.",
+    "basePrice": 11,
+    "sortOrder": 0,
+    "ready": true,
+    "variants": [
+      {
+        "sku": "PL020101",
+        "color": "Red",
+        "size": "L / XXL",
+        "priceOverride": null,
+        "stock": 2,
+        "photo": null
+      },
+      {
+        "sku": "PL020102",
+        "color": "Black",
+        "size": "L / XXL",
+        "priceOverride": null,
+        "stock": 3,
+        "photo": null
+      },
+      {
+        "sku": "PL020103",
+        "color": "White",
+        "size": "L / XXL",
+        "priceOverride": null,
+        "stock": 3,
+        "photo": null
+      },
+      {
+        "sku": "PL020104",
+        "color": "Khaki",
+        "size": "L / XXL",
+        "priceOverride": null,
+        "stock": 2,
+        "photo": null
+      },
+      {
+        "sku": "PL020105",
+        "color": "R",
+        "size": "L / XXL",
+        "priceOverride": null,
+        "stock": 2,
+        "photo": null
+      }
+    ]
+  },
+  {
+    "id": "branded-leggins",
+    "categoryId": "leggins",
+    "name": "Branded Leggins",
+    "description": "Stretch Fit, Ankle Length Leggings, Everyday Layering Essential.",
+    "basePrice": 16.5,
+    "sortOrder": 0,
+    "ready": true,
+    "variants": [
+      {
+        "sku": "PB030001",
+        "color": "Black",
+        "size": "L",
+        "priceOverride": null,
+        "stock": 1,
+        "photo": "assets/products/branded-leggins-pb030001.jpg"
+      },
+      {
+        "sku": "PB030002",
+        "color": "Black",
+        "size": "XL",
+        "priceOverride": null,
+        "stock": 1,
+        "photo": "assets/products/branded-leggins-pb030002.jpg"
+      },
+      {
+        "sku": "PB030003",
+        "color": "Black",
+        "size": "XXL",
+        "priceOverride": null,
+        "stock": 1,
+        "photo": "assets/products/branded-leggins-pb030003.jpg"
+      },
+      {
+        "sku": "PB030004",
+        "color": "Skin",
+        "size": "L",
+        "priceOverride": null,
+        "stock": 1,
+        "photo": "assets/products/branded-leggins-pb030004.jpg"
+      },
+      {
+        "sku": "PB030005",
+        "color": "Skin",
+        "size": "XL",
+        "priceOverride": null,
+        "stock": 1,
+        "photo": "assets/products/branded-leggins-pb030005.jpg"
+      },
+      {
+        "sku": "PB030006",
+        "color": "Skin",
+        "size": "XXL",
+        "priceOverride": null,
+        "stock": 1,
+        "photo": "assets/products/branded-leggins-pb030006.jpg"
       }
     ]
   }
