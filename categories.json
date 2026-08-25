@@ -40,5 +40,131 @@
     "name": "Nighties",
     "sortOrder": 6,
     "parentId": null
+  },
+  {
+    "id": "straight-pants",
+    "name": "Straight Pants",
+    "sortOrder": 0,
+    "parentId": "pants"
+  },
+  {
+    "id": "patiyala-pants",
+    "name": "Patiyala Pants",
+    "sortOrder": 1,
+    "parentId": "pants"
+  },
+  {
+    "id": "floral-print",
+    "name": "Floral Print",
+    "sortOrder": 1,
+    "parentId": "short-tops"
+  },
+  {
+    "id": "solid-pattern",
+    "name": "Solid Pattern",
+    "sortOrder": 2,
+    "parentId": "short-tops"
+  },
+  {
+    "id": "designer-trendy",
+    "name": "Designer & Trendy",
+    "sortOrder": 3,
+    "parentId": "short-tops"
+  },
+  {
+    "id": "cotton-tissue",
+    "name": "Cotton Tissue",
+    "sortOrder": 4,
+    "parentId": "short-tops"
+  },
+  {
+    "id": "delta-luxury",
+    "name": "Delta Luxury",
+    "sortOrder": 5,
+    "parentId": "short-tops"
+  },
+  {
+    "id": "peacock-embroidery",
+    "name": "Peacock Embroidery",
+    "sortOrder": 6,
+    "parentId": "short-tops"
+  },
+  {
+    "id": "foil-print",
+    "name": "Foil Print",
+    "sortOrder": 7,
+    "parentId": "short-tops"
+  },
+  {
+    "id": "western-frozo-print",
+    "name": "Western Frozo Print",
+    "sortOrder": 8,
+    "parentId": "short-tops"
+  },
+  {
+    "id": "embroidery-neck",
+    "name": "Embroidery Neck",
+    "sortOrder": 9,
+    "parentId": "short-tops"
+  },
+  {
+    "id": "rose-pattern",
+    "name": "Rose Pattern",
+    "sortOrder": 10,
+    "parentId": "short-tops"
+  },
+  {
+    "id": "popcorn-pattern",
+    "name": "Popcorn Pattern",
+    "sortOrder": 11,
+    "parentId": "short-tops"
+  },
+  {
+    "id": "body-floral-print",
+    "name": "Body Floral Print",
+    "sortOrder": 12,
+    "parentId": "short-tops"
+  },
+  {
+    "id": "umbrella-pattern",
+    "name": "Umbrella Pattern",
+    "sortOrder": 1,
+    "parentId": "long-tops"
+  },
+  {
+    "id": "fancy-floral-print",
+    "name": "Fancy Floral Print",
+    "sortOrder": 2,
+    "parentId": "long-tops"
+  },
+  {
+    "id": "jean-top",
+    "name": "Jean Top",
+    "sortOrder": 3,
+    "parentId": "long-tops"
+  },
+  {
+    "id": "uv-neck",
+    "name": "Uv Neck",
+    "sortOrder": 4,
+    "parentId": "long-tops"
+  },
+  {
+    "id": "pot-pattern",
+    "name": "Pot Pattern",
+    "sortOrder": 5,
+    "parentId": "long-tops"
+  },
+  {
+    "id": "leaf-pattern",
+    "name": "Leaf Pattern",
+    "sortOrder": 6,
+    "parentId": "long-tops"
+  },
+  {
+    "id": "floral-print-2",
+    "name": "Floral Print",
+    "sortOrder": 7,
+    "parentId": "long-tops"
   }
 ]
