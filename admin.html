@@ -9,6 +9,10 @@
 <link rel="preconnect" href="https://fonts.googleapis.com" />
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
 <link href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:wght@600;700&family=Karla:wght@400;500;600;700&family=JetBrains+Mono:wght@400;500&display=swap" rel="stylesheet" />
+<!-- Only used for reading .xlsx delivery-zone uploads (Settings tab). If this
+     fails to load (e.g. no internet), that upload option just falls back to
+     asking for a .csv instead — nothing else on this page depends on it. -->
+<script src="https://cdnjs.cloudflare.com/ajax/libs/xlsx/0.18.5/xlsx.full.min.js" defer></script>
 <style>
   :root {
     --ink: #1b1610; --ink-soft: #6b6153; --ivory: #f8f3e9; --surface: #ffffff;
@@ -159,6 +163,7 @@
     <button data-view="products">Products</button>
     <button data-view="categories">Categories</button>
     <button data-view="reviews">Reviews <span class="badge" id="reviews-nav-badge" style="display:none;background:var(--rani);color:#fff;"></span></button>
+    <button data-view="orders">Orders <span class="badge" id="orders-nav-badge" style="display:none;background:var(--rani);color:#fff;"></span></button>
     <button data-view="settings">Settings</button>
     <button id="btn-signout" style="margin-left:auto;color:var(--gold);">Sign out</button>
   </div>
@@ -285,6 +290,13 @@
       </div>
     </div>
 
+    <!-- ---- Orders ---- -->
+    <div id="view-orders" class="view" style="display:none;">
+      <div class="page-head"><h1>Orders</h1></div>
+      <p class="hint" style="margin:-4px 0 20px;">Every delivery and self-collection order a customer submits lands here, with the WhatsApp message sent alongside it. Changing status here is immediate — it doesn't need Publish. Delivery zones, collection points, and the Aramex courier connection are all configured on the Settings tab.</p>
+      <div class="card-block"><div id="orders-list"></div></div>
+    </div>
+
     <!-- ---- Settings ---- -->
     <div id="view-settings" class="view" style="display:none;">
       <div class="page-head"><h1>Settings</h1></div>
@@ -299,16 +311,88 @@
         <div class="field"><label for="s-tagline">Tagline</label><input type="text" id="s-tagline" /></div>
         <div class="field-row">
           <div class="field"><label for="s-whatsapp">WhatsApp number</label><input type="text" id="s-whatsapp" placeholder="e.g. 971586711803" /><p class="hint">Digits only, with country code, no + or spaces.</p></div>
-          <div class="field"><label for="s-instagram">Instagram URL (optional)</label><input type="url" id="s-instagram" placeholder="https://instagram.com/..." /></div>
+          <div class="field"><label for="s-contact-email">Contact email (optional)</label><input type="email" id="s-contact-email" placeholder="hello@yourbrand.com" /><p class="hint">Used for the "Email us" option in the storefront's Contact Us popup. Leave blank to hide that option. This is separate from your sign-in 2FA email above.</p></div>
         </div>
-        <div class="field"><label for="s-contact-email">Contact email (optional)</label><input type="email" id="s-contact-email" placeholder="hello@yourbrand.com" /><p class="hint">Used for the "Email us" option in the storefront's Contact Us popup. Leave blank to hide that option.</p></div>
+        <div class="field-row">
+          <div class="field"><label for="s-instagram">Instagram URL (optional)</label><input type="url" id="s-instagram" placeholder="https://instagram.com/..." /></div>
+          <div class="field"><label for="s-facebook">Facebook URL (optional)</label><input type="url" id="s-facebook" placeholder="https://facebook.com/..." /></div>
+        </div>
+        <div class="field-row">
+          <div class="field"><label for="s-tiktok">TikTok URL (optional)</label><input type="url" id="s-tiktok" placeholder="https://tiktok.com/@..." /></div>
+          <div class="field"><label for="s-snapchat">Snapchat URL (optional)</label><input type="url" id="s-snapchat" placeholder="https://snapchat.com/add/..." /></div>
+        </div>
+        <div class="field"><label for="s-moj">Moj URL (optional)</label><input type="url" id="s-moj" placeholder="https://mojapp.in/..." /></div>
         <button class="btn btn-ghost" id="btn-save-site-settings">Save site settings (stages — click Publish to go live)</button>
       </div>
 
       <div class="card-block">
         <h2>Hero banner photos</h2>
-        <p class="hint" style="margin-bottom:14px;">Photo 1 is required — it's what shows if you don't add any others. Add more to rotate through them, one change per minute, on the live site's top banner.</p>
+        <p class="hint" style="margin-bottom:14px;">Photo 1 is required — it's what shows if you don't add any others. Add more to rotate through them on the live site's top banner.</p>
         <div id="hero-photo-rows"></div>
+        <div class="field" style="max-width:260px;margin-top:16px;">
+          <label for="s-hero-interval">Change photo every (seconds)</label>
+          <input type="number" min="5" step="1" id="s-hero-interval" placeholder="60" />
+          <p class="hint">Only matters once you've added more than one photo above.</p>
+        </div>
+      </div>
+
+      <div class="card-block">
+        <h2>Delivery zones &amp; pricing</h2>
+        <p class="hint" style="margin-bottom:14px;">Priced by area at checkout. If Aramex is turned on below and reachable, a live Aramex rate is used instead automatically for that order — this table is always the fallback (and what's used while Aramex is off), so keep it filled in either way.</p>
+        <div id="zones-table-wrap"></div>
+        <div style="display:flex;gap:10px;flex-wrap:wrap;align-items:center;margin-top:14px;">
+          <button type="button" class="btn btn-ghost btn-sm" id="btn-add-zone">+ Add zone manually</button>
+          <label class="btn btn-ghost btn-sm" style="margin:0;">Upload CSV/Excel<input type="file" id="zones-upload" accept=".csv,.xlsx,.xls" style="display:none;" /></label>
+        </div>
+        <p class="hint" id="zones-upload-hint" style="margin-top:8px;">Columns: Area, Emirate, Charge, Free Above (optional), Available (optional — "no" to hide a zone). A .csv always works; a .xlsx needs an internet connection to load the Excel reader.</p>
+      </div>
+
+      <div class="card-block">
+        <h2>Self-collection points</h2>
+        <p class="hint" style="margin-bottom:14px;">Shown to customers who choose to collect their order themselves instead of having it delivered.</p>
+        <div id="points-table-wrap"></div>
+        <button type="button" class="btn btn-ghost btn-sm" id="btn-add-point" style="margin-top:6px;">+ Add collection point</button>
+      </div>
+
+      <div class="card-block">
+        <h2>Delivery time slots</h2>
+        <p class="hint" style="margin-bottom:14px;">The windows customers can choose from when scheduling a delivery — e.g. "9am – 12pm". These are requested windows, not a guaranteed courier booking, so keep them broad enough to actually meet.</p>
+        <div id="slots-list"></div>
+        <button type="button" class="btn btn-ghost btn-sm" id="btn-add-slot" style="margin-top:6px;">+ Add time slot</button>
+      </div>
+
+      <div class="card-block">
+        <h2>Courier (Aramex)</h2>
+        <p class="hint" style="margin-bottom:14px;">Off by default — delivery pricing uses the zone table above, and you book couriers manually, until you turn this on with your own Aramex account details. Saves immediately below, not through Publish. This talks to Aramex's real API, so only turn it on once you have a live Aramex business account with API access — see the setup guide for how to request one.</p>
+        <div id="aramex-msg"></div>
+        <div class="field checkbox-row"><input type="checkbox" id="ar-enabled" /><label for="ar-enabled" style="margin:0;">Turn on live Aramex rates &amp; booking</label></div>
+        <div class="field-row" style="margin-top:12px;">
+          <div class="field"><label for="ar-account">Account number</label><input type="text" id="ar-account" /></div>
+          <div class="field"><label for="ar-entity">Account entity</label><input type="text" id="ar-entity" placeholder="e.g. DXB" /></div>
+        </div>
+        <div class="field-row">
+          <div class="field"><label for="ar-country">Account country code</label><input type="text" id="ar-country" placeholder="AE" /></div>
+          <div class="field"><label for="ar-origin">Ships from (city)</label><input type="text" id="ar-origin" placeholder="Dubai" /></div>
+        </div>
+        <div class="field-row">
+          <div class="field"><label for="ar-username">Aramex username</label><input type="text" id="ar-username" placeholder="Leave blank to keep current" autocomplete="off" /></div>
+          <div class="field"><label for="ar-password">Aramex password</label><input type="password" id="ar-password" placeholder="Leave blank to keep current" autocomplete="off" /></div>
+        </div>
+        <div class="field" style="max-width:260px;"><label for="ar-pin">Account PIN</label><input type="text" id="ar-pin" placeholder="Leave blank to keep current" autocomplete="off" /></div>
+        <button class="btn btn-ghost" id="btn-save-aramex">Save courier settings</button>
+        <p class="hint" id="ar-cred-status" style="margin-top:10px;"></p>
+      </div>
+
+      <div class="card-block">
+        <h2>Schedule an Aramex pickup</h2>
+        <p class="hint" style="margin-bottom:14px;">Books one pickup covering every order currently marked "Booked" that doesn't have a pickup scheduled yet — Aramex normally does one consolidated pickup per day rather than one per shipment. Requires Aramex to be turned on above.</p>
+        <div class="field-row cols-3">
+          <div class="field"><label for="ar-pickup-date">Pickup date</label><input type="date" id="ar-pickup-date" /></div>
+          <div class="field"><label for="ar-ready-time">Ready time</label><input type="time" id="ar-ready-time" value="10:00" /></div>
+          <div class="field"><label for="ar-closing-time">Closing time</label><input type="time" id="ar-closing-time" value="18:00" /></div>
+        </div>
+        <button class="btn btn-primary btn-sm" id="btn-schedule-pickup">Schedule pickup</button>
+        <p class="hint" id="pickup-msg" style="margin-top:10px;"></p>
       </div>
 
       <div class="card-block">
@@ -389,6 +473,7 @@
     settings: {},
     reviews: [],
     pendingReviews: [],
+    orders: [],
     shas: { products: null, categories: null, settings: null, reviews: null },
     dirty: { products: false, categories: false, settings: false },
     editingProductIndex: null,
@@ -591,7 +676,7 @@
 
   function signOut() {
     sessionStorage.removeItem(SESSION_KEY);
-    state = { token: null, challenge: null, categories: [], products: [], settings: {}, shas: { products: null, categories: null, settings: null }, dirty: { products: false, categories: false, settings: false }, editingProductIndex: null, currentView: "dashboard" };
+    state = { token: null, challenge: null, categories: [], products: [], settings: {}, reviews: [], pendingReviews: [], orders: [], shas: { products: null, categories: null, settings: null }, dirty: { products: false, categories: false, settings: false }, editingProductIndex: null, currentView: "dashboard" };
     $("app").style.display = "none";
     $("tabnav").style.display = "none";
     $("twofa-card").style.display = "none";
@@ -621,6 +706,7 @@
       state.settings = data.settings || {};
       state.reviews = data.reviews || [];
       state.pendingReviews = data.pendingReviews || [];
+      state.orders = data.orders || [];
       state.shas = data.shas || {};
     } catch (err) {
       if (err.status === 401) {
@@ -632,12 +718,21 @@
     state.dirty = { products: false, categories: false, settings: false };
     populateSettingsForm();
     updateReviewsBadge();
+    updateOrdersBadge();
   }
 
   function updateReviewsBadge() {
     const badge = $("reviews-nav-badge");
     if (!badge) return;
     const n = state.pendingReviews.length;
+    badge.textContent = n;
+    badge.style.display = n ? "inline-block" : "none";
+  }
+
+  function updateOrdersBadge() {
+    const badge = $("orders-nav-badge");
+    if (!badge) return;
+    const n = state.orders.filter((o) => o.status === "new").length;
     badge.textContent = n;
     badge.style.display = n ? "inline-block" : "none";
   }
@@ -656,10 +751,23 @@
     document.querySelectorAll("#tabnav button[data-view]").forEach((btn) => {
       btn.classList.toggle("active", btn.dataset.view === view);
     });
-    if (view === "dashboard") { renderDashboard(); refreshReviews().then(renderDashboard); }
+    if (view === "dashboard") { renderDashboard(); Promise.all([refreshReviews(), refreshOrders()]).then(renderDashboard); }
     if (view === "products") renderProducts();
     if (view === "categories") renderCategories();
     if (view === "reviews") { renderReviews(); refreshReviews().then(renderReviews); }
+    if (view === "orders") { renderOrders(); refreshOrders().then(renderOrders); }
+  }
+
+  // Orders can arrive from customers at any time, so re-fetch on every
+  // Dashboard/Orders tab open, same reasoning as refreshReviews() above.
+  async function refreshOrders() {
+    try {
+      const data = await api("/api/orders");
+      state.orders = data.orders || [];
+      updateOrdersBadge();
+    } catch {
+      // Non-fatal — leave the existing (possibly stale) state as-is.
+    }
   }
 
   // Pending reviews can arrive from visitors at any time, so re-fetch the
@@ -692,6 +800,7 @@
       <div class="stat-card"><div class="num">${soldOut}</div><div class="label">SKUs sold out</div></div>
       <div class="stat-card"><div class="num">${state.categories.length}</div><div class="label">Categories</div></div>
       <div class="stat-card"><div class="num">${state.pendingReviews.length}</div><div class="label">Reviews pending</div></div>
+      <div class="stat-card"><div class="num">${state.orders.filter((o) => o.status === "new").length}</div><div class="label">New orders</div></div>
     `;
 
     const recent = activeProducts.slice(0, 5);
@@ -1051,7 +1160,13 @@
   // ============================================================
   // REVIEWS
   // ============================================================
+  // Matches the same constant name used in index.html — general feedback
+  // (submitted from the site-wide "Feedback" button, not a product's star
+  // row) is stored under this fixed id instead of a real product id.
+  const GENERAL_FEEDBACK_ID = "_site_feedback";
+
   function productNameFor(productId) {
+    if (productId === GENERAL_FEEDBACK_ID) return "General feedback (not product-specific)";
     const p = state.products.find((p) => p.id === productId);
     return p ? p.name : productId;
   }
@@ -1150,6 +1265,102 @@
   });
 
   // ============================================================
+  // ORDERS
+  // ============================================================
+  const ORDER_STATUS_LABELS = { new: "New", confirmed: "Confirmed", booked: "Booked (Aramex)", in_transit: "In transit", delivered: "Delivered", collected: "Collected", cancelled: "Cancelled" };
+
+  function orderStatusLabel(s) { return ORDER_STATUS_LABELS[s] || s; }
+
+  // Only offer sensible next steps for this order's fulfillment type (a
+  // collection order should never show "Booked (Aramex)", for instance) —
+  // but always keep whatever its current status is in the list too, so the
+  // dropdown never mismatches reality.
+  function orderStatusOptions(order) {
+    const common = ["new", "confirmed", "cancelled"];
+    const steps = order.fulfillment === "delivery" ? ["booked", "in_transit", "delivered"] : ["collected"];
+    const options = [...common, ...steps];
+    if (!options.includes(order.status)) options.push(order.status);
+    return options;
+  }
+
+  function renderOrders() {
+    updateOrdersBadge();
+    if (!state.orders.length) {
+      $("orders-list").innerHTML = '<div class="empty-state">No orders yet.</div>';
+      return;
+    }
+    $("orders-list").innerHTML = state.orders.map((o) => {
+      const itemsLabel = (o.items || []).map((it) => `${it.qty}× ${escapeHtml(it.productName)}${it.variantLabel ? ` (${escapeHtml(it.variantLabel)})` : ""}`).join(", ");
+      const fulfillmentLabel = o.fulfillment === "delivery"
+        ? `Delivery to ${escapeHtml(o.delivery?.zoneLabel || "—")}${o.delivery?.date ? ` &middot; ${escapeHtml(o.delivery.date)}` : ""}${o.delivery?.slotLabel ? ` &middot; ${escapeHtml(o.delivery.slotLabel)}` : ""}`
+        : `Self-collection at ${escapeHtml(o.collection?.pointName || "—")}`;
+      const addressLine = o.fulfillment === "delivery" && o.delivery?.addressLine
+        ? `<p class="hint" style="margin:4px 0 0;">${escapeHtml(o.delivery.addressLine)}${o.delivery.lat && o.delivery.lng ? ` &middot; <a href="https://www.google.com/maps?q=${o.delivery.lat},${o.delivery.lng}" target="_blank" rel="noopener">view pin ↗</a>` : ""}</p>`
+        : "";
+      const aramexLine = o.aramex
+        ? `<p class="hint" style="margin:4px 0 0;">${o.aramex.awb ? `AWB ${escapeHtml(o.aramex.awb)} &middot; ${escapeHtml(o.aramex.lastStatus || "Booked")}` : ""}${o.aramex.pickupId ? ` &middot; pickup scheduled` : ""}${o.aramex.error ? ` — <span style="color:var(--bad);">${escapeHtml(o.aramex.error)}</span>` : ""}</p>`
+        : "";
+      return `<div class="card-block" style="margin-bottom:12px;" data-order-id="${escapeHtml(o.id)}">
+        <div style="display:flex;justify-content:space-between;gap:12px;flex-wrap:wrap;">
+          <div>
+            <strong>${escapeHtml(o.contact?.name || "—")}</strong>
+            <span class="hint">&middot; ${escapeHtml(o.contact?.phone || "")}${o.contact?.email ? " &middot; " + escapeHtml(o.contact.email) : ""}</span>
+            <p style="margin:6px 0 0;">${itemsLabel}</p>
+            <p class="hint" style="margin:4px 0 0;">${fulfillmentLabel}</p>
+            ${addressLine}
+            ${aramexLine}
+            <p class="hint" style="margin:4px 0 0;">${escapeHtml((o.createdAt || "").slice(0, 16).replace("T", " "))} &middot; ${formatPrice(o.orderTotal)}</p>
+          </div>
+          <div style="display:flex;flex-direction:column;gap:8px;align-items:flex-end;flex:none;">
+            <select class="order-status" data-order-status="${escapeHtml(o.id)}">
+              ${orderStatusOptions(o).map((s) => `<option value="${s}" ${s === o.status ? "selected" : ""}>${orderStatusLabel(s)}</option>`).join("")}
+            </select>
+            ${o.aramex?.awb ? `<button type="button" class="btn btn-ghost btn-sm" data-track-order="${escapeHtml(o.id)}">Refresh tracking</button>` : ""}
+          </div>
+        </div>
+      </div>`;
+    }).join("");
+  }
+
+  $("orders-list").addEventListener("change", async (e) => {
+    const select = e.target.closest("select[data-order-status]");
+    if (!select) return;
+    const id = select.dataset.orderStatus;
+    const status = select.value;
+    select.disabled = true;
+    try {
+      const data = await api("/api/orders/update", { method: "POST", body: JSON.stringify({ id, status }) });
+      const idx = state.orders.findIndex((o) => o.id === id);
+      if (idx !== -1) state.orders[idx] = data.order;
+      renderOrders();
+      if (state.currentView === "dashboard") renderDashboard();
+    } catch (err) {
+      alert(err.message || "Something went wrong.");
+    } finally {
+      select.disabled = false;
+    }
+  });
+
+  $("orders-list").addEventListener("click", async (e) => {
+    const btn = e.target.closest("button[data-track-order]");
+    if (!btn) return;
+    const id = btn.dataset.trackOrder;
+    btn.disabled = true;
+    btn.textContent = "Refreshing…";
+    try {
+      const data = await api("/api/orders/track", { method: "POST", body: JSON.stringify({ id }) });
+      const idx = state.orders.findIndex((o) => o.id === id);
+      if (idx !== -1) state.orders[idx] = data.order;
+      renderOrders();
+    } catch (err) {
+      alert(err.message || "Something went wrong.");
+    } finally {
+      btn.disabled = false;
+      btn.textContent = "Refresh tracking";
+    }
+  });
+
+  // ============================================================
   // SETTINGS
   // ============================================================
   function populateSettingsForm() {
@@ -1158,8 +1369,17 @@
     $("s-tagline").value = state.settings.tagline || "";
     $("s-whatsapp").value = state.settings.whatsappNumber || "";
     $("s-instagram").value = state.settings.instagramUrl || "";
+    $("s-facebook").value = state.settings.facebookUrl || "";
+    $("s-tiktok").value = state.settings.tiktokUrl || "";
+    $("s-snapchat").value = state.settings.snapchatUrl || "";
+    $("s-moj").value = state.settings.mojUrl || "";
     $("s-contact-email").value = state.settings.contactEmail || "";
+    $("s-hero-interval").value = state.settings.heroRotateSeconds || 60;
     renderHeroPhotoRows();
+    renderZones();
+    renderCollectionPoints();
+    renderSlots();
+    loadAramexConfig();
     renderTotpStatus();
     $("email-2fa").value = "";
   }
@@ -1221,6 +1441,335 @@
     renderHeroPhotoRows();
   });
 
+  // ---- delivery zones & pricing ----
+  function renderZones() {
+    const zones = state.settings.deliveryZones || [];
+    if (!zones.length) {
+      $("zones-table-wrap").innerHTML = '<div class="empty-state">No delivery zones yet — add one, or upload a CSV/Excel list.</div>';
+      return;
+    }
+    $("zones-table-wrap").innerHTML = `<div class="table-wrap"><table class="data-table">
+      <tr><th>Area</th><th>Emirate</th><th>Charge</th><th>Free above</th><th>Available</th><th></th></tr>
+      ${zones.map((z) => `
+        <tr data-zone-id="${escapeHtml(z.id)}">
+          <td><input type="text" class="zone-area" value="${escapeHtml(z.area || "")}" placeholder="e.g. Al Quoz" /></td>
+          <td><input type="text" class="zone-emirate" value="${escapeHtml(z.emirate || "")}" placeholder="e.g. Dubai" /></td>
+          <td><input type="number" min="0" step="0.01" class="zone-charge" value="${z.charge ?? 0}" style="width:90px;" /></td>
+          <td><input type="number" min="0" step="0.01" class="zone-free" value="${z.freeAbove ?? ""}" placeholder="—" style="width:90px;" /></td>
+          <td><input type="checkbox" class="zone-available" ${z.available === false ? "" : "checked"} /></td>
+          <td class="row-actions"><button type="button" class="btn btn-danger btn-sm" data-delete-zone="${escapeHtml(z.id)}">Delete</button></td>
+        </tr>`).join("")}
+    </table></div>`;
+  }
+
+  $("zones-table-wrap").addEventListener("input", (e) => {
+    const row = e.target.closest("tr[data-zone-id]");
+    if (!row) return;
+    const zone = (state.settings.deliveryZones || []).find((z) => z.id === row.dataset.zoneId);
+    if (!zone) return;
+    if (e.target.classList.contains("zone-area")) zone.area = e.target.value;
+    if (e.target.classList.contains("zone-emirate")) zone.emirate = e.target.value;
+    if (e.target.classList.contains("zone-charge")) zone.charge = Number(e.target.value) || 0;
+    if (e.target.classList.contains("zone-free")) zone.freeAbove = e.target.value === "" ? null : (Number(e.target.value) || 0);
+    if (e.target.classList.contains("zone-available")) zone.available = e.target.checked;
+    state.dirty.settings = true;
+    updatePublishUi();
+  });
+
+  $("zones-table-wrap").addEventListener("click", (e) => {
+    const btn = e.target.closest("button[data-delete-zone]");
+    if (!btn) return;
+    state.settings.deliveryZones = (state.settings.deliveryZones || []).filter((z) => z.id !== btn.dataset.deleteZone);
+    state.dirty.settings = true;
+    updatePublishUi();
+    renderZones();
+  });
+
+  $("btn-add-zone").addEventListener("click", () => {
+    const existingIds = new Set((state.settings.deliveryZones || []).map((z) => z.id));
+    const id = uniqueId("zone", existingIds);
+    state.settings.deliveryZones = [...(state.settings.deliveryZones || []), { id, area: "", emirate: "", charge: 0, freeAbove: null, available: true }];
+    state.dirty.settings = true;
+    updatePublishUi();
+    renderZones();
+  });
+
+  // Minimal CSV parser — handles simple quoted fields, which is all a
+  // delivery-zone spreadsheet is likely to need.
+  function parseCsv(text) {
+    const lines = text.replace(/\r/g, "").split("\n").filter((l) => l.trim() !== "");
+    return lines.map((line) => {
+      const cells = [];
+      let cur = "", inQuotes = false;
+      for (let i = 0; i < line.length; i++) {
+        const c = line[i];
+        if (c === '"') { inQuotes = !inQuotes; continue; }
+        if (c === "," && !inQuotes) { cells.push(cur); cur = ""; continue; }
+        cur += c;
+      }
+      cells.push(cur);
+      return cells.map((c) => c.trim());
+    });
+  }
+
+  // Turns parsed spreadsheet rows (first row = header) into zone objects.
+  // Returns null if it can't find the required Area/Charge columns at all.
+  function zonesFromRows(rows) {
+    if (!rows.length) return null;
+    const header = rows[0].map((h) => String(h || "").toLowerCase().replace(/[^a-z]/g, ""));
+    const findCol = (names) => { for (const n of names) { const i = header.indexOf(n); if (i !== -1) return i; } return -1; };
+    const areaIdx = findCol(["area", "zone", "location"]);
+    const emirateIdx = findCol(["emirate", "city"]);
+    const chargeIdx = findCol(["charge", "fee", "price", "deliverycharge"]);
+    const freeIdx = findCol(["freeabove", "freedeliveryabove", "freeover"]);
+    const availIdx = findCol(["available", "active", "enabled"]);
+    if (areaIdx === -1 || chargeIdx === -1) return null;
+
+    const existingIds = new Set();
+    return rows.slice(1).filter((r) => r[areaIdx]).map((r) => {
+      const area = r[areaIdx].trim();
+      const id = uniqueId(slugify(area), existingIds);
+      existingIds.add(id);
+      const availableRaw = availIdx !== -1 ? String(r[availIdx] || "").toLowerCase() : "";
+      return {
+        id,
+        area,
+        emirate: emirateIdx !== -1 ? (r[emirateIdx] || "").trim() : "",
+        charge: Number(r[chargeIdx]) || 0,
+        freeAbove: freeIdx !== -1 && r[freeIdx] ? (Number(r[freeIdx]) || null) : null,
+        available: availableRaw ? !["no", "false", "0"].includes(availableRaw) : true,
+      };
+    });
+  }
+
+  $("zones-upload").addEventListener("change", async (e) => {
+    const file = e.target.files[0];
+    if (!file) return;
+    const hintEl = $("zones-upload-hint");
+    try {
+      let rows;
+      if (/\.csv$/i.test(file.name)) {
+        rows = parseCsv(await file.text());
+      } else if (typeof XLSX === "undefined") {
+        hintEl.innerHTML = '<span style="color:var(--bad);">Couldn\'t load the Excel reader (no internet connection?) — save your file as CSV and try again.</span>';
+        e.target.value = "";
+        return;
+      } else {
+        const buf = await file.arrayBuffer();
+        const wb = XLSX.read(buf, { type: "array" });
+        const sheet = wb.Sheets[wb.SheetNames[0]];
+        rows = XLSX.utils.sheet_to_json(sheet, { header: 1, raw: false }).map((r) => r.map((c) => String(c ?? "")));
+      }
+      const zones = zonesFromRows(rows);
+      if (!zones) {
+        hintEl.innerHTML = '<span style="color:var(--bad);">Couldn\'t find "Area" and "Charge" columns — check the header row.</span>';
+        e.target.value = "";
+        return;
+      }
+      const currentCount = (state.settings.deliveryZones || []).length;
+      if (currentCount && !confirm(`This replaces your current ${currentCount} zone(s) with ${zones.length} from the file. Continue?`)) {
+        e.target.value = "";
+        return;
+      }
+      state.settings.deliveryZones = zones;
+      state.dirty.settings = true;
+      updatePublishUi();
+      renderZones();
+      hintEl.textContent = `Loaded ${zones.length} zone(s) from the file — click Publish Changes to go live.`;
+    } catch (err) {
+      hintEl.innerHTML = `<span style="color:var(--bad);">Couldn't read that file: ${escapeHtml(err.message)}</span>`;
+    } finally {
+      e.target.value = "";
+    }
+  });
+
+  // ---- self-collection points ----
+  function renderCollectionPoints() {
+    const points = state.settings.collectionPoints || [];
+    if (!points.length) {
+      $("points-table-wrap").innerHTML = '<div class="empty-state">No collection points yet — add your shop/warehouse address.</div>';
+      return;
+    }
+    $("points-table-wrap").innerHTML = points.map((pt) => `
+      <div class="card-block" data-point-id="${escapeHtml(pt.id)}" style="margin-bottom:12px;">
+        <div class="field-row">
+          <div class="field"><span class="mini-label">Name</span><input type="text" class="point-name" value="${escapeHtml(pt.name || "")}" placeholder="e.g. Main store — Al Quoz" /></div>
+          <div class="field"><span class="mini-label">Hours</span><input type="text" class="point-hours" value="${escapeHtml(pt.hours || "")}" placeholder="e.g. Mon–Sat, 10am–8pm" /></div>
+        </div>
+        <div class="field"><span class="mini-label">Address</span><input type="text" class="point-address" value="${escapeHtml(pt.address || "")}" placeholder="Street, area, emirate" /></div>
+        <div class="field-row cols-3" style="align-items:end;">
+          <div class="field"><span class="mini-label">Latitude</span><input type="text" class="point-lat" value="${pt.lat ?? ""}" placeholder="25.1234" /></div>
+          <div class="field"><span class="mini-label">Longitude</span><input type="text" class="point-lng" value="${pt.lng ?? ""}" placeholder="55.1234" /></div>
+          <div class="field"><button type="button" class="btn btn-ghost btn-sm" data-point-locate="${escapeHtml(pt.id)}">Use my current location</button></div>
+        </div>
+        <div style="display:flex;justify-content:space-between;align-items:center;margin-top:6px;flex-wrap:wrap;gap:8px;">
+          <span data-point-mapinfo="${escapeHtml(pt.id)}">${pointMapInfoHtml(pt)}</span>
+          <button type="button" class="btn btn-danger btn-sm" data-delete-point="${escapeHtml(pt.id)}">Delete</button>
+        </div>
+      </div>`).join("");
+  }
+
+  function pointMapInfoHtml(pt) {
+    return pt.lat != null && pt.lng != null
+      ? `<a href="https://www.google.com/maps?q=${pt.lat},${pt.lng}" target="_blank" rel="noopener" class="hint">View on map ↗</a>`
+      : '<span class="hint">Add coordinates, or use "Use my current location" while standing there.</span>';
+  }
+
+  $("points-table-wrap").addEventListener("input", (e) => {
+    const card = e.target.closest("[data-point-id]");
+    if (!card) return;
+    const pt = (state.settings.collectionPoints || []).find((p) => p.id === card.dataset.pointId);
+    if (!pt) return;
+    if (e.target.classList.contains("point-name")) pt.name = e.target.value;
+    if (e.target.classList.contains("point-hours")) pt.hours = e.target.value;
+    if (e.target.classList.contains("point-address")) pt.address = e.target.value;
+    if (e.target.classList.contains("point-lat")) pt.lat = e.target.value === "" ? null : Number(e.target.value);
+    if (e.target.classList.contains("point-lng")) pt.lng = e.target.value === "" ? null : Number(e.target.value);
+    if (e.target.classList.contains("point-lat") || e.target.classList.contains("point-lng")) {
+      const infoEl = card.querySelector(`[data-point-mapinfo="${CSS.escape(pt.id)}"]`);
+      if (infoEl) infoEl.innerHTML = pointMapInfoHtml(pt);
+    }
+    state.dirty.settings = true;
+    updatePublishUi();
+  });
+
+  $("points-table-wrap").addEventListener("click", (e) => {
+    const delBtn = e.target.closest("button[data-delete-point]");
+    if (delBtn) {
+      state.settings.collectionPoints = (state.settings.collectionPoints || []).filter((p) => p.id !== delBtn.dataset.deletePoint);
+      state.dirty.settings = true;
+      updatePublishUi();
+      renderCollectionPoints();
+      return;
+    }
+    const locBtn = e.target.closest("button[data-point-locate]");
+    if (locBtn) {
+      if (!navigator.geolocation) { alert("Your browser doesn't support location — enter coordinates manually."); return; }
+      locBtn.disabled = true;
+      locBtn.textContent = "Locating…";
+      navigator.geolocation.getCurrentPosition(
+        (pos) => {
+          const pt = (state.settings.collectionPoints || []).find((p) => p.id === locBtn.dataset.pointLocate);
+          if (pt) {
+            pt.lat = Number(pos.coords.latitude.toFixed(6));
+            pt.lng = Number(pos.coords.longitude.toFixed(6));
+            state.dirty.settings = true;
+            updatePublishUi();
+          }
+          renderCollectionPoints();
+        },
+        () => { alert("Couldn't get your location — enter coordinates manually."); locBtn.disabled = false; locBtn.textContent = "Use my current location"; },
+        { enableHighAccuracy: true, timeout: 10000 }
+      );
+    }
+  });
+
+  $("btn-add-point").addEventListener("click", () => {
+    const existingIds = new Set((state.settings.collectionPoints || []).map((p) => p.id));
+    const id = uniqueId("point", existingIds);
+    state.settings.collectionPoints = [...(state.settings.collectionPoints || []), { id, name: "", address: "", hours: "", lat: null, lng: null }];
+    state.dirty.settings = true;
+    updatePublishUi();
+    renderCollectionPoints();
+  });
+
+  // ---- delivery time slots ----
+  function renderSlots() {
+    const slots = state.settings.deliverySlots || [];
+    $("slots-list").innerHTML = slots.length ? slots.map((s) => `
+      <div style="display:flex;gap:8px;align-items:center;margin-bottom:8px;">
+        <input type="text" class="slot-label" data-slot-id="${escapeHtml(s.id)}" value="${escapeHtml(s.label || "")}" placeholder="e.g. 9am – 12pm" style="max-width:260px;" />
+        <button type="button" class="btn btn-danger btn-sm" data-delete-slot="${escapeHtml(s.id)}">Delete</button>
+      </div>`).join("") : '<p class="hint">No delivery time slots yet — add one below.</p>';
+  }
+
+  $("slots-list").addEventListener("input", (e) => {
+    const input = e.target.closest(".slot-label");
+    if (!input) return;
+    const slot = (state.settings.deliverySlots || []).find((s) => s.id === input.dataset.slotId);
+    if (slot) { slot.label = input.value; state.dirty.settings = true; updatePublishUi(); }
+  });
+
+  $("slots-list").addEventListener("click", (e) => {
+    const btn = e.target.closest("button[data-delete-slot]");
+    if (!btn) return;
+    state.settings.deliverySlots = (state.settings.deliverySlots || []).filter((s) => s.id !== btn.dataset.deleteSlot);
+    state.dirty.settings = true;
+    updatePublishUi();
+    renderSlots();
+  });
+
+  $("btn-add-slot").addEventListener("click", () => {
+    const existingIds = new Set((state.settings.deliverySlots || []).map((s) => s.id));
+    const id = uniqueId("slot", existingIds);
+    state.settings.deliverySlots = [...(state.settings.deliverySlots || []), { id, label: "" }];
+    state.dirty.settings = true;
+    updatePublishUi();
+    renderSlots();
+  });
+
+  // ---- Aramex courier ----
+  // Saves immediately via its own endpoint (like your password/2FA above) —
+  // credentials are never staged into the Publish flow, and never touch the
+  // public GitHub repo.
+  async function loadAramexConfig() {
+    try {
+      const cfg = await api("/api/aramex/config");
+      $("ar-enabled").checked = !!cfg.enabled;
+      $("ar-account").value = cfg.accountNumber || "";
+      $("ar-entity").value = cfg.accountEntity || "";
+      $("ar-country").value = cfg.accountCountryCode || "AE";
+      $("ar-origin").value = cfg.originCity || "";
+      $("ar-username").value = "";
+      $("ar-password").value = "";
+      $("ar-pin").value = "";
+      $("ar-cred-status").textContent = cfg.hasCredentials ? "Credentials are saved." : "No credentials saved yet.";
+    } catch {
+      // Non-fatal — the rest of Settings still works.
+    }
+  }
+
+  $("btn-save-aramex").addEventListener("click", async () => {
+    const msgEl = $("aramex-msg");
+    msgEl.innerHTML = "";
+    try {
+      await api("/api/aramex/config", { method: "POST", body: JSON.stringify({
+        enabled: $("ar-enabled").checked,
+        accountNumber: $("ar-account").value.trim(),
+        accountEntity: $("ar-entity").value.trim(),
+        accountCountryCode: $("ar-country").value.trim() || "AE",
+        originCity: $("ar-origin").value.trim(),
+        username: $("ar-username").value.trim(),
+        password: $("ar-password").value,
+        accountPin: $("ar-pin").value.trim(),
+      }) });
+      msgEl.innerHTML = '<div class="msg ok">Courier settings saved.</div>';
+      await loadAramexConfig();
+    } catch (err) {
+      msgEl.innerHTML = `<div class="msg error">${escapeHtml(err.message)}</div>`;
+    }
+  });
+
+  $("btn-schedule-pickup").addEventListener("click", async () => {
+    const msgEl = $("pickup-msg");
+    msgEl.innerHTML = "";
+    const pickupDate = $("ar-pickup-date").value;
+    const readyTime = $("ar-ready-time").value;
+    const closingTime = $("ar-closing-time").value;
+    if (!pickupDate || !readyTime || !closingTime) { msgEl.innerHTML = '<div class="msg error">Fill in date, ready time, and closing time.</div>'; return; }
+    const btn = $("btn-schedule-pickup");
+    btn.disabled = true;
+    try {
+      const data = await api("/api/aramex/pickup", { method: "POST", body: JSON.stringify({ pickupDate, readyTime, closingTime }) });
+      msgEl.innerHTML = `<div class="msg ok">Pickup scheduled for ${data.count} order(s).</div>`;
+      await refreshOrders();
+    } catch (err) {
+      msgEl.innerHTML = `<div class="msg error">${escapeHtml(err.message)}</div>`;
+    } finally {
+      btn.disabled = false;
+    }
+  });
+
   $("btn-save-site-settings").addEventListener("click", () => {
     state.settings = {
       ...state.settings,
@@ -1229,7 +1778,12 @@
       tagline: $("s-tagline").value.trim(),
       whatsappNumber: $("s-whatsapp").value.replace(/[^0-9]/g, ""),
       instagramUrl: $("s-instagram").value.trim(),
+      facebookUrl: $("s-facebook").value.trim(),
+      tiktokUrl: $("s-tiktok").value.trim(),
+      snapchatUrl: $("s-snapchat").value.trim(),
+      mojUrl: $("s-moj").value.trim(),
       contactEmail: $("s-contact-email").value.trim(),
+      heroRotateSeconds: Math.max(5, parseInt($("s-hero-interval").value, 10) || 60),
     };
     state.dirty.settings = true;
     updatePublishUi();

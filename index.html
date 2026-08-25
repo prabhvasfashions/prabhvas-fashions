@@ -39,16 +39,16 @@
   .btn-whatsapp svg { width: 16px; height: 16px; flex: none; }
   .btn-whatsapp.muted { background: var(--ink-soft); box-shadow: none; }
 
-  .hero-section { padding: clamp(20px, 3vw, 32px) 0; }
-  .hero { position: relative; border-radius: 20px; overflow: hidden; background-color: var(--ink); min-height: clamp(340px, 52vh, 480px); display: flex; align-items: center; justify-content: center; padding: clamp(32px, 5vw, 56px) clamp(20px, 4vw, 48px); text-align: center; }
+  .hero-section { padding: 0; }
+  .hero { position: relative; width: 100%; overflow: hidden; background-color: var(--ink); min-height: clamp(480px, 88vh, 860px); display: flex; align-items: center; justify-content: center; padding: clamp(32px, 5vw, 56px) clamp(20px, 4vw, 48px); text-align: center; }
   .hero-bg-layer { position: absolute; inset: 0; background-size: cover; background-position: center 38%; filter: saturate(1.2) brightness(0.8) contrast(1.05) blur(1.5px); opacity: 0; transition: opacity 1.8s ease; }
   .hero-bg-layer.showing { opacity: 1; }
   .hero-overlay { position: absolute; inset: 0; background: linear-gradient(180deg, rgba(20,15,10,0.32) 0%, rgba(20,15,10,0.42) 55%, rgba(20,15,10,0.6) 100%); }
-  .hero-content { position: relative; z-index: 1; max-width: 620px; }
-  .hero-logo-badge { width: clamp(140px, 18vw, 210px); height: clamp(140px, 18vw, 210px); margin: 0 auto 16px; border-radius: 50%; background: #fdfbf3; box-shadow: 0 6px 22px rgba(0,0,0,0.4); display: flex; align-items: center; justify-content: center; padding: 12px; }
+  .hero-content { position: relative; z-index: 1; max-width: 760px; }
+  .hero-logo-badge { width: clamp(150px, 19vw, 230px); height: clamp(150px, 19vw, 230px); margin: 0 auto 20px; border-radius: 50%; background: #fdfbf3; box-shadow: 0 6px 22px rgba(0,0,0,0.4); display: flex; align-items: center; justify-content: center; padding: 12px; }
   .hero-content img.mark { width: 100%; height: 100%; object-fit: contain; }
-  .hero-content h1 { color: var(--ivory); font-size: clamp(1.9rem, 4.6vw, 3rem); letter-spacing: 0.01em; }
-  .hero-content .tagline { margin: 16px auto 0; max-width: 46ch; color: #f1ece2; font-size: clamp(0.95rem, 1.5vw, 1.1rem); }
+  .hero-content h1 { color: var(--ivory); font-size: clamp(2.2rem, 5.6vw, 3.8rem); letter-spacing: 0.01em; }
+  .hero-content .tagline { margin: 18px auto 0; max-width: 50ch; color: #f1ece2; font-size: clamp(1rem, 1.7vw, 1.25rem); }
   .hero-actions { margin-top: 28px; display: flex; align-items: center; justify-content: center; gap: 16px; flex-wrap: wrap; }
   .btn-outline { display: inline-flex; align-items: center; gap: 8px; border: 1.5px solid var(--ivory); color: var(--ivory); font-weight: 600; font-size: 0.85rem; letter-spacing: 0.03em; padding: 10px 22px; border-radius: 100px; text-decoration: none; }
   .btn-outline:hover { background: var(--ivory); color: var(--ink); }
@@ -146,13 +146,25 @@
   .qv-modal .qv-info { padding: clamp(20px, 3vw, 32px); display: flex; flex-direction: column; gap: 12px; }
   .qv-close { position: absolute; top: 10px; right: 10px; background: rgba(27,22,16,0.6); color: #fff; border: none; border-radius: 50%; width: 30px; height: 30px; font-size: 1.1rem; line-height: 1; z-index: 2; }
   .qv-options { display: flex; flex-wrap: wrap; gap: 8px; }
-  .qv-option { padding: 8px 14px; border-radius: 100px; font-size: 0.8rem; font-weight: 600; border: 1px solid var(--line); background: var(--ivory); }
-  .qv-option.active { background: var(--ink); color: var(--ivory); border-color: var(--ink); }
+  .qv-option, .qv-fulfillment-option { padding: 8px 14px; border-radius: 100px; font-size: 0.8rem; font-weight: 600; border: 1px solid var(--line); background: var(--ivory); }
+  .qv-option.active, .qv-fulfillment-option.active { background: var(--ink); color: var(--ivory); border-color: var(--ink); }
   .qv-option.out { opacity: 0.5; text-decoration: line-through; }
   .qv-price { font-family: 'Cormorant Garamond', serif; font-weight: 700; font-size: 1.7rem; color: var(--rani); }
   .qv-stock-note { font-size: 0.8rem; color: var(--ink-soft); }
   .qv-stock-note.out { color: var(--rani); font-weight: 700; }
   @media (max-width: 700px) { .qv-modal { grid-template-columns: 1fr; } }
+
+  /* ---------- quick-view: delivery / self-collection ---------- */
+  .qv-fulfillment-wrap { border-top: 1px solid var(--line); padding-top: 12px; margin-top: 2px; }
+  .qv-fulfillment-wrap .qv-field { margin-bottom: 10px; }
+  .qv-fulfillment-wrap .qv-field label { display: block; font-size: 0.76rem; font-weight: 700; margin-bottom: 4px; color: var(--ink-soft); }
+  .qv-fulfillment-wrap input, .qv-fulfillment-wrap select, .qv-fulfillment-wrap textarea { width: 100%; padding: 9px 11px; border: 1px solid var(--line); border-radius: 6px; font-family: inherit; font-size: 0.85rem; background: var(--ivory); color: var(--ink); }
+  .qv-fulfillment-wrap textarea { min-height: 56px; resize: vertical; }
+  .qv-field-row { display: grid; grid-template-columns: 1fr 1fr; gap: 10px; }
+  .qv-hint { font-size: 0.78rem; color: var(--ink-soft); margin: 2px 0 0; }
+  .qv-hint.err { color: var(--rani); font-weight: 700; }
+  .qv-locate-btn { background: none; border: 1px solid var(--line); border-radius: 100px; padding: 7px 14px; font-size: 0.78rem; font-weight: 600; color: var(--ink); cursor: pointer; margin: 2px 0 4px; }
+  .qv-locate-btn:hover { background: var(--ivory); }
 
   .contact-backdrop { position: fixed; inset: 0; background: rgba(27,22,16,0.55); display: none; z-index: 50; align-items: center; justify-content: center; padding: 20px; }
   .contact-backdrop.open { display: flex; }
@@ -239,6 +251,7 @@
       <a class="section-link" href="#collection">Collection</a>
       <a class="section-link" href="#shipping">Shipping &amp; Payment</a>
       <button type="button" class="section-link" id="nav-contact-btn">Contact Us</button>
+      <button type="button" class="section-link" id="nav-feedback-btn">Feedback</button>
       <a class="btn-whatsapp" id="nav-whatsapp" href="#" target="_blank" rel="noopener">
         <svg viewBox="0 0 24 24" fill="currentColor"><path d="M12.04 2c-5.46 0-9.9 4.44-9.9 9.9 0 1.75.46 3.45 1.32 4.95L2 22l5.25-1.38a9.9 9.9 0 0 0 4.79 1.22h.004c5.46 0 9.9-4.44 9.9-9.9s-4.44-9.94-9.93-9.94zm0 18.1a8.2 8.2 0 0 1-4.19-1.15l-.3-.18-3.12.82.83-3.04-.2-.31a8.2 8.2 0 0 1-1.26-4.37c0-4.54 3.7-8.24 8.25-8.24 4.54 0 8.24 3.7 8.24 8.24 0 4.55-3.7 8.23-8.25 8.23zm4.52-6.17c-.25-.12-1.47-.72-1.7-.81-.23-.08-.4-.12-.56.13-.17.25-.65.81-.8.97-.14.17-.3.19-.55.06-.25-.12-1.05-.39-2-1.23-.74-.66-1.24-1.48-1.39-1.73-.14-.25-.02-.38.11-.51.11-.11.25-.29.37-.43.12-.14.16-.25.25-.41.08-.17.04-.31-.02-.43-.06-.12-.56-1.35-.77-1.85-.2-.48-.4-.42-.56-.43h-.48c-.17 0-.43.06-.66.31-.23.25-.86.84-.86 2.05 0 1.2.88 2.37 1 2.53.12.17 1.74 2.65 4.21 3.72.59.25 1.05.4 1.41.52.59.19 1.13.16 1.56.1.48-.07 1.47-.6 1.67-1.18.21-.58.21-1.07.14-1.18-.06-.1-.23-.16-.48-.28z"/></svg>
         Order on WhatsApp
@@ -248,7 +261,7 @@
 </div>
 
 <main id="top">
-  <section class="hero-section wrap">
+  <section class="hero-section">
     <div class="hero" id="hero">
       <div class="hero-bg-layer showing" id="hero-bg-a" style="background-image: url('assets/hero-photo.jpg');"></div>
       <div class="hero-bg-layer" id="hero-bg-b"></div>
@@ -328,7 +341,12 @@
       <div class="social">
         <a id="footer-whatsapp" href="#" target="_blank" rel="noopener">WhatsApp</a>
         <a id="footer-instagram" href="#" target="_blank" rel="noopener" style="display:none;">Instagram</a>
+        <a id="footer-facebook" href="#" target="_blank" rel="noopener" style="display:none;">Facebook</a>
+        <a id="footer-tiktok" href="#" target="_blank" rel="noopener" style="display:none;">TikTok</a>
+        <a id="footer-snapchat" href="#" target="_blank" rel="noopener" style="display:none;">Snapchat</a>
+        <a id="footer-moj" href="#" target="_blank" rel="noopener" style="display:none;">Moj</a>
         <button type="button" class="footer-contact-link" id="footer-contact-btn">Contact Us</button>
+        <button type="button" class="footer-contact-link" id="footer-feedback-btn">Feedback</button>
       </div>
       <p class="fine">&copy; <span id="year"></span> <span id="footer-brand-name-2">Prabhvas Fashions</span>, Dubai, UAE. Modest wear &amp; ethnic fashion.</p>
       <p class="fine"><a class="admin-link" href="admin.html">admin</a></p>
@@ -359,7 +377,7 @@
 <div class="reviews-backdrop" id="reviews-backdrop">
   <div class="reviews-modal" id="reviews-modal">
     <button class="contact-close" id="reviews-close" aria-label="Close">&times;</button>
-    <h3>Reviews</h3>
+    <h3 id="reviews-modal-heading">Reviews</h3>
     <p class="reviews-product-name" id="reviews-product-name"></p>
 
     <div id="reviews-summary-wrap"></div>
@@ -407,7 +425,45 @@
       </div>
       <div class="qv-price" id="qv-price"></div>
       <p class="qv-stock-note" id="qv-stock-note"></p>
+
+      <div id="qv-fulfillment-wrap" class="qv-fulfillment-wrap" style="display:none;">
+        <p class="meta" style="margin-bottom:6px;">Delivery or self-collection?</p>
+        <div class="qv-options" id="qv-fulfillment-toggle">
+          <button type="button" class="qv-fulfillment-option" data-fulfillment="delivery">Delivery</button>
+          <button type="button" class="qv-fulfillment-option" data-fulfillment="collection">Self-collection</button>
+        </div>
+
+        <div id="qv-delivery-fields" style="display:none;margin-top:10px;">
+          <div class="qv-field"><label for="qv-zone">Delivery area</label>
+            <select id="qv-zone"><option value="">Choose your area…</option></select>
+          </div>
+          <p class="qv-hint" id="qv-zone-charge"></p>
+          <div class="qv-field"><label for="qv-address">Address</label>
+            <textarea id="qv-address" placeholder="Building, street, area"></textarea>
+          </div>
+          <button type="button" class="qv-locate-btn" id="qv-locate-btn">📍 Share my location (optional)</button>
+          <p class="qv-hint" id="qv-locate-status"></p>
+          <div class="qv-field-row">
+            <div class="qv-field"><label for="qv-date">Preferred date</label><input type="date" id="qv-date" /></div>
+            <div class="qv-field"><label for="qv-slot">Time window</label><select id="qv-slot"></select></div>
+          </div>
+        </div>
+
+        <div id="qv-collection-fields" style="display:none;margin-top:10px;">
+          <div class="qv-field"><label for="qv-point">Collection point</label><select id="qv-point"><option value="">Choose a location…</option></select></div>
+          <p class="qv-hint" id="qv-point-detail"></p>
+        </div>
+
+        <div class="qv-field-row" style="margin-top:10px;">
+          <div class="qv-field"><label for="qv-cust-name">Your name</label><input type="text" id="qv-cust-name" placeholder="Required" maxlength="80" /></div>
+          <div class="qv-field"><label for="qv-cust-phone">Phone</label><input type="text" id="qv-cust-phone" placeholder="Required" maxlength="20" /></div>
+        </div>
+        <p class="qv-hint" id="qv-order-total"></p>
+        <p class="qv-hint" id="qv-order-msg"></p>
+      </div>
+
       <a class="btn-whatsapp" id="qv-whatsapp" href="#" target="_blank" rel="noopener" style="justify-content:center;"></a>
+      <button type="button" class="btn-whatsapp" id="qv-whatsapp-submit" style="display:none;justify-content:center;"></button>
     </div>
   </div>
 </div>
@@ -524,15 +580,22 @@
     document.title = `${siteName} — Modest Wear & Ethnic Fashion, Dubai`;
     ["brand-name", "footer-brand-name", "footer-brand-name-2"].forEach((id) => (document.getElementById(id).textContent = siteName));
     document.getElementById("hero-tagline").textContent = SETTINGS.tagline || "";
-    initHeroCarousel(Array.isArray(SETTINGS.heroImages) && SETTINGS.heroImages.length ? SETTINGS.heroImages : ["assets/hero-photo.jpg"]);
+    initHeroCarousel(Array.isArray(SETTINGS.heroImages) && SETTINGS.heroImages.length ? SETTINGS.heroImages : ["assets/hero-photo.jpg"], SETTINGS.heroRotateSeconds);
     document.getElementById("nav-whatsapp").href = waLink(number, defaultMsg);
     document.getElementById("hero-whatsapp").href = waLink(number, defaultMsg);
     document.getElementById("footer-whatsapp").href = waLink(number, defaultMsg);
-    if (SETTINGS.instagramUrl) {
-      const ig = document.getElementById("footer-instagram");
-      ig.href = SETTINGS.instagramUrl;
-      ig.style.display = "";
-    }
+    [
+      ["instagramUrl", "footer-instagram"],
+      ["facebookUrl", "footer-facebook"],
+      ["tiktokUrl", "footer-tiktok"],
+      ["snapchatUrl", "footer-snapchat"],
+      ["mojUrl", "footer-moj"],
+    ].forEach(([key, id]) => {
+      if (!SETTINGS[key]) return;
+      const el = document.getElementById(id);
+      el.href = SETTINGS[key];
+      el.style.display = "";
+    });
 
     // ---- contact us modal ----
     const contactMsg = `Hi ${siteName}! I have a suggestion / question about your collection.`;
@@ -804,6 +867,8 @@
       optsWrap.style.display = "none";
     }
 
+    resetFulfillmentFields();
+    populateFulfillmentOptions();
     renderQuickViewSelection();
     document.getElementById("qv-backdrop").classList.add("open");
   }
@@ -826,21 +891,269 @@
       stockNote.classList.remove("out");
     }
 
-    const waBtn = document.getElementById("qv-whatsapp");
-    waBtn.href = waLink(number, orderMessage(product, variant, soldOut));
-    waBtn.classList.toggle("muted", soldOut);
-    waBtn.innerHTML = whatsappIconSvg() + (soldOut ? "Ask About Restock" : "Order on WhatsApp");
+    // Delivery/self-collection only applies once you've configured at least
+    // one delivery zone or collection point in the admin panel — until then
+    // this behaves exactly as a plain WhatsApp order, same as always.
+    const showFulfillment = !soldOut && fulfillmentAvailable();
+    document.getElementById("qv-fulfillment-wrap").style.display = showFulfillment ? "block" : "none";
 
-    document.querySelectorAll(".qv-option").forEach((btn) => {
+    const waLinkBtn = document.getElementById("qv-whatsapp");
+    const waSubmitBtn = document.getElementById("qv-whatsapp-submit");
+    if (showFulfillment) {
+      waLinkBtn.style.display = "none";
+      waSubmitBtn.style.display = "flex";
+      waSubmitBtn.innerHTML = whatsappIconSvg() + "Order on WhatsApp";
+    } else {
+      waLinkBtn.style.display = "";
+      waSubmitBtn.style.display = "none";
+      waLinkBtn.href = waLink(number, orderMessage(product, variant, soldOut));
+      waLinkBtn.classList.toggle("muted", soldOut);
+      waLinkBtn.innerHTML = whatsappIconSvg() + (soldOut ? "Ask About Restock" : "Order on WhatsApp");
+    }
+
+    document.querySelectorAll(".qv-option[data-sku]").forEach((btn) => {
       btn.classList.toggle("active", btn.dataset.sku === variant.sku);
     });
+
+    updateQvOrderTotal();
   }
 
   document.getElementById("qv-options").addEventListener("click", (e) => {
-    const btn = e.target.closest(".qv-option");
+    const btn = e.target.closest(".qv-option[data-sku]");
     if (!btn) return;
     const v = (qvState.product.variants || []).find((v) => v.sku === btn.dataset.sku);
     if (v) { qvState.variant = v; renderQuickViewSelection(); }
+  });
+
+  // ---- delivery / self-collection ----
+  let qvFulfillment = { type: null, zoneId: null, zoneCharge: 0, zoneLabel: "", address: "", lat: null, lng: null, pointId: null, pointName: "" };
+
+  function fulfillmentAvailable() {
+    const zones = (SETTINGS.deliveryZones || []).filter((z) => z.available !== false);
+    const points = SETTINGS.collectionPoints || [];
+    return zones.length > 0 || points.length > 0;
+  }
+
+  function resetFulfillmentFields() {
+    qvFulfillment = { type: null, zoneId: null, zoneCharge: 0, zoneLabel: "", address: "", lat: null, lng: null, pointId: null, pointName: "" };
+    document.getElementById("qv-address").value = "";
+    document.getElementById("qv-cust-name").value = "";
+    document.getElementById("qv-cust-phone").value = "";
+    document.getElementById("qv-zone-charge").textContent = "";
+    document.getElementById("qv-locate-status").textContent = "";
+    document.getElementById("qv-point-detail").textContent = "";
+    document.getElementById("qv-order-msg").textContent = "";
+  }
+
+  function populateFulfillmentOptions() {
+    const zones = (SETTINGS.deliveryZones || []).filter((z) => z.available !== false);
+    const zoneSel = document.getElementById("qv-zone");
+    zoneSel.innerHTML = '<option value="">Choose your area…</option>' + zones.map((z) =>
+      `<option value="${escapeHtml(z.id)}">${escapeHtml(z.area || "")}${z.emirate ? ", " + escapeHtml(z.emirate) : ""}</option>`
+    ).join("");
+
+    const points = SETTINGS.collectionPoints || [];
+    const pointSel = document.getElementById("qv-point");
+    pointSel.innerHTML = '<option value="">Choose a location…</option>' + points.map((p) =>
+      `<option value="${escapeHtml(p.id)}">${escapeHtml(p.name || "Collection point")}</option>`
+    ).join("");
+
+    const toggle = document.getElementById("qv-fulfillment-toggle");
+    toggle.querySelector('[data-fulfillment="delivery"]').style.display = zones.length ? "" : "none";
+    toggle.querySelector('[data-fulfillment="collection"]').style.display = points.length ? "" : "none";
+
+    const slotSel = document.getElementById("qv-slot");
+    const slots = SETTINGS.deliverySlots || [];
+    slotSel.innerHTML = slots.length
+      ? slots.map((s) => `<option value="${escapeHtml(s.id)}">${escapeHtml(s.label || "")}</option>`).join("")
+      : '<option value="">Any time</option>';
+
+    const dateInput = document.getElementById("qv-date");
+    const minDate = new Date(Date.now() + 86400000).toISOString().slice(0, 10);
+    dateInput.min = minDate;
+    dateInput.value = minDate;
+
+    if (zones.length) selectFulfillmentType("delivery");
+    else if (points.length) selectFulfillmentType("collection");
+  }
+
+  function selectFulfillmentType(type) {
+    qvFulfillment.type = type;
+    document.querySelectorAll("#qv-fulfillment-toggle .qv-fulfillment-option").forEach((btn) => {
+      btn.classList.toggle("active", btn.dataset.fulfillment === type);
+    });
+    document.getElementById("qv-delivery-fields").style.display = type === "delivery" ? "block" : "none";
+    document.getElementById("qv-collection-fields").style.display = type === "collection" ? "block" : "none";
+    if (type === "collection") updatePointDetail();
+    updateQvOrderTotal();
+  }
+
+  document.getElementById("qv-fulfillment-toggle").addEventListener("click", (e) => {
+    const btn = e.target.closest("[data-fulfillment]");
+    if (!btn || btn.style.display === "none") return;
+    selectFulfillmentType(btn.dataset.fulfillment);
+  });
+
+  document.getElementById("qv-zone").addEventListener("change", async (e) => {
+    const zoneId = e.target.value;
+    const chargeEl = document.getElementById("qv-zone-charge");
+    qvFulfillment.zoneId = zoneId || null;
+    const zone = (SETTINGS.deliveryZones || []).find((z) => z.id === zoneId);
+    qvFulfillment.zoneLabel = zone ? (zone.emirate || zone.area || "") : "";
+    if (!zoneId) { qvFulfillment.zoneCharge = 0; chargeEl.textContent = ""; updateQvOrderTotal(); return; }
+
+    chargeEl.textContent = "Checking delivery charge…";
+    try {
+      const res = await fetch(WORKER_URL + "/api/delivery/quote", {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({ zoneId }),
+      });
+      const data = await res.json();
+      if (!res.ok) throw new Error(data.error || "quote failed");
+      qvFulfillment.zoneCharge = Number(data.charge) || 0;
+      chargeEl.textContent = `Delivery: ${formatPrice(qvFulfillment.zoneCharge)}${data.freeAbove ? ` (free above ${formatPrice(data.freeAbove)})` : ""}`;
+    } catch (err) {
+      // A live quote failed (or the Worker isn't reachable) — fall back to
+      // the zone's own listed price from settings.json, already loaded, so
+      // a network hiccup never blocks checkout.
+      qvFulfillment.zoneCharge = Number(zone?.charge) || 0;
+      chargeEl.textContent = `Delivery: ${formatPrice(qvFulfillment.zoneCharge)}`;
+    }
+    updateQvOrderTotal();
+  });
+
+  document.getElementById("qv-point").addEventListener("change", (e) => {
+    qvFulfillment.pointId = e.target.value || null;
+    updatePointDetail();
+  });
+
+  function updatePointDetail() {
+    const detailEl = document.getElementById("qv-point-detail");
+    const point = (SETTINGS.collectionPoints || []).find((p) => p.id === qvFulfillment.pointId);
+    qvFulfillment.pointName = point ? (point.name || "") : "";
+    if (!point) { detailEl.textContent = ""; return; }
+    const mapLink = point.lat != null && point.lng != null
+      ? ` &middot; <a href="https://www.google.com/maps?q=${point.lat},${point.lng}" target="_blank" rel="noopener">View on map ↗</a>`
+      : "";
+    detailEl.innerHTML = `${escapeHtml(point.address || "")}${point.hours ? " &middot; " + escapeHtml(point.hours) : ""}${mapLink} &middot; Free — no delivery charge`;
+  }
+
+  document.getElementById("qv-locate-btn").addEventListener("click", () => {
+    const statusEl = document.getElementById("qv-locate-status");
+    if (!navigator.geolocation) { statusEl.textContent = "Your browser doesn't support location sharing — just fill in the address above."; return; }
+    statusEl.textContent = "Getting your location…";
+    navigator.geolocation.getCurrentPosition(
+      (pos) => {
+        qvFulfillment.lat = Number(pos.coords.latitude.toFixed(6));
+        qvFulfillment.lng = Number(pos.coords.longitude.toFixed(6));
+        statusEl.textContent = "Location added ✓ — this helps the rider find you.";
+      },
+      () => { statusEl.textContent = "Couldn't get your location — no problem, just fill in the address above."; },
+      { enableHighAccuracy: true, timeout: 10000 }
+    );
+  });
+
+  function updateQvOrderTotal() {
+    const { product, variant } = qvState;
+    const totalEl = document.getElementById("qv-order-total");
+    if (!variant || document.getElementById("qv-fulfillment-wrap").style.display === "none") { totalEl.textContent = ""; return; }
+    const itemPrice = variantPrice(variant, product);
+    const deliveryCharge = qvFulfillment.type === "delivery" ? qvFulfillment.zoneCharge : 0;
+    const total = itemPrice + deliveryCharge;
+    totalEl.textContent = deliveryCharge
+      ? `Total: ${formatPrice(total)} (includes ${formatPrice(deliveryCharge)} delivery)`
+      : `Total: ${formatPrice(total)}`;
+  }
+
+  function fulfillmentOrderMessage(product, variant, name, phone) {
+    const siteName = SETTINGS.siteName || "Prabhvas Fashions";
+    const bits = [product.name];
+    if (variant.color) bits.push(variant.color);
+    const label = bits.join(" — ") + (variant.size ? ` (${variant.size})` : "");
+    const price = variantPrice(variant, product);
+    const lines = [`Hi ${siteName}! I'd like to order: ${label} (SKU: ${variant.sku}), ${formatPrice(price)}`];
+    if (qvFulfillment.type === "delivery") {
+      lines.push(`Delivery to: ${qvFulfillment.address}${qvFulfillment.zoneLabel ? " (" + qvFulfillment.zoneLabel + ")" : ""}`);
+      if (qvFulfillment.lat != null && qvFulfillment.lng != null) {
+        lines.push(`Pin: https://www.google.com/maps?q=${qvFulfillment.lat},${qvFulfillment.lng}`);
+      }
+      const dateVal = document.getElementById("qv-date").value;
+      const slotSel = document.getElementById("qv-slot");
+      const slotLabel = slotSel.options[slotSel.selectedIndex] ? slotSel.options[slotSel.selectedIndex].textContent : "";
+      lines.push(`Preferred: ${dateVal}${slotLabel ? ", " + slotLabel : ""}`);
+      lines.push(`Delivery charge: ${formatPrice(qvFulfillment.zoneCharge)}`);
+      lines.push(`Total: ${formatPrice(price + qvFulfillment.zoneCharge)}`);
+    } else {
+      lines.push(`Self-collection at: ${qvFulfillment.pointName}`);
+    }
+    lines.push(`Name: ${name}`);
+    lines.push(`Phone: ${phone}`);
+    return lines.join("\n");
+  }
+
+  document.getElementById("qv-whatsapp-submit").addEventListener("click", async () => {
+    const { product, variant } = qvState;
+    const msgEl = document.getElementById("qv-order-msg");
+    msgEl.textContent = "";
+    msgEl.classList.remove("err");
+
+    const name = document.getElementById("qv-cust-name").value.trim();
+    const phone = document.getElementById("qv-cust-phone").value.trim();
+    const showError = (t) => { msgEl.textContent = t; msgEl.classList.add("err"); };
+
+    if (!qvFulfillment.type) return showError("Choose delivery or self-collection.");
+    if (!name) return showError("Your name is required.");
+    if (!phone) return showError("A phone number is required.");
+    if (qvFulfillment.type === "delivery") {
+      if (!qvFulfillment.zoneId) return showError("Choose your delivery area.");
+      const address = document.getElementById("qv-address").value.trim();
+      if (!address) return showError("Enter your delivery address.");
+      qvFulfillment.address = address;
+    } else if (!qvFulfillment.pointId) {
+      return showError("Choose a collection point.");
+    }
+
+    const btn = document.getElementById("qv-whatsapp-submit");
+    btn.disabled = true;
+    const number = (SETTINGS.whatsappNumber || "").replace(/[^0-9]/g, "");
+    const message = fulfillmentOrderMessage(product, variant, name, phone);
+
+    try {
+      const payload = {
+        fulfillment: qvFulfillment.type,
+        name, phone,
+        items: [{ productId: product.id, productName: product.name, sku: variant.sku, variantLabel: variantLabel(variant), qty: 1, unitPrice: variantPrice(variant, product) }],
+      };
+      if (qvFulfillment.type === "delivery") {
+        const slotSel = document.getElementById("qv-slot");
+        Object.assign(payload, {
+          zoneId: qvFulfillment.zoneId,
+          zoneLabel: qvFulfillment.zoneLabel,
+          deliveryCharge: qvFulfillment.zoneCharge,
+          addressLine: qvFulfillment.address,
+          lat: qvFulfillment.lat,
+          lng: qvFulfillment.lng,
+          deliveryDate: document.getElementById("qv-date").value,
+          slotId: slotSel.value,
+          slotLabel: slotSel.options[slotSel.selectedIndex] ? slotSel.options[slotSel.selectedIndex].textContent : "",
+        });
+      } else {
+        Object.assign(payload, { collectionPointId: qvFulfillment.pointId, collectionPointName: qvFulfillment.pointName });
+      }
+      await fetch(WORKER_URL + "/api/orders", {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify(payload),
+      });
+    } catch (err) {
+      // Don't block the order over a backend hiccup — WhatsApp is still the
+      // real handoff to you, exactly as it was before this feature existed.
+    } finally {
+      btn.disabled = false;
+    }
+
+    window.open(waLink(number, message), "_blank", "noopener");
   });
 
   // ---- contact us modal ----
@@ -848,6 +1161,8 @@
   function closeContactModal() { document.getElementById("contact-backdrop").classList.remove("open"); }
   document.getElementById("nav-contact-btn").addEventListener("click", openContactModal);
   document.getElementById("footer-contact-btn").addEventListener("click", openContactModal);
+  document.getElementById("nav-feedback-btn").addEventListener("click", () => openReviewsModal(GENERAL_FEEDBACK_ID));
+  document.getElementById("footer-feedback-btn").addEventListener("click", () => openReviewsModal(GENERAL_FEEDBACK_ID));
   document.getElementById("contact-close").addEventListener("click", closeContactModal);
   document.getElementById("contact-backdrop").addEventListener("click", (e) => {
     if (e.target.id === "contact-backdrop") closeContactModal();
@@ -915,11 +1230,21 @@
     document.getElementById("rv-submit").textContent = "Submit Review";
   }
 
+  // Feedback that isn't about any one product — submitted from the general
+  // "Feedback" button (next to Contact Us) rather than a product's star row.
+  // It flows through the exact same submit/pending/approve/publish pipeline
+  // as product reviews, just filed under this fixed id instead of a real one.
+  const GENERAL_FEEDBACK_ID = "_site_feedback";
+
   function openReviewsModal(productId) {
-    const product = PRODUCTS.find((p) => p.id === productId);
+    const isGeneral = productId === GENERAL_FEEDBACK_ID;
+    const product = isGeneral ? null : PRODUCTS.find((p) => p.id === productId);
     rvState.productId = productId;
     rvState.product = product;
-    document.getElementById("reviews-product-name").textContent = product ? product.name : "";
+    document.getElementById("reviews-modal-heading").textContent = isGeneral ? "Customer Feedback" : "Reviews";
+    document.getElementById("reviews-product-name").textContent = isGeneral
+      ? "Tell us about your experience with Prabhvas Fashions"
+      : (product ? product.name : "");
     renderReviewsSummaryAndList(productId);
     resetReviewForm();
     document.getElementById("reviews-backdrop").classList.add("open");
@@ -1000,19 +1325,19 @@
   // ============================================================
   // HERO PHOTO CAROUSEL
   // ============================================================
-  // Driven by settings.json's "heroImages" array (managed from the admin
-  // panel's Settings tab — "Hero banner photos"). With one photo, this is a
-  // no-op (no rotation, no extra requests). With more, it crossfades to the
-  // next one every minute.
-  const HERO_ROTATE_MS = 60000;
-
-  function initHeroCarousel(images) {
+  // Driven by settings.json's "heroImages" array and "heroRotateSeconds"
+  // (both managed from the admin panel's Settings tab — "Hero banner
+  // photos"). With one photo, this is a no-op (no rotation, no extra
+  // requests). With more, it crossfades to the next one on the configured
+  // interval (defaults to 60s if not set).
+  function initHeroCarousel(images, rotateSeconds) {
     const layerA = document.getElementById("hero-bg-a");
     const layerB = document.getElementById("hero-bg-b");
     if (!images.length) return;
     layerA.style.backgroundImage = `url('${images[0]}')`;
     if (images.length <= 1) return;
 
+    const rotateMs = Math.max(5, Number(rotateSeconds) || 60) * 1000;
     let index = 0;
     let showingA = true;
     setInterval(() => {
@@ -1023,7 +1348,7 @@
       next.classList.add("showing");
       current.classList.remove("showing");
       showingA = !showingA;
-    }, HERO_ROTATE_MS);
+    }, rotateMs);
   }
 
   init();
