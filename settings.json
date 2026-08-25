@@ -38,5 +38,6 @@
       "id": "slot",
       "label": "9 AM TO 5 PM"
     }
-  ]
+  ],
+  "heroRotateSeconds": 10
 }
