@@ -28,7 +28,16 @@
       "available": true
     }
   ],
-  "collectionPoints": [],
+  "collectionPoints": [
+    {
+      "id": "point",
+      "name": "SWAMINATHAN M S",
+      "address": "Al Nadha2",
+      "hours": "Mon-Sat 10 am to 6 pm",
+      "lat": 25.292221,
+      "lng": 55.382707
+    }
+  ],
   "deliverySlots": [],
   "requireVisitorGate": false
 }
