@@ -6,7 +6,13 @@
 <title>Prabhvas Fashions — Modest Wear &amp; Ethnic Fashion, Dubai</title>
 <meta name="description" content="Prabhvas Fashions — signature pleated palazzos and modest ethnic wear, hand-picked and shipped across the UAE. Order on WhatsApp, cash on delivery available." />
 <link rel="icon" type="image/png" sizes="32x32" href="assets/favicon-32.png" />
-<link rel="apple-touch-icon" href="assets/favicon-180.png" />
+<link rel="apple-touch-icon" href="assets/icon-180.png" />
+<link rel="manifest" href="manifest.webmanifest" />
+<meta name="theme-color" content="#c79a2e" />
+<meta name="mobile-web-app-capable" content="yes" />
+<meta name="apple-mobile-web-app-capable" content="yes" />
+<meta name="apple-mobile-web-app-status-bar-style" content="black-translucent" />
+<meta name="apple-mobile-web-app-title" content="Prabhvas" />
 <link rel="preconnect" href="https://fonts.googleapis.com" />
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
 <link href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:wght@500;600;700&family=Karla:wght@400;500;600;700&display=swap" rel="stylesheet" />
@@ -26,12 +32,14 @@
   .wrap { max-width: 1120px; margin: 0 auto; padding: 0 clamp(20px, 4vw, 48px); }
 
   .topbar { position: sticky; top: 0; z-index: 20; background: rgba(248, 243, 233, 0.92); backdrop-filter: blur(6px); border-bottom: 1px solid var(--line); }
-  .topbar-inner { display: flex; align-items: center; justify-content: space-between; padding: 12px clamp(20px, 4vw, 48px); max-width: 1120px; margin: 0 auto; gap: 16px; }
-  .brand-mark { display: flex; align-items: center; gap: 10px; text-decoration: none; }
+  .topbar-inner { display: flex; align-items: center; justify-content: space-between; padding: 12px clamp(20px, 3vw, 40px); width: 100%; gap: 16px; box-sizing: border-box; }
+  .brand-mark { display: flex; align-items: center; gap: 10px; text-decoration: none; flex-shrink: 0; }
   .brand-mark img { width: 42.5px; height: 42.5px; }
   .brand-mark span { font-family: 'Cormorant Garamond', serif; font-weight: 700; font-size: 1.25rem; letter-spacing: 0.05em; text-transform: uppercase; color: var(--gold); white-space: nowrap; }
-  .topbar nav { display: flex; align-items: center; gap: clamp(14px, 2vw, 28px); }
-  .topbar nav .section-link { font-size: 0.82rem; font-weight: 600; text-decoration: none; color: var(--ink-soft); letter-spacing: 0.01em; background: none; border: none; font-family: inherit; padding: 0; cursor: pointer; }
+  .brand-text-col { display: flex; flex-direction: column; justify-content: center; gap: 1px; line-height: 1.15; }
+  #visitor-greeting { font-family: 'Cormorant Garamond', serif; font-weight: 700; font-size: 1.25rem; letter-spacing: 0.05em; text-transform: none; color: var(--rani); white-space: nowrap; }
+  .topbar nav { display: flex; align-items: center; justify-content: space-between; flex: 1; min-width: 0; margin-left: clamp(24px, 4vw, 64px); gap: clamp(14px, 2vw, 28px); }
+  .topbar nav .section-link { font-size: 0.82rem; font-weight: 600; text-decoration: none; color: var(--ink-soft); letter-spacing: 0.01em; background: none; border: none; font-family: inherit; padding: 0; cursor: pointer; white-space: nowrap; }
   .topbar nav .section-link:hover { color: var(--ink); }
 
   .btn-whatsapp { display: inline-flex; align-items: center; gap: 8px; background: var(--whatsapp); color: #fff; font-weight: 700; font-size: 0.85rem; padding: 10px 18px; border-radius: 100px; text-decoration: none; box-shadow: 0 2px 8px rgba(37, 211, 102, 0.35); white-space: nowrap; border: none; cursor: pointer; transition: transform 0.15s ease, box-shadow 0.15s ease; }
@@ -223,6 +231,8 @@
   .contact-option svg { width: 22px; height: 22px; flex: none; }
   .contact-option .opt-text strong { display: block; font-size: 0.92rem; }
   .contact-option .opt-text span { display: block; font-size: 0.78rem; color: var(--ink-soft); margin-top: 2px; }
+  .contact-option.install-instructions { cursor: default; }
+  .contact-option.install-instructions:hover { border-color: var(--line); }
 
   .track-backdrop { position: fixed; inset: 0; background: rgba(27,22,16,0.55); display: none; z-index: 55; align-items: center; justify-content: center; padding: 20px; }
   .track-backdrop.open { display: flex; }
@@ -289,12 +299,30 @@
   .reviews-form-msg.ok { color: var(--teal); }
   .reviews-form-msg.err { color: var(--rani); }
 
-  @media (max-width: 760px) {
+  @media (max-width: 1150px) {
     .topbar nav .section-link { display: none; }
+    .topbar nav { flex: none; margin-left: auto; gap: 10px; }
+  }
+
+  @media (max-width: 760px) {
     .value-strip .wrap { grid-template-columns: repeat(2, 1fr); }
     .value-item:nth-child(3) { border-left: none; }
     .value-item:nth-child(1), .value-item:nth-child(2) { border-bottom: 1px solid var(--line); padding-bottom: 22px; }
     .info-band .wrap { grid-template-columns: 1fr; }
+  }
+
+  @media (max-width: 580px) {
+    .topbar-inner { padding: 10px clamp(14px, 4vw, 20px); }
+    .brand-mark { gap: 6px; }
+    .brand-mark img { width: 34px; height: 34px; }
+    .brand-mark span { font-size: 0.98rem; }
+    #nav-whatsapp-label { display: none; }
+    #nav-whatsapp { padding: 10px; }
+    #nav-whatsapp svg { width: 18px; height: 18px; }
+  }
+
+  @media (max-width: 359px) {
+    .brand-mark span { display: none; }
   }
   @media (prefers-reduced-motion: reduce) { html { scroll-behavior: auto; } * { transition: none !important; } }
 </style>
@@ -313,7 +341,10 @@
   <div class="topbar-inner">
     <a class="brand-mark" href="#top">
       <img src="assets/logo-header.png" alt="" />
-      <span id="brand-name">Prabhvas Fashions</span>
+      <span class="brand-text-col">
+        <span id="brand-name">Prabhvas Fashions</span>
+        <span class="visitor-greeting" id="visitor-greeting" style="display:none;"></span>
+      </span>
     </a>
     <nav>
       <a class="section-link" href="#collection">Collection</a>
@@ -323,7 +354,7 @@
       <button type="button" class="section-link" id="nav-feedback-btn">Feedback</button>
       <a class="btn-whatsapp" id="nav-whatsapp" href="#" target="_blank" rel="noopener">
         <svg viewBox="0 0 24 24" fill="currentColor"><path d="M12.04 2c-5.46 0-9.9 4.44-9.9 9.9 0 1.75.46 3.45 1.32 4.95L2 22l5.25-1.38a9.9 9.9 0 0 0 4.79 1.22h.004c5.46 0 9.9-4.44 9.9-9.9s-4.44-9.94-9.93-9.94zm0 18.1a8.2 8.2 0 0 1-4.19-1.15l-.3-.18-3.12.82.83-3.04-.2-.31a8.2 8.2 0 0 1-1.26-4.37c0-4.54 3.7-8.24 8.25-8.24 4.54 0 8.24 3.7 8.24 8.24 0 4.55-3.7 8.23-8.25 8.23zm4.52-6.17c-.25-.12-1.47-.72-1.7-.81-.23-.08-.4-.12-.56.13-.17.25-.65.81-.8.97-.14.17-.3.19-.55.06-.25-.12-1.05-.39-2-1.23-.74-.66-1.24-1.48-1.39-1.73-.14-.25-.02-.38.11-.51.11-.11.25-.29.37-.43.12-.14.16-.25.25-.41.08-.17.04-.31-.02-.43-.06-.12-.56-1.35-.77-1.85-.2-.48-.4-.42-.56-.43h-.48c-.17 0-.43.06-.66.31-.23.25-.86.84-.86 2.05 0 1.2.88 2.37 1 2.53.12.17 1.74 2.65 4.21 3.72.59.25 1.05.4 1.41.52.59.19 1.13.16 1.56.1.48-.07 1.47-.6 1.67-1.18.21-.58.21-1.07.14-1.18-.06-.1-.23-.16-.48-.28z"/></svg>
-        Order on WhatsApp
+        <span id="nav-whatsapp-label">Order on WhatsApp</span>
       </a>
       <button type="button" class="cart-nav-btn" id="cart-nav-btn" aria-label="Open cart">
         <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><circle cx="9" cy="21" r="1"/><circle cx="20" cy="21" r="1"/><path d="M1 1h4l2.68 13.39a2 2 0 0 0 2 1.61h9.72a2 2 0 0 0 2-1.61L23 6H6"/></svg>
@@ -421,6 +452,7 @@
         <button type="button" class="footer-contact-link" id="footer-track-btn">Track Order</button>
         <button type="button" class="footer-contact-link" id="footer-contact-btn">Contact Us</button>
         <button type="button" class="footer-contact-link" id="footer-feedback-btn">Feedback</button>
+        <button type="button" class="footer-contact-link" id="footer-install-btn">Mobile App</button>
       </div>
       <p class="fine">&copy; <span id="year"></span> <span id="footer-brand-name-2">Prabhvas Fashions</span>, Dubai, UAE. Modest wear &amp; ethnic fashion.</p>
       <p class="fine"><a class="admin-link" href="admin.html">admin</a></p>
@@ -459,6 +491,27 @@
     </div>
     <p class="track-msg" id="track-msg"></p>
     <div class="track-results" id="track-results"></div>
+  </div>
+</div>
+
+<!-- ===================== INSTALL APP MODAL ===================== -->
+<div class="contact-backdrop" id="install-backdrop">
+  <div class="contact-modal" id="install-modal">
+    <button class="contact-close" id="install-close" aria-label="Close">&times;</button>
+    <h3>Get the Mobile App</h3>
+    <p class="meta">Install Prabhvas Fashions on your phone for a faster, full-screen shopping experience — no app store needed.</p>
+    <button type="button" class="btn-submit-review" id="install-now-btn" style="display:none;width:100%;margin-bottom:18px;">Install Now</button>
+    <div class="contact-options">
+      <div class="contact-option install-instructions">
+        <span class="opt-text"><strong>Android (Chrome)</strong><span>Tap the menu ⋮ and choose "Install app" or "Add to Home screen"</span></span>
+      </div>
+      <div class="contact-option install-instructions">
+        <span class="opt-text"><strong>iPhone / iPad (Safari)</strong><span>Tap the Share icon, then "Add to Home Screen"</span></span>
+      </div>
+      <div class="contact-option install-instructions">
+        <span class="opt-text"><strong>Desktop (Chrome/Edge)</strong><span>Click the install icon in the address bar, or open the browser menu</span></span>
+      </div>
+    </div>
   </div>
 </div>
 
@@ -1003,6 +1056,7 @@
     }
 
     updateCartBadge();
+    updateVisitorGreeting();
     initVisitorGate();
   }
 
@@ -1486,6 +1540,13 @@
     const message = cartOrderMessage(name, phone, orderNumber);
     window.open(waLink(number, message), "_blank", "noopener");
 
+    // Remember who they are for next time too — same "Hi, {name}" greeting
+    // the entry gate sets, so a shopper who checked out gets recognised on
+    // their next visit even on a site with the gate switched off.
+    localStorage.setItem(GATE_NAME_KEY, name);
+    localStorage.setItem(GATE_PHONE_KEY, phone);
+    updateVisitorGreeting();
+
     // One consolidated order sent — clear the cart for the next round, per
     // the "just this visit" scope this cart was built to.
     cart = [];
@@ -1506,6 +1567,22 @@
   const GATE_SESSION_KEY = "prabhvas_gate_passed";
   const GATE_NAME_KEY = "prabhvas_visitor_name";
   const GATE_PHONE_KEY = "prabhvas_visitor_phone";
+
+  // Personalises the top banner with "Hi, {name}" once we know who's
+  // visiting — from the entry gate, if it's been filled in before. Purely
+  // cosmetic and safe to call any time; hides itself when there's no name.
+  function updateVisitorGreeting() {
+    const savedName = (localStorage.getItem(GATE_NAME_KEY) || "").trim();
+    const greetingEl = document.getElementById("visitor-greeting");
+    if (!greetingEl) return;
+    if (!savedName) {
+      greetingEl.style.display = "none";
+      return;
+    }
+    const firstName = savedName.split(/\s+/)[0];
+    greetingEl.textContent = `Hi, ${firstName}`;
+    greetingEl.style.display = "block";
+  }
 
   function initVisitorGate() {
     if (!SETTINGS.requireVisitorGate) return;
@@ -1573,6 +1650,7 @@
     localStorage.setItem(GATE_NAME_KEY, name);
     localStorage.setItem(GATE_PHONE_KEY, phone);
     prefillCheckoutFromVisitor();
+    updateVisitorGreeting();
 
     document.getElementById("gate-form-wrap").style.display = "none";
     document.getElementById("gate-welcome-wrap").style.display = "block";
@@ -1597,6 +1675,40 @@
   document.getElementById("contact-close").addEventListener("click", closeContactModal);
   document.getElementById("contact-backdrop").addEventListener("click", (e) => {
     if (e.target.id === "contact-backdrop") closeContactModal();
+  });
+
+  // ---- install app modal (PWA) ----
+  // Chrome/Edge/Android fire this event when the site qualifies for
+  // installation; we stash it and only trigger the native prompt once the
+  // shopper actually asks to install, from inside our own modal.
+  let deferredInstallPrompt = null;
+  window.addEventListener("beforeinstallprompt", (e) => {
+    e.preventDefault();
+    deferredInstallPrompt = e;
+    const btn = document.getElementById("install-now-btn");
+    if (btn) btn.style.display = "block";
+  });
+  window.addEventListener("appinstalled", () => {
+    deferredInstallPrompt = null;
+    const btn = document.getElementById("install-now-btn");
+    if (btn) btn.style.display = "none";
+  });
+  function openInstallModal() { document.getElementById("install-backdrop").classList.add("open"); }
+  function closeInstallModal() { document.getElementById("install-backdrop").classList.remove("open"); }
+  document.getElementById("footer-install-btn").addEventListener("click", openInstallModal);
+  document.getElementById("install-close").addEventListener("click", closeInstallModal);
+  document.getElementById("install-backdrop").addEventListener("click", (e) => {
+    if (e.target.id === "install-backdrop") closeInstallModal();
+  });
+  document.getElementById("install-now-btn").addEventListener("click", async () => {
+    if (!deferredInstallPrompt) return;
+    const btn = document.getElementById("install-now-btn");
+    btn.disabled = true;
+    deferredInstallPrompt.prompt();
+    try { await deferredInstallPrompt.userChoice; } catch (err) { /* dismissed */ }
+    deferredInstallPrompt = null;
+    btn.style.display = "none";
+    btn.disabled = false;
   });
 
   // ---- track order modal ----
@@ -1843,6 +1955,7 @@
     closeQuickView();
     closeContactModal();
     closeTrackModal();
+    closeInstallModal();
     closeReviewsModal();
     closeCart();
     // The gate is intentionally not dismissible via Escape when required —
@@ -1879,6 +1992,15 @@
   }
 
   init();
+
+  // Registering this makes the storefront installable as an app on
+  // Android/iOS ("Add to Home Screen" / the browser's install prompt).
+  // Safe to skip silently on any browser without support.
+  if ("serviceWorker" in navigator) {
+    window.addEventListener("load", () => {
+      navigator.serviceWorker.register("sw.js", { scope: "./" }).catch(() => {});
+    });
+  }
 </script>
 
 </body>

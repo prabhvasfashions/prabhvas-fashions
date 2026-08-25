@@ -1,0 +1,19 @@
+{
+  "name": "Prabhvas Fashions Admin",
+  "short_name": "Prabhvas Admin",
+  "description": "Manage Prabhvas Fashions — catalog, orders, customers and reviews.",
+  "start_url": "./admin.html",
+  "id": "./admin.html",
+  "scope": "./admin.html",
+  "display": "standalone",
+  "background_color": "#1b1610",
+  "theme_color": "#1b1610",
+  "orientation": "portrait-primary",
+  "lang": "en",
+  "icons": [
+    { "src": "assets/admin-icon-192.png", "sizes": "192x192", "type": "image/png", "purpose": "any" },
+    { "src": "assets/admin-icon-512.png", "sizes": "512x512", "type": "image/png", "purpose": "any" },
+    { "src": "assets/admin-icon-192-maskable.png", "sizes": "192x192", "type": "image/png", "purpose": "maskable" },
+    { "src": "assets/admin-icon-512-maskable.png", "sizes": "512x512", "type": "image/png", "purpose": "maskable" }
+  ]
+}

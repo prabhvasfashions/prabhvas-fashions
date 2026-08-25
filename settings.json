@@ -4,41 +4,15 @@
   "whatsappNumber": "971586711803",
   "currency": "AED",
   "instagramUrl": "",
-  "contactEmail": "prabhvasfashions@gmail.com",
-  "heroImages": [
-    "assets/hero-photo.jpg",
-    "assets/hero-2.jpg",
-    "assets/hero-3.jpg",
-    "assets/hero-4.jpg",
-    "assets/hero-5.jpg",
-    "assets/hero-6.jpg"
-  ],
-  "deliveryZones": [
-    {
-      "id": "zone",
-      "area": "Al Nadha 2",
-      "emirate": "Dubai",
-      "charge": 0,
-      "freeAbove": null,
-      "available": true
-    }
-  ],
-  "collectionPoints": [
-    {
-      "id": "point",
-      "name": "SWAMINATHAN M S",
-      "address": "407 4th FLOOR ALSHAFARBUILDING3, AL NADHA 2, DUBAI",
-      "hours": "Mon - Sat 9.00 am to 5.00 pm",
-      "lat": 25.2926615069642,
-      "lng": 55.383267253447556
-    }
-  ],
-  "deliverySlots": [
-    {
-      "id": "slot",
-      "label": "9 AM TO 5 PM"
-    }
-  ],
-  "heroRotateSeconds": 10,
-  "requireVisitorGate": true
+  "facebookUrl": "",
+  "tiktokUrl": "",
+  "snapchatUrl": "",
+  "mojUrl": "",
+  "contactEmail": "",
+  "heroImages": ["assets/hero-photo.jpg"],
+  "heroRotateSeconds": 60,
+  "deliveryZones": [],
+  "collectionPoints": [],
+  "deliverySlots": [],
+  "requireVisitorGate": false
 }

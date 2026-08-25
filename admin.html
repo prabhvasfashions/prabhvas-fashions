@@ -6,6 +6,13 @@
 <meta name="robots" content="noindex, nofollow" />
 <title>Prabhvas Fashions — Admin</title>
 <link rel="icon" type="image/png" sizes="32x32" href="assets/favicon-32.png" />
+<link rel="apple-touch-icon" href="assets/admin-icon-180.png" />
+<link rel="manifest" href="admin-manifest.webmanifest" />
+<meta name="theme-color" content="#1b1610" />
+<meta name="mobile-web-app-capable" content="yes" />
+<meta name="apple-mobile-web-app-capable" content="yes" />
+<meta name="apple-mobile-web-app-status-bar-style" content="black-translucent" />
+<meta name="apple-mobile-web-app-title" content="Prabhvas Admin" />
 <link rel="preconnect" href="https://fonts.googleapis.com" />
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
 <link href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:wght@600;700&family=Karla:wght@400;500;600;700&family=JetBrains+Mono:wght@400;500&display=swap" rel="stylesheet" />
@@ -75,6 +82,22 @@
   details.howto ol { margin: 12px 0 0; padding-left: 20px; color: var(--ink-soft); }
   details.howto li { margin-bottom: 6px; }
   details.howto code { background: var(--surface-sunk); padding: 1px 5px; border-radius: 3px; }
+
+  .faq-category-title { font-size: 0.72rem; text-transform: uppercase; letter-spacing: 0.06em; color: var(--gold); font-weight: 700; margin: 26px 0 6px; }
+  .faq-category-title:first-child { margin-top: 0; }
+  .faq-item { border-bottom: 1px solid var(--line); padding: 13px 0; }
+  .faq-item:last-child { border-bottom: none; }
+  .faq-item summary { cursor: pointer; font-weight: 700; color: var(--ink); font-size: 0.93rem; list-style: none; }
+  .faq-item summary::-webkit-details-marker { display: none; }
+  .faq-item summary::before { content: "+"; display: inline-block; width: 16px; color: var(--gold); font-weight: 700; }
+  .faq-item[open] summary::before { content: "–"; }
+  .faq-item .faq-answer { margin: 10px 0 0 16px; font-size: 0.87rem; color: var(--ink-soft); line-height: 1.6; max-width: 760px; }
+  .faq-item .faq-answer p { margin: 0 0 8px; }
+  .faq-item .faq-answer p:last-child { margin-bottom: 0; }
+  .faq-item .faq-answer ul, .faq-item .faq-answer ol { margin: 6px 0 8px 20px; }
+  .faq-item .faq-answer li { margin-bottom: 5px; }
+  .faq-item .faq-answer strong { color: var(--ink); }
+  .downloads-row { display: flex; gap: 12px; flex-wrap: wrap; align-items: center; }
 
   .msg { border-radius: 4px; padding: 10px 14px; font-size: 0.85rem; margin: 0 0 16px; }
   .msg.error { background: var(--bad-soft); color: var(--bad); border: 1px solid #f0c9c5; }
@@ -183,6 +206,7 @@
     <button data-view="orders">Orders <span class="badge" id="orders-nav-badge" style="display:none;background:var(--rani);color:#fff;"></span></button>
     <button data-view="customers">Customers</button>
     <button data-view="settings">Settings</button>
+    <button data-view="faq">FAQ</button>
     <button id="btn-signout" style="margin-left:auto;color:var(--gold);">Sign out</button>
   </div>
 </nav>
@@ -439,6 +463,209 @@
           <div class="field" style="flex:1;"><label for="email-2fa">Email address</label><input type="email" id="email-2fa" placeholder="Leave blank to turn off" /></div>
         </div>
         <button class="btn btn-ghost btn-sm" id="btn-save-email-2fa">Save email</button>
+      </div>
+    </div>
+
+    <!-- ---- FAQ ---- -->
+    <div id="view-faq" class="view" style="display:none;">
+      <div class="page-head"><h1>FAQ &amp; Admin Guide</h1></div>
+      <p class="hint" style="margin:-4px 0 20px;">Everything from the full Admin Guide, right here — search your browser's Find (Ctrl/Cmd+F) if you're looking for something specific, or download the PDF to keep offline.</p>
+
+      <div class="card-block">
+        <h2>Downloads</h2>
+        <div class="downloads-row">
+          <a class="btn btn-ghost" id="faq-download-pdf" href="assets/Prabhvas-Fashions-Admin-Guide.pdf" target="_blank" rel="noopener" download>📄 Download Admin Guide (PDF)</a>
+          <button type="button" class="btn btn-ghost" id="faq-install-btn">📱 Install Admin App</button>
+        </div>
+        <details class="howto" id="faq-install-howto">
+          <summary>Manual install steps (if "Install Admin App" doesn't prompt anything)</summary>
+          <ol>
+            <li><strong>Android (Chrome):</strong> tap the menu <code>⋮</code> and choose "Install app" or "Add to Home screen".</li>
+            <li><strong>iPhone / iPad (Safari):</strong> tap the Share icon, then "Add to Home Screen".</li>
+            <li><strong>Desktop (Chrome/Edge):</strong> click the install icon in the address bar, or open the browser menu.</li>
+          </ol>
+        </details>
+      </div>
+
+      <div class="card-block">
+        <h2>Frequently Asked Questions</h2>
+
+        <p class="faq-category-title">Getting started</p>
+        <details class="faq-item">
+          <summary>What's the difference between the admin panel and the storefront?</summary>
+          <div class="faq-answer">
+            <p>The admin panel (admin.html — this app) is where you manage everything: what's for sale, delivery options, and every order and customer that comes in. The storefront (index.html) is what your shoppers see. It's a static site, so nothing you do here reaches shoppers until you either click a Publish button or the change is one of the handful that go live immediately — see "How does publishing work?" below.</p>
+          </div>
+        </details>
+        <details class="faq-item">
+          <summary>What does a typical order journey look like?</summary>
+          <div class="faq-answer">
+            <p>A visitor lands on the storefront, optionally fills in the entry-gate welcome form, browses the collection, and adds items to their cart. They check out, choosing delivery or self-collection — this opens WhatsApp with the order pre-filled, and the order is also saved into this admin panel automatically. You see it land on the Orders tab, send a Proforma Invoice, and the customer taps a link to accept it. You then move its status forward as it progresses — confirmed, booked, in transit, then delivered or collected. Everyone who has ordered or filled in the entry gate builds up in your Customers list.</p>
+            <p>Nothing about payments changes — there's still no online payment gateway. Every order is still followed up and settled with the customer on WhatsApp; this admin panel just keeps a clean, organised record of it all.</p>
+          </div>
+        </details>
+        <details class="faq-item">
+          <summary>How do I sign in?</summary>
+          <div class="faq-answer">
+            <p>Signing in is two steps: your password, then a 6-digit code from your authenticator app (or an emailed code, if you set that up instead). Five wrong attempts on either step locks that step for 5 minutes as basic brute-force protection — it resets on its own, so just wait and try again.</p>
+          </div>
+        </details>
+
+        <p class="faq-category-title">Categories &amp; products</p>
+        <details class="faq-item">
+          <summary>How do I add a category?</summary>
+          <div class="faq-answer">
+            <p>Open the Categories tab, type the category name, leave <strong>Parent category</strong> as None for a main category or choose an existing one to make this a subcategory of it, optionally set a sort order (lower numbers appear first), then click <strong>Add category</strong>.</p>
+            <p>Deleting a category is blocked with a friendly message if it still has subcategories or products under it — move or remove those first. Subcategories can only go one level deep.</p>
+          </div>
+        </details>
+        <details class="faq-item">
+          <summary>How do I add or edit a product?</summary>
+          <div class="faq-answer">
+            <ol>
+              <li>Click <strong>+ Add Product</strong> (or Edit on an existing one) from the Products tab.</li>
+              <li>Choose its category — pick the most specific one available (a subcategory if the parent has any).</li>
+              <li>Fill in the product name, description, base price, and sort order.</li>
+              <li>Tick <strong>Published</strong> once you're ready for shoppers to see it — leave it unticked to keep working on a product without it appearing live.</li>
+              <li>Add at least one row under <strong>SKUs — colours &amp; sizes</strong>: a photo, SKU code, colour, size, an optional price override, and the stock count. Use <strong>+ Add another SKU</strong> for each extra colour/size combination.</li>
+              <li>Click <strong>Save to List</strong>.</li>
+            </ol>
+            <p>Saving only stages the change — it doesn't go live until you click the global <strong>Publish Changes</strong> button.</p>
+          </div>
+        </details>
+
+        <p class="faq-category-title">Settings</p>
+        <details class="faq-item">
+          <summary>What's in "Site details"?</summary>
+          <div class="faq-answer"><p>Your site name, tagline, WhatsApp number, currency, contact email, and social links (Instagram, Facebook, TikTok, Snapchat, Moj — leave any blank to hide that icon in the footer).</p></div>
+        </details>
+        <details class="faq-item">
+          <summary>How do the hero banner photos work?</summary>
+          <div class="faq-answer">
+            <p>The banner at the top of your storefront can rotate through up to 6 photos. Photo 1 is required and is the one shown if you never add any others. Add Photos 2–6 to turn on rotation — each is a plain upload, no filenames or coding needed. Set "Change photo every (seconds)" to control the rotation speed (defaults to 10 seconds; only matters once a second photo is added), then click that card's own Save &amp; Publish.</p>
+          </div>
+        </details>
+        <details class="faq-item">
+          <summary>How do I set up delivery zones and pricing?</summary>
+          <div class="faq-answer">
+            <p>Add every area you deliver to, each with its own charge, an optional free-delivery threshold, and an available/unavailable toggle — handy for pausing an area temporarily without deleting it. Only zones marked Available are offered to shoppers. Click <strong>+ Add zone</strong> (or upload a spreadsheet of zones at once), fill in the area, emirate, and delivery charge, then <strong>Save &amp; Publish</strong>.</p>
+          </div>
+        </details>
+        <details class="faq-item">
+          <summary>How do I add self-collection points?</summary>
+          <div class="faq-answer">
+            <p>Add one or more pickup locations — name, address, hours and, ideally, GPS coordinates (type them in, or capture them with "Use my current location" while standing at the location). Coordinates power the "View on map" link shoppers see.</p>
+          </div>
+        </details>
+        <details class="faq-item">
+          <summary>How do I set delivery time slots?</summary>
+          <div class="faq-answer"><p>Define the fixed windows shoppers can request for a delivery, e.g. "9am–12pm". These are the same slots for every zone — add, relabel, or remove them as needed.</p></div>
+        </details>
+        <details class="faq-item">
+          <summary>What does "Customer capture" (the entry gate) do?</summary>
+          <div class="faq-answer">
+            <p>A single toggle controls whether every visitor must share their name and phone number (email and area optional) before they can browse the storefront at all. This is a deliberate trade-off — some casual visitors will leave rather than fill in a form — so it's entirely your call, and easy to switch off again later. Tick "Require visitor details before browsing" to turn it on, then Save &amp; Publish.</p>
+            <p>Whether or not the gate is on, every order still captures the customer's name and phone automatically — the gate is only for building a fuller list that includes people who browse but never order.</p>
+          </div>
+        </details>
+        <details class="faq-item">
+          <summary>How do I change my password or 2FA?</summary>
+          <div class="faq-answer"><p>Further down the Settings tab you can change your password, regenerate or turn off your authenticator key, and set or remove the email used for emailed 2FA codes. These take effect immediately — there's no Save &amp; Publish button, since there's nothing to "publish" about your own login.</p></div>
+        </details>
+
+        <p class="faq-category-title">Publishing changes</p>
+        <details class="faq-item">
+          <summary>How does publishing work?</summary>
+          <div class="faq-answer">
+            <p>It's worth being clear about this, because two mechanisms work differently on purpose:</p>
+            <ul>
+              <li><strong>Products and Categories</strong> stage your changes first. Nothing goes live until you click the <strong>Publish Changes</strong> button at the bottom of the screen, which commits everything you've staged to your GitHub repo (and uploads any new photos) in one step. Your live site then updates within about a minute.</li>
+              <li><strong>Settings</strong> publishes card-by-card, immediately, the moment you click that card's own Save &amp; Publish button — it doesn't wait for, or get bundled into, the global Publish Changes button. This means you can, for example, turn the entry gate on right now without your in-progress product edits also needing to be ready to go live.</li>
+            </ul>
+            <p>Reviews/feedback approvals and Orders status changes are a third category: both take effect immediately too, with no Publish step at all, because there's nothing to stage.</p>
+          </div>
+        </details>
+
+        <p class="faq-category-title">What your customers see</p>
+        <details class="faq-item">
+          <summary>What does browsing &amp; checkout look like for a shopper?</summary>
+          <div class="faq-answer">
+            <p>Every product card has a small "+" quick-add button — for a product with only one option in stock, this adds it straight to the cart. For a product with a real choice to make (colour, size), tapping the card opens Quick View instead. The cart icon in the top navigation shows a live item count; opening it lists every line with a running subtotal. If you've configured at least one delivery zone or collection point, a delivery/self-collection step appears before checkout; otherwise checkout just asks for name and phone.</p>
+            <p>Checking out records the order here automatically and opens WhatsApp with everything pre-filled — every item, the address or collection point, date/slot, and total — ready for the shopper to hit Send.</p>
+          </div>
+        </details>
+        <details class="faq-item">
+          <summary>What is "Track Order", and do I need to set anything up for it?</summary>
+          <div class="faq-answer">
+            <p>Track Order is a self-service option on the storefront (in the top navigation and the footer) that lets a customer enter the mobile number they ordered with and see every order under that number — status, what was ordered, delivery area or collection point, and total. There's nothing to configure — it works automatically for every order already coming through the site, past and present.</p>
+            <p>Because a phone number alone isn't a strong secret, the lookup deliberately shows a trimmed view — no exact street address, no GPS pin, and no email — and is rate-limited per visitor.</p>
+          </div>
+        </details>
+        <details class="faq-item">
+          <summary>What is the "Mobile App" / install-as-app feature?</summary>
+          <div class="faq-answer">
+            <p>Both the storefront and this admin panel can be installed like a regular app — with their own home-screen icon, opening full-screen with no browser bar around them. No app store or review process is involved; it installs straight from the website. These are two separate, independently-installable apps: a "Mobile App" link in the storefront's footer lets your customers install the storefront, and the <strong>Install Admin App</strong> button at the top of this FAQ tab lets you install this admin panel the same way.</p>
+            <p>It's purely a convenience — everything you see once installed still comes live from the same site and worker, so there's no separate data to keep in sync.</p>
+          </div>
+        </details>
+
+        <p class="faq-category-title">Orders</p>
+        <details class="faq-item">
+          <summary>How do I move an order through its status?</summary>
+          <div class="faq-answer">
+            <p>Pick the next status from an order's dropdown on the Orders tab — this is modelled on how a courier tracks a shipment, and takes effect immediately, no Publish needed: <strong>New → Confirmed → Booked → In transit → Delivered / Collected</strong> (or Cancelled, at any point). Each card is tinted by status at a glance — amber for new, blue while confirmed/booked/in transit, green once delivered or collected, red and faded if cancelled.</p>
+          </div>
+        </details>
+        <details class="faq-item">
+          <summary>How do I send a Proforma Invoice?</summary>
+          <div class="faq-answer">
+            <p>Each order card has a <strong>Send Proforma Invoice</strong> button. Clicking it builds a PDF invoice (itemised costing, delivery/collection details, total) and opens WhatsApp with a message to that customer, pre-filled with a link to view/download the PDF and a second link they can tap to formally accept the order — you just hit Send in WhatsApp. Send this from whichever device/browser has your shop's WhatsApp signed in, since that's what makes it go out through your business number.</p>
+          </div>
+        </details>
+        <details class="faq-item">
+          <summary>What happens when a customer taps the accept link?</summary>
+          <div class="faq-answer">
+            <p>They land on a simple confirmation page — no account or app needed on their side. Back here, that order automatically gets a green "✓ Accepted" badge and moves from New to Confirmed on its own — you don't need to ask the customer to reply and update it yourself.</p>
+            <p>Orders aren't published to your public GitHub repo like Products and Categories are — they're kept privately in your Worker's storage, since they contain customer names, phone numbers, and addresses.</p>
+          </div>
+        </details>
+
+        <p class="faq-category-title">Customers</p>
+        <details class="faq-item">
+          <summary>What's on the Customers tab?</summary>
+          <div class="faq-answer">
+            <p>Every order already captures a name and phone number, but the Customers tab builds a fuller list of everyone captured this way — including anyone who filled in the entry gate but never ordered. Records are deduplicated by phone number, so nobody appears twice — repeat visits or repeat orders just bump their visit count and last-seen date instead.</p>
+            <p><strong>Refresh</strong> pulls the latest list. <strong>Export CSV</strong> downloads it as a spreadsheet for WhatsApp Business, Mailchimp, or wherever else you run outreach from. <strong>Import from past orders</strong> is a one-time backfill for orders placed before this list existed — safe to click more than once, since it never touches an existing person's visit count.</p>
+          </div>
+        </details>
+
+        <p class="faq-category-title">Reviews &amp; feedback</p>
+        <details class="faq-item">
+          <summary>How do I approve or reject a review?</summary>
+          <div class="faq-answer">
+            <p>Open the Reviews tab, then click <strong>Approve</strong> to publish a review to the live site immediately (no Publish step needed), or <strong>Reject</strong> to discard it. You can also delete an already-published review later from the same tab. General feedback (not tied to a product) goes through the exact same Approve/Reject flow.</p>
+          </div>
+        </details>
+
+        <p class="faq-category-title">Quick-reference cheat sheet</p>
+        <details class="faq-item">
+          <summary>What goes live immediately vs. needs Publish Changes?</summary>
+          <div class="faq-answer">
+            <p><strong>Goes live immediately:</strong> every Settings card's own Save &amp; Publish button; approving or rejecting a review or feedback submission; changing an order's status or sending a Proforma Invoice; password/2FA/account security changes.</p>
+            <p><strong>Stages first, needs Publish Changes:</strong> adding, editing, or deleting a Product; adding, renaming, reordering, or deleting a Category.</p>
+          </div>
+        </details>
+        <details class="faq-item">
+          <summary>What's a typical daily routine?</summary>
+          <div class="faq-answer">
+            <ol>
+              <li>Check the Orders tab (and its badge) for anything new — action or send invoices as needed.</li>
+              <li>Check the Reviews tab (and its badge) and approve or reject anything waiting.</li>
+              <li>Make any catalog changes (Products/Categories), then click Publish Changes once at the end.</li>
+              <li>Check the Customers tab occasionally, and export a CSV when you want to run outreach.</li>
+            </ol>
+          </div>
+        </details>
       </div>
     </div>
 
@@ -772,6 +999,13 @@
     document.querySelectorAll("#tabnav button[data-view]").forEach((btn) => {
       btn.classList.toggle("active", btn.dataset.view === view);
     });
+    // The Publish Changes bar only concerns staged Product/Category edits —
+    // irrelevant on the FAQ tab, and its sticky-bottom positioning would
+    // otherwise sit on top of that tab's long list of questions. Hidden
+    // here rather than removed, so it reappears exactly as before on every
+    // other tab.
+    const publishBar = document.getElementById("publish-bar");
+    if (publishBar) publishBar.style.display = view === "faq" ? "none" : "";
     if (view === "dashboard") { renderDashboard(); Promise.all([refreshReviews(), refreshOrders()]).then(renderDashboard); }
     if (view === "products") renderProducts();
     if (view === "categories") renderCategories();
@@ -2055,6 +2289,42 @@
   window.addEventListener("beforeunload", (e) => {
     if (isDirty()) { e.preventDefault(); e.returnValue = ""; }
   });
+
+  // Lets you install the admin panel as its own app on your phone, separate
+  // from the storefront's — see admin-sw.js for what it does and doesn't
+  // cache (nothing beyond the empty page shell; your data is never cached).
+  if ("serviceWorker" in navigator) {
+    window.addEventListener("load", () => {
+      navigator.serviceWorker.register("admin-sw.js", { scope: "./admin.html" }).catch(() => {});
+    });
+  }
+
+  // "Install Admin App" button on the FAQ tab's Downloads card — captures
+  // the browser's native install prompt (Chrome/Edge/Android) and fires it
+  // on click; falls back to the manual how-to steps when it isn't offered
+  // (iOS Safari, or a browser that doesn't support installable web apps).
+  let deferredAdminInstallPrompt = null;
+  window.addEventListener("beforeinstallprompt", (e) => {
+    e.preventDefault();
+    deferredAdminInstallPrompt = e;
+  });
+  window.addEventListener("appinstalled", () => { deferredAdminInstallPrompt = null; });
+  const faqInstallBtn = document.getElementById("faq-install-btn");
+  if (faqInstallBtn) {
+    faqInstallBtn.addEventListener("click", async () => {
+      if (deferredAdminInstallPrompt) {
+        deferredAdminInstallPrompt.prompt();
+        try { await deferredAdminInstallPrompt.userChoice; } catch (err) { /* dismissed */ }
+        deferredAdminInstallPrompt = null;
+      } else {
+        const howto = document.getElementById("faq-install-howto");
+        if (howto) {
+          howto.open = true;
+          howto.scrollIntoView({ behavior: "smooth", block: "nearest" });
+        }
+      }
+    });
+  }
 </script>
 
 </body>
