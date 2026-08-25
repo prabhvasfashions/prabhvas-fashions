@@ -44,5 +44,5 @@
       "label": "9 am - 5 pm"
     }
   ],
-  "requireVisitorGate": false
+  "requireVisitorGate": true
 }
