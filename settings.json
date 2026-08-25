@@ -38,6 +38,11 @@
       "lng": 55.382707
     }
   ],
-  "deliverySlots": [],
+  "deliverySlots": [
+    {
+      "id": "slot",
+      "label": "9 am - 5 pm"
+    }
+  ],
   "requireVisitorGate": false
 }
