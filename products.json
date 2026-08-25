@@ -6,7 +6,7 @@
     "description": "Micro pleated wide-leg palazzo, modest-chic everyday wear.",
     "basePrice": 9,
     "sortOrder": 0,
-    "ready": false,
+    "ready": true,
     "variants": [
       {
         "sku": "PB010001",
