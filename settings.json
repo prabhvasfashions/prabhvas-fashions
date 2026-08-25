@@ -18,7 +18,16 @@
     "assets/hero-6.jpg"
   ],
   "heroRotateSeconds": 10,
-  "deliveryZones": [],
+  "deliveryZones": [
+    {
+      "id": "zone",
+      "area": "Al Nadha 2",
+      "emirate": "Dubai",
+      "charge": 0,
+      "freeAbove": null,
+      "available": true
+    }
+  ],
   "collectionPoints": [],
   "deliverySlots": [],
   "requireVisitorGate": false
