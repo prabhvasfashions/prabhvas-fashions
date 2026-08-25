@@ -4,6 +4,13 @@
   "whatsappNumber": "971586711803",
   "currency": "AED",
   "instagramUrl": "",
-  "contactEmail": "",
-  "heroImages": ["assets/hero-photo.jpg"]
+  "contactEmail": "prabhvasfashions@gmail.com",
+  "heroImages": [
+    "assets/hero-photo.jpg",
+    "assets/hero-2.jpg",
+    "assets/hero-3.jpg",
+    "assets/hero-4.jpg",
+    "assets/hero-5.jpg",
+    "assets/hero-6.jpg"
+  ]
 }
