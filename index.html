@@ -224,6 +224,30 @@
   .contact-option .opt-text strong { display: block; font-size: 0.92rem; }
   .contact-option .opt-text span { display: block; font-size: 0.78rem; color: var(--ink-soft); margin-top: 2px; }
 
+  .track-backdrop { position: fixed; inset: 0; background: rgba(27,22,16,0.55); display: none; z-index: 55; align-items: center; justify-content: center; padding: 20px; }
+  .track-backdrop.open { display: flex; }
+  .track-modal { position: relative; background: var(--surface); border-radius: 10px; max-width: 460px; width: 100%; max-height: 88vh; overflow-y: auto; padding: clamp(24px, 4vw, 34px); }
+  .track-modal h3 { font-size: 1.25rem; margin-bottom: 6px; }
+  .track-modal p.meta { color: var(--ink-soft); font-size: 0.88rem; margin-bottom: 18px; }
+  .track-lookup-row { display: grid; grid-template-columns: 1fr auto; gap: 10px; margin-bottom: 4px; }
+  .track-modal input { width: 100%; padding: 10px 12px; border: 1px solid var(--line); border-radius: 6px; font-family: inherit; font-size: 0.87rem; background: var(--ivory); color: var(--ink); }
+  .track-modal .btn-submit-review { padding: 10px 20px; }
+  .track-msg { font-size: 0.82rem; margin: 10px 0 0; text-align: center; }
+  .track-msg.err { color: var(--rani); }
+  .track-msg.ok { color: var(--teal); }
+  .track-results { display: flex; flex-direction: column; gap: 14px; margin-top: 16px; }
+  .track-order-card { border: 1px solid var(--line); border-radius: 10px; padding: 14px 16px; background: var(--ivory); }
+  .track-order-head { display: flex; align-items: center; justify-content: space-between; gap: 10px; margin-bottom: 6px; }
+  .track-order-number { font-family: 'Cormorant Garamond', serif; font-weight: 700; font-size: 1.05rem; }
+  .track-status-badge { display: inline-block; padding: 3px 11px; border-radius: 100px; font-size: 0.72rem; font-weight: 700; letter-spacing: 0.02em; white-space: nowrap; }
+  .track-status-badge.status-new { background: rgba(199,154,46,0.18); color: #8a6a1e; }
+  .track-status-badge.status-confirmed, .track-status-badge.status-booked, .track-status-badge.status-in_transit { background: rgba(42,63,143,0.13); color: var(--royal); }
+  .track-status-badge.status-delivered, .track-status-badge.status-collected { background: rgba(14,124,116,0.14); color: var(--teal); }
+  .track-status-badge.status-cancelled { background: rgba(194,31,91,0.10); color: var(--rani); }
+  .track-order-items { font-size: 0.84rem; color: var(--ink-soft); margin: 4px 0; }
+  .track-order-meta { font-size: 0.8rem; color: var(--ink-soft); margin: 2px 0; }
+  .track-order-total { font-size: 0.88rem; font-weight: 700; margin-top: 6px; }
+
   /* ---------- ratings + reviews ---------- */
   .rating-row { display: inline-flex; align-items: center; gap: 6px; background: none; border: none; padding: 0; cursor: pointer; font-family: inherit; }
   .rating-row .stars { color: var(--gold); font-size: 0.85rem; letter-spacing: 1px; }
@@ -294,6 +318,7 @@
     <nav>
       <a class="section-link" href="#collection">Collection</a>
       <a class="section-link" href="#shipping">Shipping &amp; Payment</a>
+      <button type="button" class="section-link" id="nav-track-btn">Track Order</button>
       <button type="button" class="section-link" id="nav-contact-btn">Contact Us</button>
       <button type="button" class="section-link" id="nav-feedback-btn">Feedback</button>
       <a class="btn-whatsapp" id="nav-whatsapp" href="#" target="_blank" rel="noopener">
@@ -393,6 +418,7 @@
         <a id="footer-tiktok" href="#" target="_blank" rel="noopener" style="display:none;">TikTok</a>
         <a id="footer-snapchat" href="#" target="_blank" rel="noopener" style="display:none;">Snapchat</a>
         <a id="footer-moj" href="#" target="_blank" rel="noopener" style="display:none;">Moj</a>
+        <button type="button" class="footer-contact-link" id="footer-track-btn">Track Order</button>
         <button type="button" class="footer-contact-link" id="footer-contact-btn">Contact Us</button>
         <button type="button" class="footer-contact-link" id="footer-feedback-btn">Feedback</button>
       </div>
@@ -418,6 +444,21 @@
         <span class="opt-text"><strong>Message us on WhatsApp</strong><span>Fastest way to reach us</span></span>
       </a>
     </div>
+  </div>
+</div>
+
+<!-- ===================== TRACK ORDER MODAL ===================== -->
+<div class="track-backdrop" id="track-backdrop">
+  <div class="track-modal" id="track-modal">
+    <button class="contact-close" id="track-close" aria-label="Close">&times;</button>
+    <h3>Track Your Order</h3>
+    <p class="meta">Enter the mobile number you ordered with to see its status.</p>
+    <div class="track-lookup-row">
+      <input type="tel" id="track-phone" placeholder="Your mobile number" maxlength="20" />
+      <button type="button" class="btn-submit-review" id="track-submit">Track</button>
+    </div>
+    <p class="track-msg" id="track-msg"></p>
+    <div class="track-results" id="track-results"></div>
   </div>
 </div>
 
@@ -969,6 +1010,7 @@
   // QUICK VIEW MODAL
   // ============================================================
   let qvState = { product: null, variant: null };
+  let qvCloseTimer = null;
 
   function openQuickView(product) {
     qvState.product = product;
@@ -993,6 +1035,7 @@
 
     document.getElementById("qv-qty").value = 1;
     document.getElementById("qv-cart-msg").textContent = "";
+    clearTimeout(qvCloseTimer);
     renderQuickViewSelection();
     document.getElementById("qv-backdrop").classList.add("open");
   }
@@ -1076,6 +1119,10 @@
     const msgEl = document.getElementById("qv-cart-msg");
     msgEl.textContent = `Added ${qty} to cart ✓`;
     msgEl.classList.remove("err");
+    // Close the popup automatically once the item is in — the cart badge
+    // update and this brief confirmation are enough feedback, so the
+    // shopper isn't stuck needing an extra tap to get back to browsing.
+    qvCloseTimer = setTimeout(closeQuickView, 700);
   });
 
   // ============================================================
@@ -1552,6 +1599,93 @@
     if (e.target.id === "contact-backdrop") closeContactModal();
   });
 
+  // ---- track order modal ----
+  const TRACK_STATUS_LABELS = { new: "New", confirmed: "Confirmed", booked: "Booked with courier", in_transit: "In transit", delivered: "Delivered", collected: "Collected", cancelled: "Cancelled" };
+
+  function openTrackModal() {
+    document.getElementById("track-backdrop").classList.add("open");
+    // A shopper who already went through the entry gate (or checked out
+    // before) has their phone remembered locally — prefill it so tracking
+    // an order they just placed is a one-tap lookup, not retyping.
+    const phoneInput = document.getElementById("track-phone");
+    if (!phoneInput.value) {
+      const known = localStorage.getItem(GATE_PHONE_KEY);
+      if (known) phoneInput.value = known;
+    }
+  }
+  function closeTrackModal() { document.getElementById("track-backdrop").classList.remove("open"); }
+  document.getElementById("nav-track-btn").addEventListener("click", openTrackModal);
+  document.getElementById("footer-track-btn").addEventListener("click", openTrackModal);
+  document.getElementById("track-close").addEventListener("click", closeTrackModal);
+  document.getElementById("track-backdrop").addEventListener("click", (e) => {
+    if (e.target.id === "track-backdrop") closeTrackModal();
+  });
+
+  function trackOrderCardHtml(o) {
+    const statusKey = TRACK_STATUS_LABELS[o.status] ? o.status : "new";
+    const itemsText = (o.items || []).map((it) => `${it.qty}× ${it.productName}${it.variantLabel ? ` (${it.variantLabel})` : ""}`).join(", ");
+    const placedDate = (o.createdAt || "").slice(0, 10);
+    const fulfillmentBits = [];
+    if (o.fulfillment === "delivery") {
+      fulfillmentBits.push("Delivery" + (o.areaLabel ? ` to ${o.areaLabel}` : ""));
+      if (o.deliveryDate) fulfillmentBits.push(o.deliveryDate + (o.slotLabel ? `, ${o.slotLabel}` : ""));
+    } else {
+      fulfillmentBits.push("Self-collection" + (o.areaLabel ? ` — ${o.areaLabel}` : ""));
+    }
+    return `<div class="track-order-card">
+      <div class="track-order-head">
+        <span class="track-order-number">Order #${escapeHtml(String(o.orderNumber || ""))}</span>
+        <span class="track-status-badge status-${escapeHtml(statusKey)}">${escapeHtml(TRACK_STATUS_LABELS[statusKey])}</span>
+      </div>
+      <p class="track-order-meta">Placed ${escapeHtml(placedDate)}</p>
+      <p class="track-order-items">${escapeHtml(itemsText)}</p>
+      <p class="track-order-meta">${escapeHtml(fulfillmentBits.join(" · "))}</p>
+      <p class="track-order-total">${formatPrice(o.orderTotal)}</p>
+    </div>`;
+  }
+
+  document.getElementById("track-submit").addEventListener("click", async () => {
+    const msgEl = document.getElementById("track-msg");
+    const resultsEl = document.getElementById("track-results");
+    const phone = document.getElementById("track-phone").value.trim();
+    resultsEl.innerHTML = "";
+    msgEl.textContent = "";
+    msgEl.classList.remove("err", "ok");
+
+    if (!phone) {
+      msgEl.textContent = "Please enter the mobile number you ordered with.";
+      msgEl.classList.add("err");
+      return;
+    }
+
+    const btn = document.getElementById("track-submit");
+    btn.disabled = true;
+    btn.textContent = "Looking up…";
+
+    try {
+      const res = await fetch(WORKER_URL + "/api/orders/track?phone=" + encodeURIComponent(phone));
+      const data = await res.json().catch(() => ({}));
+      if (!res.ok) throw new Error(data.error || "Something went wrong — please try again.");
+      const orders = data.orders || [];
+      if (!orders.length) {
+        msgEl.textContent = "No orders found for that number. Double-check it's the number you ordered with, or message us on WhatsApp.";
+        msgEl.classList.add("err");
+      } else {
+        resultsEl.innerHTML = orders.map(trackOrderCardHtml).join("");
+      }
+    } catch (err) {
+      msgEl.textContent = err.message || "Couldn't reach the server — please try again.";
+      msgEl.classList.add("err");
+    } finally {
+      btn.disabled = false;
+      btn.textContent = "Track";
+    }
+  });
+
+  document.getElementById("track-phone").addEventListener("keydown", (e) => {
+    if (e.key === "Enter") document.getElementById("track-submit").click();
+  });
+
   function closeQuickView() { document.getElementById("qv-backdrop").classList.remove("open"); }
   document.getElementById("qv-close").addEventListener("click", closeQuickView);
   document.getElementById("qv-backdrop").addEventListener("click", (e) => {
@@ -1708,6 +1842,7 @@
     if (e.key !== "Escape") return;
     closeQuickView();
     closeContactModal();
+    closeTrackModal();
     closeReviewsModal();
     closeCart();
     // The gate is intentionally not dismissible via Escape when required —
