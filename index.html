@@ -31,22 +31,27 @@
   .brand-mark img { width: 34px; height: 34px; }
   .brand-mark span { font-family: 'Cormorant Garamond', serif; font-weight: 700; font-size: 1.25rem; letter-spacing: 0.02em; }
   .topbar nav { display: flex; align-items: center; gap: clamp(14px, 2vw, 28px); }
-  .topbar nav a.section-link { font-size: 0.82rem; font-weight: 600; text-decoration: none; color: var(--ink-soft); letter-spacing: 0.01em; }
-  .topbar nav a.section-link:hover { color: var(--ink); }
+  .topbar nav .section-link { font-size: 0.82rem; font-weight: 600; text-decoration: none; color: var(--ink-soft); letter-spacing: 0.01em; background: none; border: none; font-family: inherit; padding: 0; cursor: pointer; }
+  .topbar nav .section-link:hover { color: var(--ink); }
 
   .btn-whatsapp { display: inline-flex; align-items: center; gap: 8px; background: var(--whatsapp); color: #fff; font-weight: 700; font-size: 0.85rem; padding: 10px 18px; border-radius: 100px; text-decoration: none; box-shadow: 0 2px 8px rgba(37, 211, 102, 0.35); white-space: nowrap; border: none; cursor: pointer; transition: transform 0.15s ease, box-shadow 0.15s ease; }
   .btn-whatsapp:hover { transform: translateY(-1px); box-shadow: 0 4px 14px rgba(37, 211, 102, 0.45); }
   .btn-whatsapp svg { width: 16px; height: 16px; flex: none; }
   .btn-whatsapp.muted { background: var(--ink-soft); box-shadow: none; }
 
-  .hero { padding: clamp(48px, 8vw, 96px) 0 clamp(40px, 6vw, 64px); text-align: center; position: relative; }
-  .hero-rule { width: 64px; height: 2px; background: var(--gold); margin: 0 auto 28px; }
-  .hero img.mark { width: clamp(150px, 20vw, 220px); margin: 0 auto 28px; }
-  .hero h1 { font-size: clamp(2.4rem, 6vw, 4rem); letter-spacing: 0.01em; }
-  .hero .tagline { margin: 18px auto 0; max-width: 46ch; color: var(--ink-soft); font-size: clamp(1rem, 1.6vw, 1.15rem); }
-  .hero-actions { margin-top: 34px; display: flex; align-items: center; justify-content: center; gap: 16px; flex-wrap: wrap; }
-  .btn-outline { display: inline-flex; align-items: center; gap: 8px; border: 1.5px solid var(--ink); color: var(--ink); font-weight: 600; font-size: 0.85rem; letter-spacing: 0.03em; padding: 10px 22px; border-radius: 100px; text-decoration: none; }
-  .btn-outline:hover { background: var(--ink); color: var(--ivory); }
+  .hero-section { padding: clamp(20px, 3vw, 32px) 0; }
+  .hero { position: relative; border-radius: 20px; overflow: hidden; background-color: var(--ink); min-height: clamp(340px, 52vh, 480px); display: flex; align-items: center; justify-content: center; padding: clamp(32px, 5vw, 56px) clamp(20px, 4vw, 48px); text-align: center; }
+  .hero-bg-layer { position: absolute; inset: 0; background-size: cover; background-position: center 38%; filter: saturate(1.2) brightness(0.8) contrast(1.05) blur(1.5px); opacity: 0; transition: opacity 1.8s ease; }
+  .hero-bg-layer.showing { opacity: 1; }
+  .hero-overlay { position: absolute; inset: 0; background: linear-gradient(180deg, rgba(20,15,10,0.32) 0%, rgba(20,15,10,0.42) 55%, rgba(20,15,10,0.6) 100%); }
+  .hero-content { position: relative; z-index: 1; max-width: 620px; }
+  .hero-logo-badge { width: clamp(140px, 18vw, 210px); height: clamp(140px, 18vw, 210px); margin: 0 auto 16px; border-radius: 50%; background: #fdfbf3; box-shadow: 0 6px 22px rgba(0,0,0,0.4); display: flex; align-items: center; justify-content: center; padding: 12px; }
+  .hero-content img.mark { width: 100%; height: 100%; object-fit: contain; }
+  .hero-content h1 { color: var(--ivory); font-size: clamp(1.9rem, 4.6vw, 3rem); letter-spacing: 0.01em; }
+  .hero-content .tagline { margin: 16px auto 0; max-width: 46ch; color: #f1ece2; font-size: clamp(0.95rem, 1.5vw, 1.1rem); }
+  .hero-actions { margin-top: 28px; display: flex; align-items: center; justify-content: center; gap: 16px; flex-wrap: wrap; }
+  .btn-outline { display: inline-flex; align-items: center; gap: 8px; border: 1.5px solid var(--ivory); color: var(--ivory); font-weight: 600; font-size: 0.85rem; letter-spacing: 0.03em; padding: 10px 22px; border-radius: 100px; text-decoration: none; }
+  .btn-outline:hover { background: var(--ivory); color: var(--ink); }
 
   .value-strip { border-top: 1px solid var(--line); border-bottom: 1px solid var(--line); background: var(--surface); }
   .value-strip .wrap { display: grid; grid-template-columns: repeat(4, 1fr); gap: 0; }
@@ -66,6 +71,33 @@
   .cat-pill.soon::after { content: "coming soon"; font-size: 0.62rem; letter-spacing: 0.06em; text-transform: uppercase; color: var(--gold); margin-left: 8px; }
 
   .products { padding: 20px 0 clamp(24px, 4vw, 40px); }
+
+  .cat-sidebar-toggle { display: none; align-items: center; gap: 8px; margin: 0 0 18px; padding: 10px 16px; border-radius: 100px; border: 1px solid var(--line); background: var(--ivory); font-family: inherit; font-weight: 600; font-size: 0.85rem; color: var(--ink); cursor: pointer; }
+  .shop-layout { display: flex; align-items: flex-start; gap: clamp(24px, 3vw, 40px); }
+  .cat-sidebar-backdrop { display: none; }
+  .cat-sidebar { flex: 0 0 220px; width: 220px; position: sticky; top: 90px; }
+  .cat-sidebar-list { list-style: none; margin: 0; padding: 0; }
+  .cat-sidebar-item { margin-bottom: 2px; }
+  .cat-sidebar-row { display: flex; align-items: center; justify-content: space-between; gap: 8px; width: 100%; padding: 10px 12px; border-radius: 8px; border: none; background: none; text-align: left; font-family: inherit; font-size: 0.87rem; font-weight: 600; color: var(--ink); cursor: pointer; }
+  .cat-sidebar-row:hover { background: var(--ivory); }
+  .cat-sidebar-row.active { background: var(--ink); color: var(--ivory); }
+  .cat-sidebar-arrow { display: inline-flex; font-size: 0.65rem; color: var(--ink-soft); transition: transform 0.15s ease; padding: 4px; margin: -4px; }
+  .cat-sidebar-row.active .cat-sidebar-arrow { color: var(--ivory); }
+  .cat-sidebar-item.expanded .cat-sidebar-arrow { transform: rotate(90deg); }
+  .cat-sidebar-children { list-style: none; margin: 2px 0 8px; padding-left: 14px; display: none; border-left: 1px solid var(--line); }
+  .cat-sidebar-item.expanded .cat-sidebar-children { display: block; }
+  .cat-sidebar-child-row { display: block; width: 100%; padding: 8px 12px; border: none; background: none; text-align: left; font-family: inherit; font-size: 0.8rem; color: var(--ink-soft); border-radius: 6px; cursor: pointer; }
+  .cat-sidebar-child-row:hover { color: var(--ink); background: var(--ivory); }
+  .cat-sidebar-child-row.active { color: var(--rani); font-weight: 700; background: var(--ivory); }
+  .products-main { flex: 1 1 auto; min-width: 0; }
+
+  @media (max-width: 860px) {
+    .cat-sidebar-toggle { display: inline-flex; }
+    .cat-sidebar { position: fixed; top: 0; left: 0; height: 100vh; width: 78vw; max-width: 300px; background: var(--surface); z-index: 60; transform: translateX(-100%); transition: transform 0.25s ease; padding: 22px 18px; overflow-y: auto; box-shadow: 8px 0 24px rgba(0,0,0,0.18); }
+    .cat-sidebar.open { transform: translateX(0); }
+    .cat-sidebar-backdrop.open { display: block; position: fixed; inset: 0; background: rgba(0,0,0,0.4); z-index: 55; }
+  }
+
   .category-block { padding: clamp(28px, 4vw, 44px) 0; }
   .category-block h3 { font-size: clamp(1.5rem, 2.6vw, 1.9rem); margin-bottom: 20px; }
 
@@ -94,12 +126,13 @@
   .info-band .col .eyebrow { color: var(--gold); }
   .info-band .col h3 { color: var(--ivory); font-size: 1.3rem; margin: 8px 0 8px; }
   .info-band .col p { color: #cfc6b4; font-size: 0.88rem; margin: 0; }
+  .info-band .col p.payment-highlight { color: var(--ivory); font-weight: 700; font-size: 0.95rem; margin: 0 0 6px; }
 
   footer { padding: clamp(36px, 6vw, 52px) 0; text-align: center; }
   footer .brand-mark { justify-content: center; margin-bottom: 14px; }
   footer .social { display: flex; justify-content: center; gap: 20px; margin: 18px 0; }
-  footer .social a { font-size: 0.85rem; font-weight: 600; text-decoration: none; color: var(--ink-soft); }
-  footer .social a:hover { color: var(--rani); }
+  footer .social a, footer .social .footer-contact-link { font-size: 0.85rem; font-weight: 600; text-decoration: none; color: var(--ink-soft); background: none; border: none; font-family: inherit; padding: 0; cursor: pointer; }
+  footer .social a:hover, footer .social .footer-contact-link:hover { color: var(--rani); }
   footer .fine { font-size: 0.76rem; color: var(--ink-soft); margin-top: 10px; }
   footer .admin-link { font-size: 0.72rem; color: var(--line); text-decoration: none; }
   footer .admin-link:hover { color: var(--ink-soft); }
@@ -120,6 +153,61 @@
   .qv-stock-note { font-size: 0.8rem; color: var(--ink-soft); }
   .qv-stock-note.out { color: var(--rani); font-weight: 700; }
   @media (max-width: 700px) { .qv-modal { grid-template-columns: 1fr; } }
+
+  .contact-backdrop { position: fixed; inset: 0; background: rgba(27,22,16,0.55); display: none; z-index: 50; align-items: center; justify-content: center; padding: 20px; }
+  .contact-backdrop.open { display: flex; }
+  .contact-modal { position: relative; background: var(--surface); border-radius: 10px; max-width: 420px; width: 100%; padding: clamp(24px, 4vw, 34px); text-align: center; }
+  .contact-close { position: absolute; top: 10px; right: 10px; background: none; border: none; color: var(--ink-soft); font-size: 1.4rem; line-height: 1; cursor: pointer; padding: 6px; }
+  .contact-close:hover { color: var(--ink); }
+  .contact-modal h3 { font-size: 1.3rem; margin-bottom: 6px; }
+  .contact-modal p.meta { color: var(--ink-soft); font-size: 0.9rem; margin-bottom: 20px; }
+  .contact-options { display: flex; flex-direction: column; gap: 12px; }
+  .contact-option { display: flex; align-items: center; gap: 12px; padding: 14px 16px; border-radius: 10px; border: 1px solid var(--line); text-decoration: none; color: var(--ink); text-align: left; background: var(--ivory); }
+  .contact-option:hover { border-color: var(--gold); }
+  .contact-option svg { width: 22px; height: 22px; flex: none; }
+  .contact-option .opt-text strong { display: block; font-size: 0.92rem; }
+  .contact-option .opt-text span { display: block; font-size: 0.78rem; color: var(--ink-soft); margin-top: 2px; }
+
+  /* ---------- ratings + reviews ---------- */
+  .rating-row { display: inline-flex; align-items: center; gap: 6px; background: none; border: none; padding: 0; cursor: pointer; font-family: inherit; }
+  .rating-row .stars { color: var(--gold); font-size: 0.85rem; letter-spacing: 1px; }
+  .rating-row .rating-num { font-size: 0.8rem; font-weight: 700; color: var(--ink); }
+  .rating-row .rating-count, .rating-row.rating-row-empty { font-size: 0.78rem; color: var(--ink-soft); text-decoration: underline; text-decoration-color: var(--line); }
+  .rating-row:hover .rating-count, .rating-row.rating-row-empty:hover { color: var(--rani); }
+
+  .reviews-backdrop { position: fixed; inset: 0; background: rgba(27,22,16,0.55); display: none; z-index: 55; align-items: center; justify-content: center; padding: 20px; }
+  .reviews-backdrop.open { display: flex; }
+  .reviews-modal { position: relative; background: var(--surface); border-radius: 10px; max-width: 480px; width: 100%; max-height: 88vh; overflow-y: auto; padding: clamp(24px, 4vw, 34px); }
+  .reviews-modal h3 { font-size: 1.25rem; margin-bottom: 2px; }
+  .reviews-modal .reviews-product-name { font-size: 0.82rem; color: var(--ink-soft); margin-bottom: 16px; }
+  .reviews-summary { display: flex; align-items: center; gap: 10px; padding-bottom: 14px; margin-bottom: 14px; border-bottom: 1px solid var(--line); }
+  .reviews-summary .stars { color: var(--gold); font-size: 1.1rem; letter-spacing: 2px; }
+  .reviews-summary .avg { font-family: 'Cormorant Garamond', serif; font-weight: 700; font-size: 1.4rem; }
+  .reviews-summary .count { font-size: 0.8rem; color: var(--ink-soft); }
+  .reviews-list { display: flex; flex-direction: column; gap: 14px; margin-bottom: 20px; max-height: 220px; overflow-y: auto; }
+  .review-item { border-bottom: 1px solid var(--line); padding-bottom: 12px; }
+  .review-item:last-child { border-bottom: none; padding-bottom: 0; }
+  .review-item .stars { color: var(--gold); font-size: 0.8rem; letter-spacing: 1px; }
+  .review-item .review-head { display: flex; align-items: center; justify-content: space-between; gap: 8px; margin-bottom: 4px; }
+  .review-item .review-name { font-weight: 700; font-size: 0.88rem; }
+  .review-item .review-date { font-size: 0.72rem; color: var(--ink-soft); }
+  .review-item .review-text { font-size: 0.86rem; color: var(--ink-soft); margin: 0; }
+  .reviews-empty-note { font-size: 0.85rem; color: var(--ink-soft); margin-bottom: 20px; }
+
+  .reviews-form-wrap h4 { font-size: 1rem; margin-bottom: 12px; }
+  .star-picker { display: flex; gap: 6px; margin-bottom: 14px; }
+  .star-picker .star-btn { background: none; border: none; font-size: 1.6rem; line-height: 1; color: var(--line); cursor: pointer; padding: 2px; }
+  .star-picker .star-btn.filled { color: var(--gold); }
+  .reviews-form-wrap .field { margin-bottom: 12px; }
+  .reviews-form-wrap .field-row { display: grid; grid-template-columns: 1fr 1fr; gap: 12px; margin-bottom: 12px; }
+  .reviews-form-wrap input, .reviews-form-wrap textarea { width: 100%; padding: 10px 12px; border: 1px solid var(--line); border-radius: 6px; font-family: inherit; font-size: 0.87rem; background: var(--ivory); color: var(--ink); }
+  .reviews-form-wrap textarea { min-height: 70px; resize: vertical; }
+  .btn-submit-review { width: 100%; background: var(--ink); color: var(--ivory); border: none; padding: 12px 20px; border-radius: 100px; font-weight: 700; font-size: 0.85rem; letter-spacing: 0.02em; cursor: pointer; font-family: inherit; }
+  .btn-submit-review:hover { background: var(--rani); }
+  .btn-submit-review:disabled { opacity: 0.6; cursor: default; }
+  .reviews-form-msg { font-size: 0.82rem; margin-top: 10px; text-align: center; }
+  .reviews-form-msg.ok { color: var(--teal); }
+  .reviews-form-msg.err { color: var(--rani); }
 
   @media (max-width: 760px) {
     .topbar nav .section-link { display: none; }
@@ -150,6 +238,7 @@
     <nav>
       <a class="section-link" href="#collection">Collection</a>
       <a class="section-link" href="#shipping">Shipping &amp; Payment</a>
+      <button type="button" class="section-link" id="nav-contact-btn">Contact Us</button>
       <a class="btn-whatsapp" id="nav-whatsapp" href="#" target="_blank" rel="noopener">
         <svg viewBox="0 0 24 24" fill="currentColor"><path d="M12.04 2c-5.46 0-9.9 4.44-9.9 9.9 0 1.75.46 3.45 1.32 4.95L2 22l5.25-1.38a9.9 9.9 0 0 0 4.79 1.22h.004c5.46 0 9.9-4.44 9.9-9.9s-4.44-9.94-9.93-9.94zm0 18.1a8.2 8.2 0 0 1-4.19-1.15l-.3-.18-3.12.82.83-3.04-.2-.31a8.2 8.2 0 0 1-1.26-4.37c0-4.54 3.7-8.24 8.25-8.24 4.54 0 8.24 3.7 8.24 8.24 0 4.55-3.7 8.23-8.25 8.23zm4.52-6.17c-.25-.12-1.47-.72-1.7-.81-.23-.08-.4-.12-.56.13-.17.25-.65.81-.8.97-.14.17-.3.19-.55.06-.25-.12-1.05-.39-2-1.23-.74-.66-1.24-1.48-1.39-1.73-.14-.25-.02-.38.11-.51.11-.11.25-.29.37-.43.12-.14.16-.25.25-.41.08-.17.04-.31-.02-.43-.06-.12-.56-1.35-.77-1.85-.2-.48-.4-.42-.56-.43h-.48c-.17 0-.43.06-.66.31-.23.25-.86.84-.86 2.05 0 1.2.88 2.37 1 2.53.12.17 1.74 2.65 4.21 3.72.59.25 1.05.4 1.41.52.59.19 1.13.16 1.56.1.48-.07 1.47-.6 1.67-1.18.21-.58.21-1.07.14-1.18-.06-.1-.23-.16-.48-.28z"/></svg>
         Order on WhatsApp
@@ -159,17 +248,25 @@
 </div>
 
 <main id="top">
-  <section class="hero wrap">
-    <div class="hero-rule"></div>
-    <img class="mark" src="assets/logo-hero.png" alt="" />
-    <h1 id="hero-heading">Modest Wear, Made to Move</h1>
-    <p class="tagline" id="hero-tagline">Signature pleated silhouettes and hand-picked ethnic wear, shipped across the UAE.</p>
-    <div class="hero-actions">
-      <a class="btn-whatsapp" id="hero-whatsapp" href="#" target="_blank" rel="noopener">
-        <svg viewBox="0 0 24 24" fill="currentColor"><path d="M12.04 2c-5.46 0-9.9 4.44-9.9 9.9 0 1.75.46 3.45 1.32 4.95L2 22l5.25-1.38a9.9 9.9 0 0 0 4.79 1.22h.004c5.46 0 9.9-4.44 9.9-9.9s-4.44-9.94-9.93-9.94zm0 18.1a8.2 8.2 0 0 1-4.19-1.15l-.3-.18-3.12.82.83-3.04-.2-.31a8.2 8.2 0 0 1-1.26-4.37c0-4.54 3.7-8.24 8.25-8.24 4.54 0 8.24 3.7 8.24 8.24 0 4.55-3.7 8.23-8.25 8.23zm4.52-6.17c-.25-.12-1.47-.72-1.7-.81-.23-.08-.4-.12-.56.13-.17.25-.65.81-.8.97-.14.17-.3.19-.55.06-.25-.12-1.05-.39-2-1.23-.74-.66-1.24-1.48-1.39-1.73-.14-.25-.02-.38.11-.51.11-.11.25-.29.37-.43.12-.14.16-.25.25-.41.08-.17.04-.31-.02-.43-.06-.12-.56-1.35-.77-1.85-.2-.48-.4-.42-.56-.43h-.48c-.17 0-.43.06-.66.31-.23.25-.86.84-.86 2.05 0 1.2.88 2.37 1 2.53.12.17 1.74 2.65 4.21 3.72.59.25 1.05.4 1.41.52.59.19 1.13.16 1.56.1.48-.07 1.47-.6 1.67-1.18.21-.58.21-1.07.14-1.18-.06-.1-.23-.16-.48-.28z"/></svg>
-        Message us on WhatsApp
-      </a>
-      <a class="btn-outline" href="#collection">Browse the Collection ↓</a>
+  <section class="hero-section wrap">
+    <div class="hero" id="hero">
+      <div class="hero-bg-layer showing" id="hero-bg-a" style="background-image: url('assets/hero-photo.jpg');"></div>
+      <div class="hero-bg-layer" id="hero-bg-b"></div>
+      <div class="hero-overlay"></div>
+      <div class="hero-content">
+        <div class="hero-logo-badge">
+          <img class="mark" src="assets/logo-hero.png" alt="Prabhvas Fashions" />
+        </div>
+        <h1 id="hero-heading">Elegance That Moves With You</h1>
+        <p class="tagline" id="hero-tagline">Signature pleats and hand-picked ethnic wear, delivered across the UAE — fast.</p>
+        <div class="hero-actions">
+          <a class="btn-whatsapp" id="hero-whatsapp" href="#" target="_blank" rel="noopener">
+            <svg viewBox="0 0 24 24" fill="currentColor"><path d="M12.04 2c-5.46 0-9.9 4.44-9.9 9.9 0 1.75.46 3.45 1.32 4.95L2 22l5.25-1.38a9.9 9.9 0 0 0 4.79 1.22h.004c5.46 0 9.9-4.44 9.9-9.9s-4.44-9.94-9.93-9.94zm0 18.1a8.2 8.2 0 0 1-4.19-1.15l-.3-.18-3.12.82.83-3.04-.2-.31a8.2 8.2 0 0 1-1.26-4.37c0-4.54 3.7-8.24 8.25-8.24 4.54 0 8.24 3.7 8.24 8.24 0 4.55-3.7 8.23-8.25 8.23zm4.52-6.17c-.25-.12-1.47-.72-1.7-.81-.23-.08-.4-.12-.56.13-.17.25-.65.81-.8.97-.14.17-.3.19-.55.06-.25-.12-1.05-.39-2-1.23-.74-.66-1.24-1.48-1.39-1.73-.14-.25-.02-.38.11-.51.11-.11.25-.29.37-.43.12-.14.16-.25.25-.41.08-.17.04-.31-.02-.43-.06-.12-.56-1.35-.77-1.85-.2-.48-.4-.42-.56-.43h-.48c-.17 0-.43.06-.66.31-.23.25-.86.84-.86 2.05 0 1.2.88 2.37 1 2.53.12.17 1.74 2.65 4.21 3.72.59.25 1.05.4 1.41.52.59.19 1.13.16 1.56.1.48-.07 1.47-.6 1.67-1.18.21-.58.21-1.07.14-1.18-.06-.1-.23-.16-.48-.28z"/></svg>
+            Message us on WhatsApp
+          </a>
+          <a class="btn-outline" href="#collection">Browse the Collection ↓</a>
+        </div>
+      </div>
     </div>
   </section>
 
@@ -190,8 +287,15 @@
     </div>
   </section>
 
-  <section class="products wrap" id="product-sections">
-    <p class="empty-note" id="loading-note">Loading the collection…</p>
+  <section class="products wrap">
+    <button type="button" class="cat-sidebar-toggle" id="cat-sidebar-toggle">&#9776; Browse Categories</button>
+    <div class="shop-layout">
+      <div class="cat-sidebar-backdrop" id="cat-sidebar-backdrop"></div>
+      <aside class="cat-sidebar" id="cat-sidebar"></aside>
+      <div class="products-main" id="product-sections">
+        <p class="empty-note" id="loading-note">Loading the collection…</p>
+      </div>
+    </div>
   </section>
 
   <section class="info-band" id="shipping">
@@ -204,7 +308,8 @@
       <div class="col">
         <p class="eyebrow">Payment</p>
         <h3>Pay Your Way</h3>
-        <p>Cash on delivery, card on delivery, Apple Pay, bank transfer, or split it with Tabby and Tamara.</p>
+        <p class="payment-highlight">Cash on Delivery</p>
+        <p>Also accepted: card on delivery, Apple Pay, bank transfer, or split it with Tabby and Tamara.</p>
       </div>
       <div class="col">
         <p class="eyebrow">Ordering</p>
@@ -223,12 +328,66 @@
       <div class="social">
         <a id="footer-whatsapp" href="#" target="_blank" rel="noopener">WhatsApp</a>
         <a id="footer-instagram" href="#" target="_blank" rel="noopener" style="display:none;">Instagram</a>
+        <button type="button" class="footer-contact-link" id="footer-contact-btn">Contact Us</button>
       </div>
       <p class="fine">&copy; <span id="year"></span> <span id="footer-brand-name-2">Prabhvas Fashions</span>, Dubai, UAE. Modest wear &amp; ethnic fashion.</p>
       <p class="fine"><a class="admin-link" href="admin.html">admin</a></p>
     </div>
   </footer>
 </main>
+
+<!-- ===================== CONTACT US MODAL ===================== -->
+<div class="contact-backdrop" id="contact-backdrop">
+  <div class="contact-modal" id="contact-modal">
+    <button class="contact-close" id="contact-close" aria-label="Close">&times;</button>
+    <h3>Contact Us</h3>
+    <p class="meta">Got a question, suggestion, or something you'd like to see? We'd love to hear it.</p>
+    <div class="contact-options">
+      <a class="contact-option" id="contact-email-link" href="#" style="display:none;">
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6"><path d="M3 6h18v12H3z"/><path d="m3 7 9 6 9-6"/></svg>
+        <span class="opt-text"><strong>Email us</strong><span>Send suggestions or feedback by email</span></span>
+      </a>
+      <a class="contact-option" id="contact-whatsapp-link" href="#" target="_blank" rel="noopener">
+        <svg viewBox="0 0 24 24" fill="currentColor"><path d="M12.04 2c-5.46 0-9.9 4.44-9.9 9.9 0 1.75.46 3.45 1.32 4.95L2 22l5.25-1.38a9.9 9.9 0 0 0 4.79 1.22h.004c5.46 0 9.9-4.44 9.9-9.9s-4.44-9.94-9.93-9.94zm0 18.1a8.2 8.2 0 0 1-4.19-1.15l-.3-.18-3.12.82.83-3.04-.2-.31a8.2 8.2 0 0 1-1.26-4.37c0-4.54 3.7-8.24 8.25-8.24 4.54 0 8.24 3.7 8.24 8.24 0 4.55-3.7 8.23-8.25 8.23zm4.52-6.17c-.25-.12-1.47-.72-1.7-.81-.23-.08-.4-.12-.56.13-.17.25-.65.81-.8.97-.14.17-.3.19-.55.06-.25-.12-1.05-.39-2-1.23-.74-.66-1.24-1.48-1.39-1.73-.14-.25-.02-.38.11-.51.11-.11.25-.29.37-.43.12-.14.16-.25.25-.41.08-.17.04-.31-.02-.43-.06-.12-.56-1.35-.77-1.85-.2-.48-.4-.42-.56-.43h-.48c-.17 0-.43.06-.66.31-.23.25-.86.84-.86 2.05 0 1.2.88 2.37 1 2.53.12.17 1.74 2.65 4.21 3.72.59.25 1.05.4 1.41.52.59.19 1.13.16 1.56.1.48-.07 1.47-.6 1.67-1.18.21-.58.21-1.07.14-1.18-.06-.1-.23-.16-.48-.28z"/></svg>
+        <span class="opt-text"><strong>Message us on WhatsApp</strong><span>Fastest way to reach us</span></span>
+      </a>
+    </div>
+  </div>
+</div>
+
+<!-- ===================== REVIEWS MODAL ===================== -->
+<div class="reviews-backdrop" id="reviews-backdrop">
+  <div class="reviews-modal" id="reviews-modal">
+    <button class="contact-close" id="reviews-close" aria-label="Close">&times;</button>
+    <h3>Reviews</h3>
+    <p class="reviews-product-name" id="reviews-product-name"></p>
+
+    <div id="reviews-summary-wrap"></div>
+    <div class="reviews-list" id="reviews-list"></div>
+
+    <div class="reviews-form-wrap">
+      <h4>Write a Review</h4>
+      <div class="star-picker" id="rv-star-picker">
+        <button type="button" class="star-btn" data-star="1">★</button>
+        <button type="button" class="star-btn" data-star="2">★</button>
+        <button type="button" class="star-btn" data-star="3">★</button>
+        <button type="button" class="star-btn" data-star="4">★</button>
+        <button type="button" class="star-btn" data-star="5">★</button>
+      </div>
+      <div class="field"><input type="text" id="rv-name" placeholder="Your name *" maxlength="60" /></div>
+      <div class="field-row">
+        <input type="email" id="rv-email" placeholder="Email (optional)" maxlength="120" />
+        <input type="text" id="rv-phone" placeholder="Phone (optional)" maxlength="20" />
+      </div>
+      <div class="field"><textarea id="rv-text" placeholder="Share your experience (optional)" maxlength="600"></textarea></div>
+      <div style="position:absolute; left:-9999px;" aria-hidden="true">
+        <input type="text" id="rv-website" name="website" tabindex="-1" autocomplete="off" />
+      </div>
+      <button type="button" class="btn-submit-review" id="rv-submit">Submit Review</button>
+      <p class="reviews-form-msg" id="reviews-form-msg"></p>
+    </div>
+  </div>
+</div>
 
 <!-- ===================== QUICK VIEW MODAL ===================== -->
 <div class="qv-backdrop" id="qv-backdrop">
@@ -241,6 +400,7 @@
     <div class="qv-info">
       <h3 id="qv-name" class="name" style="font-size:1.6rem;"></h3>
       <p class="meta" id="qv-desc"></p>
+      <div id="qv-rating-row"></div>
       <div id="qv-options-wrap">
         <p class="meta" style="margin-bottom:2px;">Choose an option</p>
         <div class="qv-options" id="qv-options"></div>
@@ -256,10 +416,17 @@
   const CATEGORIES_URL = "categories.json";
   const PRODUCTS_URL = "products.json";
   const SETTINGS_URL = "settings.json";
+  const REVIEWS_URL = "reviews.json";
+
+  // Only used for the public "submit a review" call below — everything else
+  // on this page reads the static JSON files above. Same Worker URL as in
+  // admin.html; fill it in once, right after you deploy the Cloudflare Worker.
+  const WORKER_URL = "https://prabhvas-admin.prabhvasfashions.workers.dev";
 
   let SETTINGS = {};
   let CATEGORIES = [];
   let PRODUCTS = [];
+  let REVIEWS = [];
 
   function waLink(number, message) {
     return "https://wa.me/" + number + "?text=" + encodeURIComponent(message);
@@ -285,6 +452,30 @@
 
   function variantLabel(v) {
     return [v.color, v.size].filter(Boolean).join(" — ") || v.sku;
+  }
+
+  function reviewsFor(productId) {
+    return REVIEWS.filter((r) => r.productId === productId);
+  }
+
+  function ratingSummary(productId) {
+    const list = reviewsFor(productId);
+    if (!list.length) return { avg: 0, count: 0 };
+    const avg = list.reduce((sum, r) => sum + Number(r.rating || 0), 0) / list.length;
+    return { avg, count: list.length };
+  }
+
+  function starsHtml(avg) {
+    const filled = Math.round(avg);
+    return "★".repeat(filled) + "☆".repeat(5 - filled);
+  }
+
+  function ratingRowHtml(productId) {
+    const { avg, count } = ratingSummary(productId);
+    if (!count) {
+      return `<button type="button" class="rating-row rating-row-empty" data-open-reviews="${escapeHtml(productId)}">Be the first to review</button>`;
+    }
+    return `<button type="button" class="rating-row" data-open-reviews="${escapeHtml(productId)}"><span class="stars">${starsHtml(avg)}</span><span class="rating-num">${avg.toFixed(1)}</span><span class="rating-count">(${count} review${count === 1 ? "" : "s"})</span></button>`;
   }
 
   function orderMessage(product, variant, soldOut) {
@@ -318,6 +509,14 @@
       return;
     }
 
+    try {
+      const reviewsRes = await fetch(REVIEWS_URL, { cache: "no-store" });
+      REVIEWS = reviewsRes.ok ? await reviewsRes.json() : [];
+      if (!Array.isArray(REVIEWS)) REVIEWS = [];
+    } catch (e) {
+      REVIEWS = [];
+    }
+
     const siteName = SETTINGS.siteName || "Prabhvas Fashions";
     const number = (SETTINGS.whatsappNumber || "").replace(/[^0-9]/g, "");
     const defaultMsg = `Hi ${siteName}! I'd like to know more about your collection.`;
@@ -325,6 +524,7 @@
     document.title = `${siteName} — Modest Wear & Ethnic Fashion, Dubai`;
     ["brand-name", "footer-brand-name", "footer-brand-name-2"].forEach((id) => (document.getElementById(id).textContent = siteName));
     document.getElementById("hero-tagline").textContent = SETTINGS.tagline || "";
+    initHeroCarousel(Array.isArray(SETTINGS.heroImages) && SETTINGS.heroImages.length ? SETTINGS.heroImages : ["assets/hero-photo.jpg"]);
     document.getElementById("nav-whatsapp").href = waLink(number, defaultMsg);
     document.getElementById("hero-whatsapp").href = waLink(number, defaultMsg);
     document.getElementById("footer-whatsapp").href = waLink(number, defaultMsg);
@@ -332,6 +532,15 @@
       const ig = document.getElementById("footer-instagram");
       ig.href = SETTINGS.instagramUrl;
       ig.style.display = "";
+    }
+
+    // ---- contact us modal ----
+    const contactMsg = `Hi ${siteName}! I have a suggestion / question about your collection.`;
+    document.getElementById("contact-whatsapp-link").href = waLink(number, contactMsg);
+    if (SETTINGS.contactEmail) {
+      const emailLink = document.getElementById("contact-email-link");
+      emailLink.href = `mailto:${SETTINGS.contactEmail}?subject=${encodeURIComponent("Suggestion for " + siteName)}&body=${encodeURIComponent("Hi " + siteName + " team,\n\n")}`;
+      emailLink.style.display = "";
     }
 
     const cats = CATEGORIES.filter((c) => !c.parentId).sort((a, b) => (a.sortOrder || 0) - (b.sortOrder || 0));
@@ -360,6 +569,8 @@
     const container = document.getElementById("product-sections");
     if (!ready.length) {
       container.innerHTML = '<p class="empty-note">New pieces are being added — message us on WhatsApp to see what\'s available right now.</p>';
+      const toggleBtn = document.getElementById("cat-sidebar-toggle");
+      if (toggleBtn) toggleBtn.style.display = "none";
       return;
     }
 
@@ -382,6 +593,7 @@
             <h3 class="name">${escapeHtml(p.name)}</h3>
             ${variants.length > 1 ? `<p class="meta">${variants.length} colours/sizes available</p>` : `<p class="meta">${escapeHtml(variantLabel(defaultVariant || {}))}</p>`}
             ${p.description ? `<p class="meta">${escapeHtml(p.description)}</p>` : ""}
+            ${ratingRowHtml(p.id)}
             <div class="price-row"><span class="price">${priceLabel}<small>per piece</small></span></div>
             <button type="button" class="btn-whatsapp ${soldOut && variants.length <= 1 ? "muted" : ""}" data-open-product="${escapeHtml(p.id)}">
               ${whatsappIconSvg()}
@@ -433,19 +645,112 @@
       });
     }
 
+    // ---- category sidebar: an additional, expandable way to browse the same
+    // categories/subcategories as the top tabs. Both stay in sync. ----
+    const sidebarEl = document.getElementById("cat-sidebar");
+
+    function renderCategorySidebar() {
+      if (!sidebarEl) return;
+      sidebarEl.innerHTML = activeCats.map((cat) => {
+        const children = childrenOf(cat.id).filter((child) => productsFor(child.id).length > 0);
+        const hasChildren = children.length > 0;
+        return `<div class="cat-sidebar-item" data-sidebar-cat="${escapeHtml(cat.id)}">
+          <button type="button" class="cat-sidebar-row" data-sidebar-select="${escapeHtml(cat.id)}">
+            <span>${escapeHtml(cat.name)}</span>
+            ${hasChildren ? `<span class="cat-sidebar-arrow" data-sidebar-toggle="${escapeHtml(cat.id)}">&#9656;</span>` : ""}
+          </button>
+          ${hasChildren ? `<ul class="cat-sidebar-children">${children.map((child) =>
+            `<li><button type="button" class="cat-sidebar-child-row" data-sidebar-select="${escapeHtml(cat.id)}" data-sidebar-subselect="${escapeHtml(child.id)}">${escapeHtml(child.name)}</button></li>`
+          ).join("")}</ul>` : ""}
+        </div>`;
+      }).join("");
+    }
+
+    function syncSidebarActiveState() {
+      if (!sidebarEl) return;
+      sidebarEl.querySelectorAll(".cat-sidebar-row, .cat-sidebar-child-row").forEach((btn) => btn.classList.remove("active"));
+      let visibleBlock = null;
+      container.querySelectorAll("[data-cat-block]").forEach((block) => {
+        if (block.style.display !== "none") visibleBlock = block;
+      });
+      if (!visibleBlock) return;
+      const catId = visibleBlock.id.replace(/^cat-/, "");
+      const activeSubTab = visibleBlock.querySelector(".subcat-tab.active");
+      const item = sidebarEl.querySelector(`.cat-sidebar-item[data-sidebar-cat="${cssId(catId)}"]`);
+      if (activeSubTab) {
+        const subId = activeSubTab.dataset.subcatTab;
+        const childBtn = sidebarEl.querySelector(`.cat-sidebar-child-row[data-sidebar-subselect="${cssId(subId)}"]`);
+        if (childBtn) childBtn.classList.add("active");
+        if (item) item.classList.add("expanded");
+      } else {
+        const rowBtn = sidebarEl.querySelector(`.cat-sidebar-row[data-sidebar-select="${cssId(catId)}"]`);
+        if (rowBtn) rowBtn.classList.add("active");
+      }
+    }
+
+    function cssId(id) {
+      return window.CSS && CSS.escape ? CSS.escape(id) : id;
+    }
+
+    // Select a top-level category and (optionally) one of its subcategories,
+    // keeping the top pills, the sidebar, and the visible product container in sync.
+    function selectCategory(catId, subcatId) {
+      selectCategoryTab(catId);
+      if (subcatId) {
+        const block = document.getElementById(categoryAnchor(catId));
+        const tabBtn = block && block.querySelector(`[data-subcat-tab="${cssId(subcatId)}"]`);
+        if (tabBtn) tabBtn.click(); // reuses the existing subcat-tab click handler below
+      }
+      syncSidebarActiveState();
+    }
+
     if (activeCats.length) {
       const hashId = location.hash.replace(/^#/, "").replace(/^cat-/, "");
       const initialCat = activeCats.find((c) => c.id === hashId) || activeCats[0];
       selectCategoryTab(initialCat.id);
     }
 
+    renderCategorySidebar();
+    syncSidebarActiveState();
+
     document.getElementById("cat-pills").addEventListener("click", (e) => {
       const tabBtn = e.target.closest("[data-cat-tab]");
       if (!tabBtn) return;
       const catId = tabBtn.dataset.catTab;
       selectCategoryTab(catId);
+      syncSidebarActiveState();
       if (history.replaceState) history.replaceState(null, "", "#" + categoryAnchor(catId));
     });
+
+    if (sidebarEl) {
+      sidebarEl.addEventListener("click", (e) => {
+        const toggleBtn = e.target.closest("[data-sidebar-toggle]");
+        if (toggleBtn) {
+          const item = toggleBtn.closest(".cat-sidebar-item");
+          if (item) item.classList.toggle("expanded");
+          return; // expanding/collapsing does not change the current selection
+        }
+        const selectBtn = e.target.closest("[data-sidebar-select]");
+        if (!selectBtn) return;
+        selectCategory(selectBtn.dataset.sidebarSelect, selectBtn.dataset.sidebarSubselect || null);
+        closeMobileSidebar();
+        if (history.replaceState) history.replaceState(null, "", "#" + categoryAnchor(selectBtn.dataset.sidebarSelect));
+      });
+    }
+
+    // ---- mobile: sidebar becomes a slide-in drawer behind a toggle button ----
+    const sidebarToggleBtn = document.getElementById("cat-sidebar-toggle");
+    const sidebarBackdrop = document.getElementById("cat-sidebar-backdrop");
+    function openMobileSidebar() {
+      if (sidebarEl) sidebarEl.classList.add("open");
+      if (sidebarBackdrop) sidebarBackdrop.classList.add("open");
+    }
+    function closeMobileSidebar() {
+      if (sidebarEl) sidebarEl.classList.remove("open");
+      if (sidebarBackdrop) sidebarBackdrop.classList.remove("open");
+    }
+    if (sidebarToggleBtn) sidebarToggleBtn.addEventListener("click", openMobileSidebar);
+    if (sidebarBackdrop) sidebarBackdrop.addEventListener("click", closeMobileSidebar);
 
     // Subcategory tab switching — scoped to each category block so multiple
     // tabbed categories on the same page don't interfere with each other.
@@ -458,9 +763,11 @@
       block.querySelectorAll("[data-subcat-grid]").forEach((grid) => {
         grid.style.display = grid.dataset.subcatGrid === targetId ? "" : "none";
       });
+      syncSidebarActiveState();
     });
 
     container.addEventListener("click", (e) => {
+      if (e.target.closest("[data-open-reviews]")) return;
       const btn = e.target.closest("[data-open-product]");
       const card = e.target.closest(".card");
       const id = (btn && btn.dataset.openProduct) || (card && card.dataset.productId);
@@ -484,6 +791,7 @@
 
     document.getElementById("qv-name").textContent = product.name;
     document.getElementById("qv-desc").textContent = product.description || "";
+    document.getElementById("qv-rating-row").innerHTML = ratingRowHtml(product.id);
 
     const optsWrap = document.getElementById("qv-options-wrap");
     if (variants.length > 1) {
@@ -535,12 +843,188 @@
     if (v) { qvState.variant = v; renderQuickViewSelection(); }
   });
 
+  // ---- contact us modal ----
+  function openContactModal() { document.getElementById("contact-backdrop").classList.add("open"); }
+  function closeContactModal() { document.getElementById("contact-backdrop").classList.remove("open"); }
+  document.getElementById("nav-contact-btn").addEventListener("click", openContactModal);
+  document.getElementById("footer-contact-btn").addEventListener("click", openContactModal);
+  document.getElementById("contact-close").addEventListener("click", closeContactModal);
+  document.getElementById("contact-backdrop").addEventListener("click", (e) => {
+    if (e.target.id === "contact-backdrop") closeContactModal();
+  });
+
   function closeQuickView() { document.getElementById("qv-backdrop").classList.remove("open"); }
   document.getElementById("qv-close").addEventListener("click", closeQuickView);
   document.getElementById("qv-backdrop").addEventListener("click", (e) => {
     if (e.target.id === "qv-backdrop") closeQuickView();
   });
-  document.addEventListener("keydown", (e) => { if (e.key === "Escape") closeQuickView(); });
+
+  // ============================================================
+  // REVIEWS MODAL
+  // ============================================================
+  const rvState = { productId: null, product: null, rating: 0 };
+
+  function renderReviewsSummaryAndList(productId) {
+    const list = reviewsFor(productId).slice().sort((a, b) => (b.date || "").localeCompare(a.date || ""));
+    const summaryWrap = document.getElementById("reviews-summary-wrap");
+    const listWrap = document.getElementById("reviews-list");
+
+    if (!list.length) {
+      summaryWrap.innerHTML = "";
+      listWrap.innerHTML = '<p class="reviews-empty-note">No reviews yet — be the first to share your experience.</p>';
+      return;
+    }
+
+    const avg = list.reduce((sum, r) => sum + Number(r.rating || 0), 0) / list.length;
+    summaryWrap.innerHTML = `
+      <div class="reviews-summary">
+        <span class="stars">${starsHtml(avg)}</span>
+        <span class="avg">${avg.toFixed(1)}</span>
+        <span class="count">out of 5 · ${list.length} review${list.length === 1 ? "" : "s"}</span>
+      </div>`;
+
+    listWrap.innerHTML = list.map((r) => `
+      <div class="review-item">
+        <div class="review-head">
+          <span class="review-name">${escapeHtml(r.name || "Anonymous")}</span>
+          <span class="review-date">${escapeHtml(r.date || "")}</span>
+        </div>
+        <div class="stars">${starsHtml(Number(r.rating || 0))}</div>
+        ${r.text ? `<p class="review-text">${escapeHtml(r.text)}</p>` : ""}
+      </div>`).join("");
+  }
+
+  function setReviewRating(n) {
+    rvState.rating = n;
+    document.querySelectorAll("#rv-star-picker .star-btn").forEach((btn) => {
+      btn.classList.toggle("filled", Number(btn.dataset.star) <= n);
+    });
+  }
+
+  function resetReviewForm() {
+    setReviewRating(0);
+    document.getElementById("rv-name").value = "";
+    document.getElementById("rv-email").value = "";
+    document.getElementById("rv-phone").value = "";
+    document.getElementById("rv-text").value = "";
+    document.getElementById("rv-website").value = "";
+    const msg = document.getElementById("reviews-form-msg");
+    msg.textContent = "";
+    msg.className = "reviews-form-msg";
+    document.getElementById("rv-submit").disabled = false;
+    document.getElementById("rv-submit").textContent = "Submit Review";
+  }
+
+  function openReviewsModal(productId) {
+    const product = PRODUCTS.find((p) => p.id === productId);
+    rvState.productId = productId;
+    rvState.product = product;
+    document.getElementById("reviews-product-name").textContent = product ? product.name : "";
+    renderReviewsSummaryAndList(productId);
+    resetReviewForm();
+    document.getElementById("reviews-backdrop").classList.add("open");
+  }
+
+  function closeReviewsModal() { document.getElementById("reviews-backdrop").classList.remove("open"); }
+
+  document.getElementById("reviews-close").addEventListener("click", closeReviewsModal);
+  document.getElementById("reviews-backdrop").addEventListener("click", (e) => {
+    if (e.target.id === "reviews-backdrop") closeReviewsModal();
+  });
+  document.getElementById("rv-star-picker").addEventListener("click", (e) => {
+    const btn = e.target.closest(".star-btn");
+    if (btn) setReviewRating(Number(btn.dataset.star));
+  });
+
+  document.addEventListener("click", (e) => {
+    const btn = e.target.closest("[data-open-reviews]");
+    if (btn) openReviewsModal(btn.dataset.openReviews);
+  });
+
+  document.getElementById("rv-submit").addEventListener("click", async () => {
+    const msg = document.getElementById("reviews-form-msg");
+    const name = document.getElementById("rv-name").value.trim();
+    const email = document.getElementById("rv-email").value.trim();
+    const phone = document.getElementById("rv-phone").value.trim();
+    const text = document.getElementById("rv-text").value.trim();
+    const website = document.getElementById("rv-website").value.trim();
+
+    if (!name) {
+      msg.textContent = "Please enter your name.";
+      msg.className = "reviews-form-msg err";
+      return;
+    }
+    if (!rvState.rating) {
+      msg.textContent = "Please select a star rating.";
+      msg.className = "reviews-form-msg err";
+      return;
+    }
+
+    const submitBtn = document.getElementById("rv-submit");
+    submitBtn.disabled = true;
+    submitBtn.textContent = "Submitting…";
+    msg.textContent = "";
+    msg.className = "reviews-form-msg";
+
+    try {
+      const res = await fetch(WORKER_URL + "/api/reviews", {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({ productId: rvState.productId, name, email, phone, rating: rvState.rating, text, website }),
+      });
+      const data = await res.json().catch(() => ({}));
+      if (!res.ok) throw new Error(data.error || "Something went wrong.");
+      msg.textContent = "Thank you! Your review will appear here once we approve it.";
+      msg.className = "reviews-form-msg ok";
+      resetReviewFieldsOnly();
+    } catch (err) {
+      msg.textContent = err.message || "Couldn't submit your review — please try again, or message us on WhatsApp.";
+      msg.className = "reviews-form-msg err";
+      submitBtn.disabled = false;
+      submitBtn.textContent = "Submit Review";
+    }
+  });
+
+  function resetReviewFieldsOnly() {
+    setReviewRating(0);
+    document.getElementById("rv-name").value = "";
+    document.getElementById("rv-email").value = "";
+    document.getElementById("rv-phone").value = "";
+    document.getElementById("rv-text").value = "";
+    document.getElementById("rv-submit").disabled = false;
+    document.getElementById("rv-submit").textContent = "Submit Review";
+  }
+
+  document.addEventListener("keydown", (e) => { if (e.key === "Escape") { closeQuickView(); closeContactModal(); closeReviewsModal(); } });
+
+  // ============================================================
+  // HERO PHOTO CAROUSEL
+  // ============================================================
+  // Driven by settings.json's "heroImages" array (managed from the admin
+  // panel's Settings tab — "Hero banner photos"). With one photo, this is a
+  // no-op (no rotation, no extra requests). With more, it crossfades to the
+  // next one every minute.
+  const HERO_ROTATE_MS = 60000;
+
+  function initHeroCarousel(images) {
+    const layerA = document.getElementById("hero-bg-a");
+    const layerB = document.getElementById("hero-bg-b");
+    if (!images.length) return;
+    layerA.style.backgroundImage = `url('${images[0]}')`;
+    if (images.length <= 1) return;
+
+    let index = 0;
+    let showingA = true;
+    setInterval(() => {
+      index = (index + 1) % images.length;
+      const next = showingA ? layerB : layerA;
+      const current = showingA ? layerA : layerB;
+      next.style.backgroundImage = `url('${images[index]}')`;
+      next.classList.add("showing");
+      current.classList.remove("showing");
+      showingA = !showingA;
+    }, HERO_ROTATE_MS);
+  }
 
   init();
 </script>

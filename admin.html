@@ -123,6 +123,12 @@
   .variant-row .remove-btn { background: transparent; border: none; color: var(--bad); font-size: 1.2rem; line-height: 1; padding: 8px; }
   .variant-row .mini-label { font-size: 0.7rem; color: var(--ink-soft); margin-bottom: 4px; display: block; }
 
+  .hero-photo-row { display: grid; grid-template-columns: 76px 1fr auto; gap: 12px; align-items: end; padding: 12px 0; border-bottom: 1px solid var(--line); }
+  .hero-photo-row:last-child { border-bottom: none; }
+  .hero-photo-row .current-thumb { width: 64px; height: 84px; border-radius: 4px; overflow: hidden; background: var(--ink); }
+  .hero-photo-row .current-thumb img { width: 100%; height: 100%; object-fit: cover; }
+  .hero-photo-row .mini-label { font-size: 0.7rem; color: var(--ink-soft); margin-bottom: 4px; display: block; }
+
   .totp-key { background: var(--surface-sunk); border: 1px solid var(--line-strong); border-radius: 4px; padding: 12px 14px; font-size: 0.9rem; word-break: break-all; margin: 10px 0; }
 
   footer.page-foot { text-align: center; padding: 30px; font-size: 0.78rem; color: var(--ink-soft); }
@@ -152,6 +158,7 @@
     <button data-view="dashboard" class="active">Dashboard</button>
     <button data-view="products">Products</button>
     <button data-view="categories">Categories</button>
+    <button data-view="reviews">Reviews <span class="badge" id="reviews-nav-badge" style="display:none;background:var(--rani);color:#fff;"></span></button>
     <button data-view="settings">Settings</button>
     <button id="btn-signout" style="margin-left:auto;color:var(--gold);">Sign out</button>
   </div>
@@ -264,6 +271,20 @@
       </div>
     </div>
 
+    <!-- ---- Reviews ---- -->
+    <div id="view-reviews" class="view" style="display:none;">
+      <div class="page-head"><h1>Reviews</h1></div>
+      <p class="hint" style="margin:-4px 0 20px;">Approving or rejecting a review takes effect immediately — no need to click Publish. Approved reviews appear on the live site right away.</p>
+      <div class="card-block">
+        <h2>Pending review<span id="reviews-pending-count"></span></h2>
+        <div id="reviews-pending-list"></div>
+      </div>
+      <div class="card-block">
+        <h2>Published reviews</h2>
+        <div id="reviews-published-list"></div>
+      </div>
+    </div>
+
     <!-- ---- Settings ---- -->
     <div id="view-settings" class="view" style="display:none;">
       <div class="page-head"><h1>Settings</h1></div>
@@ -280,7 +301,14 @@
           <div class="field"><label for="s-whatsapp">WhatsApp number</label><input type="text" id="s-whatsapp" placeholder="e.g. 971586711803" /><p class="hint">Digits only, with country code, no + or spaces.</p></div>
           <div class="field"><label for="s-instagram">Instagram URL (optional)</label><input type="url" id="s-instagram" placeholder="https://instagram.com/..." /></div>
         </div>
+        <div class="field"><label for="s-contact-email">Contact email (optional)</label><input type="email" id="s-contact-email" placeholder="hello@yourbrand.com" /><p class="hint">Used for the "Email us" option in the storefront's Contact Us popup. Leave blank to hide that option.</p></div>
         <button class="btn btn-ghost" id="btn-save-site-settings">Save site settings (stages — click Publish to go live)</button>
+      </div>
+
+      <div class="card-block">
+        <h2>Hero banner photos</h2>
+        <p class="hint" style="margin-bottom:14px;">Photo 1 is required — it's what shows if you don't add any others. Add more to rotate through them, one change per minute, on the live site's top banner.</p>
+        <div id="hero-photo-rows"></div>
       </div>
 
       <div class="card-block">
@@ -359,7 +387,9 @@
     categories: [],
     products: [],
     settings: {},
-    shas: { products: null, categories: null, settings: null },
+    reviews: [],
+    pendingReviews: [],
+    shas: { products: null, categories: null, settings: null, reviews: null },
     dirty: { products: false, categories: false, settings: false },
     editingProductIndex: null,
     currentView: "dashboard",
@@ -589,6 +619,8 @@
       state.categories = data.categories || [];
       state.products = data.products || [];
       state.settings = data.settings || {};
+      state.reviews = data.reviews || [];
+      state.pendingReviews = data.pendingReviews || [];
       state.shas = data.shas || {};
     } catch (err) {
       if (err.status === 401) {
@@ -599,6 +631,15 @@
     }
     state.dirty = { products: false, categories: false, settings: false };
     populateSettingsForm();
+    updateReviewsBadge();
+  }
+
+  function updateReviewsBadge() {
+    const badge = $("reviews-nav-badge");
+    if (!badge) return;
+    const n = state.pendingReviews.length;
+    badge.textContent = n;
+    badge.style.display = n ? "inline-block" : "none";
   }
 
   // ============================================================
@@ -615,9 +656,24 @@
     document.querySelectorAll("#tabnav button[data-view]").forEach((btn) => {
       btn.classList.toggle("active", btn.dataset.view === view);
     });
-    if (view === "dashboard") renderDashboard();
+    if (view === "dashboard") { renderDashboard(); refreshReviews().then(renderDashboard); }
     if (view === "products") renderProducts();
     if (view === "categories") renderCategories();
+    if (view === "reviews") { renderReviews(); refreshReviews().then(renderReviews); }
+  }
+
+  // Pending reviews can arrive from visitors at any time, so re-fetch the
+  // latest pending/published lists whenever the Dashboard or Reviews tab is
+  // opened, rather than relying on the snapshot loaded at sign-in.
+  async function refreshReviews() {
+    try {
+      const data = await api("/api/reviews/pending");
+      state.pendingReviews = data.pending || [];
+      state.reviews = data.published || [];
+      updateReviewsBadge();
+    } catch (err) {
+      // Non-fatal — leave the existing (possibly stale) state as-is.
+    }
   }
 
   // ============================================================
@@ -635,6 +691,7 @@
       <div class="stat-card"><div class="num">${totalSkus}</div><div class="label">Total SKUs</div></div>
       <div class="stat-card"><div class="num">${soldOut}</div><div class="label">SKUs sold out</div></div>
       <div class="stat-card"><div class="num">${state.categories.length}</div><div class="label">Categories</div></div>
+      <div class="stat-card"><div class="num">${state.pendingReviews.length}</div><div class="label">Reviews pending</div></div>
     `;
 
     const recent = activeProducts.slice(0, 5);
@@ -992,6 +1049,107 @@
   });
 
   // ============================================================
+  // REVIEWS
+  // ============================================================
+  function productNameFor(productId) {
+    const p = state.products.find((p) => p.id === productId);
+    return p ? p.name : productId;
+  }
+
+  function starsPlain(rating) {
+    const n = Math.round(Number(rating) || 0);
+    return "★".repeat(n) + "☆".repeat(5 - n);
+  }
+
+  function renderReviews() {
+    const countLabel = $("reviews-pending-count");
+    countLabel.textContent = state.pendingReviews.length ? ` (${state.pendingReviews.length})` : "";
+
+    if (!state.pendingReviews.length) {
+      $("reviews-pending-list").innerHTML = '<div class="empty-state">No reviews waiting for approval.</div>';
+    } else {
+      $("reviews-pending-list").innerHTML = state.pendingReviews.map((r) => `
+        <div class="card-block" style="margin-bottom:12px;">
+          <div style="display:flex;justify-content:space-between;align-items:flex-start;gap:12px;flex-wrap:wrap;">
+            <div>
+              <strong>${escapeHtml(r.name || "Anonymous")}</strong>
+              <span style="color:var(--rani);margin-left:8px;">${starsPlain(r.rating)}</span>
+              <p class="hint" style="margin:4px 0 0;">on <strong>${escapeHtml(productNameFor(r.productId))}</strong> &middot; ${escapeHtml((r.submittedAt || "").slice(0, 10))}</p>
+              ${r.text ? `<p style="margin:8px 0 0;">${escapeHtml(r.text)}</p>` : '<p class="hint" style="margin:8px 0 0;">(no written comment)</p>'}
+              ${(r.email || r.phone) ? `<p class="hint" style="margin:8px 0 0;">Contact: ${[escapeHtml(r.email), escapeHtml(r.phone)].filter(Boolean).join(" · ")} — for your reference only, this is never published.</p>` : ""}
+            </div>
+            <div style="display:flex;gap:8px;flex:none;">
+              <button class="btn btn-primary btn-sm" data-approve-review="${escapeHtml(r.id)}">Approve</button>
+              <button class="btn btn-danger btn-sm" data-reject-review="${escapeHtml(r.id)}">Reject</button>
+            </div>
+          </div>
+        </div>`).join("");
+    }
+
+    if (!state.reviews.length) {
+      $("reviews-published-list").innerHTML = '<div class="empty-state">No published reviews yet.</div>';
+    } else {
+      const sorted = state.reviews.slice().sort((a, b) => (b.date || "").localeCompare(a.date || ""));
+      $("reviews-published-list").innerHTML = `<div class="table-wrap"><table class="data-table">
+        <tr><th>Product</th><th>Rating</th><th>Name</th><th>Review</th><th>Date</th><th></th></tr>
+        ${sorted.map((r) => `
+          <tr>
+            <td>${escapeHtml(productNameFor(r.productId))}</td>
+            <td style="color:var(--rani);white-space:nowrap;">${starsPlain(r.rating)}</td>
+            <td>${escapeHtml(r.name || "Anonymous")}</td>
+            <td>${escapeHtml(r.text || "")}</td>
+            <td>${escapeHtml(r.date || "")}</td>
+            <td class="row-actions"><button class="btn btn-danger btn-sm" data-delete-review="${escapeHtml(r.id)}">Delete</button></td>
+          </tr>`).join("")}
+      </table></div>`;
+    }
+  }
+
+  $("reviews-pending-list").addEventListener("click", async (e) => {
+    const approveBtn = e.target.closest("button[data-approve-review]");
+    const rejectBtn = e.target.closest("button[data-reject-review]");
+    if (!approveBtn && !rejectBtn) return;
+    const id = (approveBtn || rejectBtn).dataset.approveReview || (approveBtn || rejectBtn).dataset.rejectReview;
+    const btn = approveBtn || rejectBtn;
+    btn.disabled = true;
+    try {
+      if (approveBtn) {
+        await api("/api/reviews/approve", { method: "POST", body: JSON.stringify({ id }) });
+        const idx = state.pendingReviews.findIndex((r) => r.id === id);
+        if (idx !== -1) {
+          const [r] = state.pendingReviews.splice(idx, 1);
+          state.reviews.push({ id: r.id, productId: r.productId, name: r.name, rating: r.rating, text: r.text, date: (r.submittedAt || "").slice(0, 10) });
+        }
+      } else {
+        await api("/api/reviews/reject", { method: "POST", body: JSON.stringify({ id }) });
+        state.pendingReviews = state.pendingReviews.filter((r) => r.id !== id);
+      }
+      updateReviewsBadge();
+      renderReviews();
+      renderDashboard();
+    } catch (err) {
+      alert(err.message || "Something went wrong.");
+      btn.disabled = false;
+    }
+  });
+
+  $("reviews-published-list").addEventListener("click", async (e) => {
+    const btn = e.target.closest("button[data-delete-review]");
+    if (!btn) return;
+    if (!confirm("Remove this review from the live site?")) return;
+    const id = btn.dataset.deleteReview;
+    btn.disabled = true;
+    try {
+      await api("/api/reviews/delete", { method: "POST", body: JSON.stringify({ id }) });
+      state.reviews = state.reviews.filter((r) => r.id !== id);
+      renderReviews();
+    } catch (err) {
+      alert(err.message || "Something went wrong.");
+      btn.disabled = false;
+    }
+  });
+
+  // ============================================================
   // SETTINGS
   // ============================================================
   function populateSettingsForm() {
@@ -1000,9 +1158,68 @@
     $("s-tagline").value = state.settings.tagline || "";
     $("s-whatsapp").value = state.settings.whatsappNumber || "";
     $("s-instagram").value = state.settings.instagramUrl || "";
+    $("s-contact-email").value = state.settings.contactEmail || "";
+    renderHeroPhotoRows();
     renderTotpStatus();
     $("email-2fa").value = "";
   }
+
+  // ---- hero banner photos ----
+  const HERO_SLOT_PATHS = ["assets/hero-photo.jpg", "assets/hero-2.jpg", "assets/hero-3.jpg", "assets/hero-4.jpg", "assets/hero-5.jpg", "assets/hero-6.jpg"];
+  let heroPhotoFiles = {}; // path -> pending File, not yet published
+  let heroPhotoPreviews = {}; // path -> objectURL for a pending File
+
+  function currentHeroImages() {
+    return (state.settings.heroImages && state.settings.heroImages.length) ? state.settings.heroImages : ["assets/hero-photo.jpg"];
+  }
+
+  function renderHeroPhotoRows() {
+    const active = currentHeroImages();
+    $("hero-photo-rows").innerHTML = HERO_SLOT_PATHS.map((path, i) => {
+      const slotNum = i + 1;
+      const isActive = active.includes(path);
+      const preview = heroPhotoPreviews[path] || (isActive ? path : "");
+      const required = slotNum === 1;
+      return `
+        <div class="hero-photo-row">
+          <div class="current-thumb" style="${preview ? "" : "display:none;"}"><img src="${escapeHtml(preview)}" alt="" /></div>
+          <div class="field">
+            <span class="mini-label">Photo ${slotNum}${required ? " (required)" : ""}</span>
+            <input type="file" accept="image/*" class="hero-photo-input" data-hero-path="${escapeHtml(path)}" />
+          </div>
+          <div>${!required && isActive ? `<button type="button" class="btn btn-ghost btn-sm" data-hero-remove="${escapeHtml(path)}">Remove</button>` : ""}</div>
+        </div>`;
+    }).join("");
+  }
+
+  $("hero-photo-rows").addEventListener("change", (e) => {
+    const input = e.target.closest(".hero-photo-input");
+    if (!input) return;
+    const file = input.files[0];
+    if (!file) return;
+    const path = input.dataset.heroPath;
+    heroPhotoFiles[path] = file;
+    heroPhotoPreviews[path] = URL.createObjectURL(file);
+    const images = currentHeroImages().slice();
+    if (!images.includes(path)) images.push(path);
+    state.settings = { ...state.settings, heroImages: images };
+    state.dirty.settings = true;
+    updatePublishUi();
+    renderHeroPhotoRows();
+  });
+
+  $("hero-photo-rows").addEventListener("click", (e) => {
+    const btn = e.target.closest("button[data-hero-remove]");
+    if (!btn) return;
+    const path = btn.dataset.heroRemove;
+    const images = currentHeroImages().filter((p) => p !== path);
+    state.settings = { ...state.settings, heroImages: images.length ? images : ["assets/hero-photo.jpg"] };
+    delete heroPhotoFiles[path];
+    delete heroPhotoPreviews[path];
+    state.dirty.settings = true;
+    updatePublishUi();
+    renderHeroPhotoRows();
+  });
 
   $("btn-save-site-settings").addEventListener("click", () => {
     state.settings = {
@@ -1012,6 +1229,7 @@
       tagline: $("s-tagline").value.trim(),
       whatsappNumber: $("s-whatsapp").value.replace(/[^0-9]/g, ""),
       instagramUrl: $("s-instagram").value.trim(),
+      contactEmail: $("s-contact-email").value.trim(),
     };
     state.dirty.settings = true;
     updatePublishUi();
@@ -1112,6 +1330,9 @@
           if (v._photoFile) photos[v.photo] = await fileToBase64(v._photoFile);
         }
       }
+      for (const [path, file] of Object.entries(heroPhotoFiles)) {
+        photos[path] = await fileToBase64(file);
+      }
 
       const payload = { shas: state.shas, photos };
       if (state.dirty.products) {
@@ -1128,6 +1349,7 @@
       if (payload.products) state.products = payload.products;
       if (payload.categories) state.categories = payload.categories;
       state.dirty = { products: false, categories: false, settings: false };
+      heroPhotoFiles = {};
       updatePublishUi();
       if (state.currentView === "products") renderProducts();
       if (state.currentView === "categories") renderCategories();
@@ -1156,4 +1378,3 @@
 
 </body>
 </html>
-
