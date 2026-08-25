@@ -59,9 +59,10 @@
   .categories .section-head { text-align: center; margin-bottom: 30px; }
   .categories h2 { font-size: clamp(1.8rem, 3.4vw, 2.4rem); margin-top: 8px; }
   .cat-pills { display: flex; flex-wrap: wrap; justify-content: center; gap: 10px; margin-top: 24px; }
-  .cat-pill { padding: 9px 18px; border-radius: 100px; font-size: 0.82rem; font-weight: 600; border: 1px solid var(--line); text-decoration: none; color: var(--ink); }
+  .cat-pill { padding: 9px 18px; border-radius: 100px; font-size: 0.82rem; font-weight: 600; font-family: inherit; border: 1px solid var(--line); background: var(--ivory); text-decoration: none; color: var(--ink); cursor: pointer; appearance: none; -webkit-appearance: none; }
+  .cat-pill:hover { border-color: var(--ink); }
   .cat-pill.active { background: var(--ink); color: var(--ivory); border-color: var(--ink); }
-  .cat-pill.soon { color: var(--ink-soft); background: transparent; position: relative; pointer-events: none; }
+  .cat-pill.soon { color: var(--ink-soft); background: transparent; position: relative; pointer-events: none; cursor: default; }
   .cat-pill.soon::after { content: "coming soon"; font-size: 0.62rem; letter-spacing: 0.06em; text-transform: uppercase; color: var(--gold); margin-left: 8px; }
 
   .products { padding: 20px 0 clamp(24px, 4vw, 40px); }
@@ -346,10 +347,11 @@
       return children.some((child) => productsFor(child.id).length > 0);
     };
 
-    // ---- category pills (top-level only) ----
+    // ---- category pills (top-level only) — these act as tabs: clicking one
+    // shows only that category's block and hides the rest. ----
     document.getElementById("cat-pills").innerHTML = cats.map((cat) => {
       if (categoryIsActive(cat)) {
-        return `<a class="cat-pill active" href="#${categoryAnchor(cat.id)}">${escapeHtml(cat.name)}</a>`;
+        return `<button type="button" class="cat-pill" data-cat-tab="${escapeHtml(cat.id)}">${escapeHtml(cat.name)}</button>`;
       }
       return `<span class="cat-pill soon">${escapeHtml(cat.name)}</span>`;
     }).join("") || '<span class="cat-pill soon">Collection coming soon</span>';
@@ -389,11 +391,12 @@
         </article>`;
     }
 
+    const activeCats = cats.filter(categoryIsActive);
+
     let html = "";
-    cats.forEach((cat) => {
-      if (!categoryIsActive(cat)) return;
+    activeCats.forEach((cat) => {
       const children = childrenOf(cat.id);
-      html += `<div class="category-block" id="${categoryAnchor(cat.id)}"><h3>${escapeHtml(cat.name)}</h3>`;
+      html += `<div class="category-block" id="${categoryAnchor(cat.id)}" data-cat-block style="display:none;"><h3>${escapeHtml(cat.name)}</h3>`;
 
       if (children.length) {
         // Only subcategories that actually have ready products get a tab.
@@ -411,9 +414,38 @@
         productsFor(cat.id).forEach((p) => { html += productCardHtml(p); });
         html += `</div>`;
       }
+
+      if (cat.id === "palazzos") {
+        html += '<p class="bundle-note">Buying in bulk? <strong>Duo Combo</strong> — both colours for AED 110 (save AED 20). <strong>Boutique Bundle</strong> — 24 assorted pieces at AED 35/piece. Message us on WhatsApp for wholesale (MOQ 12, AED 38/piece).</p>';
+      }
+
       html += `</div>`;
     });
     container.innerHTML = html;
+
+    // ---- top-level category tabs: show only the selected category's block ----
+    function selectCategoryTab(catId) {
+      document.querySelectorAll('#cat-pills [data-cat-tab]').forEach((btn) => {
+        btn.classList.toggle("active", btn.dataset.catTab === catId);
+      });
+      container.querySelectorAll('[data-cat-block]').forEach((block) => {
+        block.style.display = block.id === categoryAnchor(catId) ? "" : "none";
+      });
+    }
+
+    if (activeCats.length) {
+      const hashId = location.hash.replace(/^#/, "").replace(/^cat-/, "");
+      const initialCat = activeCats.find((c) => c.id === hashId) || activeCats[0];
+      selectCategoryTab(initialCat.id);
+    }
+
+    document.getElementById("cat-pills").addEventListener("click", (e) => {
+      const tabBtn = e.target.closest("[data-cat-tab]");
+      if (!tabBtn) return;
+      const catId = tabBtn.dataset.catTab;
+      selectCategoryTab(catId);
+      if (history.replaceState) history.replaceState(null, "", "#" + categoryAnchor(catId));
+    });
 
     // Subcategory tab switching — scoped to each category block so multiple
     // tabbed categories on the same page don't interfere with each other.
@@ -427,13 +459,6 @@
         grid.style.display = grid.dataset.subcatGrid === targetId ? "" : "none";
       });
     });
-
-    if (categoryIsActive({ id: "palazzos" })) {
-      const note = document.createElement("p");
-      note.className = "bundle-note";
-      note.innerHTML = 'Buying in bulk? <strong>Duo Combo</strong> — both colours for AED 110 (save AED 20). <strong>Boutique Bundle</strong> — 24 assorted pieces at AED 35/piece. Message us on WhatsApp for wholesale (MOQ 12, AED 38/piece).';
-      container.appendChild(note);
-    }
 
     container.addEventListener("click", (e) => {
       const btn = e.target.closest("[data-open-product]");
