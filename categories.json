@@ -1,12 +1,44 @@
 [
-  { "id": "palazzos", "name": "Palazzos", "sortOrder": 1 },
-  { "id": "kurtis-tops", "name": "Kurtis / Tops", "sortOrder": 2 },
-  { "id": "nighties", "name": "Nighties", "sortOrder": 3 },
-  { "id": "lehengas", "name": "Lehengas", "sortOrder": 4 },
-  { "id": "sarees", "name": "Sarees", "sortOrder": 5 },
-  { "id": "dupattas", "name": "Dupattas", "sortOrder": 6 },
-  { "id": "jewelry", "name": "Jewelry", "sortOrder": 7 },
-  { "id": "footwear", "name": "Footwear", "sortOrder": 8 },
-  { "id": "bags", "name": "Bags", "sortOrder": 9 },
-  { "id": "other", "name": "Other", "sortOrder": 10 }
+  {
+    "id": "plazzos",
+    "name": "Plazzos",
+    "sortOrder": 1,
+    "parentId": null
+  },
+  {
+    "id": "pants",
+    "name": "Pants",
+    "sortOrder": 2,
+    "parentId": null
+  },
+  {
+    "id": "leggins",
+    "name": "Leggins",
+    "sortOrder": 3,
+    "parentId": null
+  },
+  {
+    "id": "short-tops",
+    "name": "Short Tops",
+    "sortOrder": 4,
+    "parentId": null
+  },
+  {
+    "id": "new-arrivals",
+    "name": "New Arrivals",
+    "sortOrder": 0,
+    "parentId": null
+  },
+  {
+    "id": "long-tops",
+    "name": "Long Tops",
+    "sortOrder": 5,
+    "parentId": null
+  },
+  {
+    "id": "nighties",
+    "name": "Nighties",
+    "sortOrder": 6,
+    "parentId": null
+  }
 ]
